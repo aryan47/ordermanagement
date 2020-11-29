@@ -1,0 +1,22 @@
+{
+    "GENERAL_SETTINGS" : {
+
+    },
+    "BOTTOM_NAV_ITEMS": {
+        "value": true,
+        "items" : [
+            {
+                "label": "Dashboard",
+                "icon": ""
+            },
+            {
+                "label": "Orders",
+                "icon": ""
+            },
+            {
+                "label": "Settings",
+                "icon": ""
+            }
+        ]
+    }
+}
