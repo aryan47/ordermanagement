@@ -1,0 +1,77 @@
+{
+    "GENERAL_SETTINGS": {
+        "title": "Paani Supply"
+    },
+    "DRAWER": {
+        "value": true,
+        "header": {
+            "label": "Header"
+        },
+        "items": [
+            {
+                "leading" : {
+                    "icon" : "57832",
+                    "alias": "list"
+                },
+                "label": "Customers"
+            },
+            {
+                "leading" : {
+                    "icon" : "58822",
+                    "alias": "amount_due"
+                },
+                "label": "Amount Due",
+                "trailing": {
+                    "text": "354"
+                }
+            },
+            {
+                "leading" : {
+                    "icon" : "58917",
+                    "alias": "call"
+                },
+                "label": "Call Us"
+            },
+            {
+                "leading" : {
+                    "icon" : "59721",
+                    "alias": "power_settings_new"
+                },
+                "label": "Log Out"
+            }
+            
+        ]
+    },
+    "BOTTOM_NAV_ITEMS": {
+        "value": true,
+        "items": [
+            {
+                "label": "Dashboard",
+                "icon": "",
+                "action": {
+                    "onTap": {
+                        "dest": ""
+                    }
+                }
+            },
+            {
+                "label": "Orders",
+                "icon": "",
+                "action": {
+                    "onTap": {
+                        "dest": ""
+                    }
+                }
+            },
+            {
+                "label": "Settings",
+                "icon": "",
+                "action": {
+                    "onTap": {
+                        "dest": ""
+                    }
+                }
+            }
+        ]
+    }
+}
