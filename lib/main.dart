@@ -2,7 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:order_management/screens/customers.dart';
+import 'package:order_management/screens/dashboard.dart';
 import 'package:order_management/screens/home.dart';
+import 'package:order_management/screens/orders.dart';
+import 'package:order_management/screens/products.dart';
+import 'package:order_management/screens/settings.dart';
 import 'package:order_management/service/mainService.dart';
 
 void main() async {
@@ -27,6 +32,15 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: Home(),
+      routes: {
+        // When navigating to the "/second" route, build the SecondScreen widget.
+        '/dashboard': (context) => Dashboard(),
+        '/product': (context) => Products(),
+        '/orders': (context) => Orders(),
+        '/settings': (context) => Settings(),
+        '/customers': (context) => Customers(),
+        '/payment': (context) => Dashboard()
+      },
     );
   }
 }

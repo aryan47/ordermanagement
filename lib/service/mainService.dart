@@ -97,7 +97,7 @@ class MyInheritedWidget extends InheritedWidget {
   }
 
   // Build drawer list
-  List<Widget> buildDrawerList() {
+  List<Widget> buildDrawerList(context) {
     List<Widget> list = [];
 
     if (_exists("DRAWER.value")) {
@@ -111,13 +111,43 @@ class MyInheritedWidget extends InheritedWidget {
       }
 
       for (var i = 0; i < _getV("DRAWER.items").length; i++) {
+        Map<String, Function> actions =
+            buildRoute(_getV("DRAWER.items")[i], context);
         list.add(ListTile(
           leading: _getI("leading.icon", _getV("DRAWER.items")[i]),
           title: new Text(_getV("DRAWER.items")[i]["label"]),
-          trailing: Text(_getV("trailing.text",_getV("DRAWER.items")[i])??""),
+          trailing:
+              Text(_getV("trailing.text", _getV("DRAWER.items")[i]) ?? ""),
+          onTap: actions["onTap"],
         ));
       }
     }
     return list;
+  }
+
+  /// Build Route to screen
+  Map<String, Function> buildRoute(dynamic src, context) {
+    Map<String, Function> routes = {};
+    routes["onTap"] = () {
+      String route = _getV("actions.onTap.gotoRoute", src);
+      print(route);
+
+      Navigator.pushNamed(context, route);
+    };
+    return routes;
+  }
+
+  /// Build Route to screen
+  Map<String, Function> buildBottomNavRoutes(_currentIndex, context) {
+    Map<String, Function> routes = {};
+    routes["onTap"] = (int index) {
+      _currentIndex = index;
+      String route = _getV(
+          "actions.onTap.gotoRoute", _getV("BOTTOM_NAV_ITEMS.items")[index]);
+      print(route);
+
+      Navigator.pushNamed(context, route);
+    };
+    return routes;
   }
 }

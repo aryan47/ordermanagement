@@ -9,15 +9,20 @@
         },
         "items": [
             {
-                "leading" : {
-                    "icon" : "57832",
+                "leading": {
+                    "icon": "57832",
                     "alias": "list"
                 },
-                "label": "Customers"
+                "label": "Customers",
+                "actions": {
+                    "onTap": {
+                        "gotoRoute": "/customers"
+                    }
+                }
             },
             {
-                "leading" : {
-                    "icon" : "58822",
+                "leading": {
+                    "icon": "58822",
                     "alias": "amount_due"
                 },
                 "label": "Amount Due",
@@ -26,20 +31,19 @@
                 }
             },
             {
-                "leading" : {
-                    "icon" : "58917",
+                "leading": {
+                    "icon": "58917",
                     "alias": "call"
                 },
                 "label": "Call Us"
             },
             {
-                "leading" : {
-                    "icon" : "59721",
+                "leading": {
+                    "icon": "59721",
                     "alias": "power_settings_new"
                 },
                 "label": "Log Out"
             }
-            
         ]
     },
     "BOTTOM_NAV_ITEMS": {
@@ -48,27 +52,27 @@
             {
                 "label": "Dashboard",
                 "icon": "",
-                "action": {
+                "actions": {
                     "onTap": {
-                        "dest": ""
+                        "gotoRoute": "/dashboard"
                     }
                 }
             },
             {
                 "label": "Orders",
                 "icon": "",
-                "action": {
+                "actions": {
                     "onTap": {
-                        "dest": ""
+                        "gotoRoute": "/orders"
                     }
                 }
             },
             {
                 "label": "Settings",
                 "icon": "",
-                "action": {
+                "actions": {
                     "onTap": {
-                        "dest": ""
+                        "gotoRoute": "/settings"
                     }
                 }
             }

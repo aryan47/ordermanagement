@@ -10,17 +10,17 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  int _currentIndex = 0;
   List bottomNavList = [];
+  int _currentIndex = 0;
   Map<String, dynamic> appConfig;
-  var service;
+  var srv;
 
   @override
   Widget build(BuildContext context) {
-     service = MyInheritedWidget.of(context);
+    srv = MyInheritedWidget.of(context);
 
     return Scaffold(
-      drawer: buildDrawer(service.buildDrawerList()),
+      drawer: buildDrawer(srv.buildDrawerList(context)),
       appBar: AppBar(
         title: Text(""),
       ),
@@ -39,8 +39,8 @@ class _HomeState extends State<Home> {
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ),
-      bottomNavigationBar:
-          buildBottomNavigationBar(service.buildBottomNavList(), _currentIndex),
+      bottomNavigationBar: buildBottomNavigationBar(srv.buildBottomNavList(),
+          srv.buildBottomNavRoutes(_currentIndex, context)),
     );
   }
 }
