@@ -18,15 +18,13 @@ void main() async {
 
   final cred =
       await rootBundle.loadString("assets/configuration/credential.json");
-  var db = await Db.create(jsonDecode(cred)["mongo"]["url"]);
+  final db = await Db.create(jsonDecode(cred)["mongo"]["url"]);
   await db.open();
-  var collection = await db.collection('customers').find().toList();
-  print("collection");
-
-  print(collection.length);
+ 
   runApp(MyInheritedWidget(
     child: MyApp(),
     appConfig: jsonDecode(content),
+    db: db
   ));
 }
 

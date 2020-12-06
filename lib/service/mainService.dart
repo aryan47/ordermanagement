@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:order_management/screens/models/customersModel.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
 
 // ignore: must_be_immutable
 class MyInheritedWidget extends InheritedWidget {
-  MyInheritedWidget({
-    Key key,
-    @required Widget child,
-    this.appConfig,
-  }) : super(key: key, child: child);
+  MyInheritedWidget({Key key, @required Widget child, this.appConfig, this.db})
+      : super(key: key, child: child);
 
   Map<String, dynamic> appConfig;
+  dynamic db;
+  List<CustomersM> custM;
 
   // String _latestAppVersion;
 
-  // BehaviorSubject _refresh = BehaviorSubject.seeded(false);
+  BehaviorSubject listLoaded = BehaviorSubject.seeded(false);
 
   Map<String, dynamic> get config => appConfig;
 
@@ -113,6 +113,8 @@ class MyInheritedWidget extends InheritedWidget {
       for (var i = 0; i < _getV("DRAWER.items").length; i++) {
         Map<String, Function> actions =
             buildRoute(_getV("DRAWER.items")[i], context);
+        print(_getV("actions.onTap.gotoRoute", _getV("DRAWER.items")[i]));
+
         list.add(ListTile(
           leading: _getI("leading.icon", _getV("DRAWER.items")[i]),
           title: new Text(_getV("DRAWER.items")[i]["label"]),
@@ -130,6 +132,7 @@ class MyInheritedWidget extends InheritedWidget {
     Map<String, Function> routes = {};
     routes["onTap"] = () {
       String route = _getV("actions.onTap.gotoRoute", src);
+      loadDataFromDB(_getV("actions.onTap.gotoRoute", src));
       Navigator.pushNamed(context, route);
     };
     return routes;
@@ -147,5 +150,26 @@ class MyInheritedWidget extends InheritedWidget {
       Navigator.pushNamed(context, route);
     };
     return routes;
+  }
+
+  /// Load data from DB
+  loadDataFromDB(String url) async {
+    if (url != null) {
+      print('loding data from db...');
+      var colName = url.substring(1);
+      var data = await db.collection(colName).find().toList();
+      switch (colName) {
+        case "customers":
+          data = data.map((custJson) => CustomersM.fromJson(custJson)).toList();
+          custM = List<CustomersM>.from(data);
+          listLoaded.add(true);
+          break;
+        default:
+      }
+    }
+  }
+
+  dynamic getCustomers() {
+    return custM;
   }
 }
