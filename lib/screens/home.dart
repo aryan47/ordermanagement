@@ -18,11 +18,10 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     srv = MyInheritedWidget.of(context);
-
     return Scaffold(
       drawer: buildDrawer(srv.buildDrawerList(context)),
       appBar: AppBar(
-        title: Text(""),
+        title: Text("Product Management"),
       ),
       body: Center(
         child: Column(

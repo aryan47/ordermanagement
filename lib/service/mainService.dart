@@ -130,8 +130,6 @@ class MyInheritedWidget extends InheritedWidget {
     Map<String, Function> routes = {};
     routes["onTap"] = () {
       String route = _getV("actions.onTap.gotoRoute", src);
-      print(route);
-
       Navigator.pushNamed(context, route);
     };
     return routes;

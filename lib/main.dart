@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mongo_dart/mongo_dart.dart';
 import 'package:order_management/screens/customers.dart';
 import 'package:order_management/screens/dashboard.dart';
 import 'package:order_management/screens/home.dart';
@@ -15,6 +16,14 @@ void main() async {
   final content =
       await rootBundle.loadString("assets/configuration/config.json");
 
+  final cred =
+      await rootBundle.loadString("assets/configuration/credential.json");
+  var db = await Db.create(jsonDecode(cred)["mongo"]["url"]);
+  await db.open();
+  var collection = await db.collection('customers').find().toList();
+  print("collection");
+
+  print(collection.length);
   runApp(MyInheritedWidget(
     child: MyApp(),
     appConfig: jsonDecode(content),
