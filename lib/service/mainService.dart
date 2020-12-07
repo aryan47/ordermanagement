@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mongo_dart/mongo_dart.dart';
 import 'package:order_management/screens/models/customersModel.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
@@ -56,7 +57,7 @@ class MyInheritedWidget extends InheritedWidget {
   }
 
   /// Get value from inside object
-  dynamic _getV(String fetchV, [dynamic src]) {
+  dynamic getV(String fetchV, [dynamic src]) {
     if (src == null) src = appConfig;
 
     if (fetchV.isEmpty || src.isEmpty) return null;
@@ -75,7 +76,7 @@ class MyInheritedWidget extends InheritedWidget {
   /// Get icon from config
   Widget _getI(icons, [dynamic src]) {
     if (icons == null) return null;
-    if (src != null) icons = _getV(icons, src);
+    if (src != null) icons = getV(icons, src);
 
     if (icons == null) return null;
 
@@ -86,10 +87,10 @@ class MyInheritedWidget extends InheritedWidget {
   List<BottomNavigationBarItem> buildBottomNavList() {
     List<BottomNavigationBarItem> list = [];
     if (_exists("BOTTOM_NAV_ITEMS.value")) {
-      for (var i = 0; i < _getV("BOTTOM_NAV_ITEMS.items").length; i++) {
+      for (var i = 0; i < getV("BOTTOM_NAV_ITEMS.items").length; i++) {
         list.add(BottomNavigationBarItem(
           icon: new Icon(Icons.more),
-          title: new Text(_getV("BOTTOM_NAV_ITEMS.items")[i]["label"]),
+          title: new Text(getV("BOTTOM_NAV_ITEMS.items")[i]["label"]),
         ));
       }
     }
@@ -103,23 +104,21 @@ class MyInheritedWidget extends InheritedWidget {
     if (_exists("DRAWER.value")) {
       if (_exists("DRAWER.header")) {
         list.add(DrawerHeader(
-          child: Text(_getV("DRAWER.header.label")),
+          child: Text(getV("DRAWER.header.label")),
           decoration: BoxDecoration(
             color: Colors.blue,
           ),
         ));
       }
 
-      for (var i = 0; i < _getV("DRAWER.items").length; i++) {
+      for (var i = 0; i < getV("DRAWER.items").length; i++) {
         Map<String, Function> actions =
-            buildRoute(_getV("DRAWER.items")[i], context);
-        print(_getV("actions.onTap.gotoRoute", _getV("DRAWER.items")[i]));
+            buildRoute(getV("DRAWER.items")[i], context);
 
         list.add(ListTile(
-          leading: _getI("leading.icon", _getV("DRAWER.items")[i]),
-          title: new Text(_getV("DRAWER.items")[i]["label"]),
-          trailing:
-              Text(_getV("trailing.text", _getV("DRAWER.items")[i]) ?? ""),
+          leading: _getI("leading.icon", getV("DRAWER.items")[i]),
+          title: new Text(getV("DRAWER.items")[i]["label"]),
+          trailing: Text(getV("trailing.text", getV("DRAWER.items")[i]) ?? ""),
           onTap: actions["onTap"],
         ));
       }
@@ -131,8 +130,8 @@ class MyInheritedWidget extends InheritedWidget {
   Map<String, Function> buildRoute(dynamic src, context) {
     Map<String, Function> routes = {};
     routes["onTap"] = () {
-      String route = _getV("actions.onTap.gotoRoute", src);
-      loadDataFromDB(_getV("actions.onTap.gotoRoute", src));
+      String route = getV("actions.onTap.gotoRoute", src);
+      loadDataFromDB(getV("actions.onTap.gotoRoute", src));
       Navigator.pushNamed(context, route);
     };
     return routes;
@@ -143,8 +142,8 @@ class MyInheritedWidget extends InheritedWidget {
     Map<String, Function> routes = {};
     routes["onTap"] = (int index) {
       _currentIndex = index;
-      String route = _getV(
-          "actions.onTap.gotoRoute", _getV("BOTTOM_NAV_ITEMS.items")[index]);
+      String route = getV(
+          "actions.onTap.gotoRoute", getV("BOTTOM_NAV_ITEMS.items")[index]);
       print(route);
 
       Navigator.pushNamed(context, route);
@@ -153,7 +152,7 @@ class MyInheritedWidget extends InheritedWidget {
   }
 
   /// Load data from DB
-  loadDataFromDB(String url) async {
+  void loadDataFromDB(String url) async {
     if (url != null) {
       print('loding data from db...');
       var colName = url.substring(1);
@@ -169,7 +168,19 @@ class MyInheritedWidget extends InheritedWidget {
     }
   }
 
+  /// get customer data
   dynamic getCustomers() {
     return custM;
+  }
+
+  /// get customer data
+  dynamic getCustomerOrders(id) async {
+    print(id.id.hexString);
+    // print(ObjectId.parse(id.id.hexString));
+    var data = await db
+        .collection("orders")
+        .find(where.eq("belongs_to_customer", id.id.hexString))
+        .toList();
+    return data;
   }
 }

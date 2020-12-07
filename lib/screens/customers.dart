@@ -12,7 +12,7 @@ class Customers extends StatefulWidget {
 class _CustomersState extends State<Customers> {
   var srv;
   List<CustomersM> customers = [];
-
+  var stateMachine;
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
@@ -21,8 +21,8 @@ class _CustomersState extends State<Customers> {
       if (event) {
         setState(() {
           customers = srv.getCustomers();
+          stateMachine = srv.config["STATE_MACHINE"]["customers"];
         });
-        print(customers.length);
       }
     });
   }
@@ -33,15 +33,21 @@ class _CustomersState extends State<Customers> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Customer"),
+        title: Text("Customers"),
       ),
       body: ListView.builder(
         shrinkWrap: true,
         itemCount: customers.length,
         itemBuilder: (context, index) {
-          print("loading" + index.toString());
           return ListTile(
             title: Text('${customers[index].customer_name}'),
+            subtitle: Text(customers[index].address),
+            trailing: Icon(Icons.keyboard_arrow_right),
+            onTap: () {
+              print(stateMachine);
+              String route = srv.getV("actions.onTap.gotoRoute", stateMachine);
+              Navigator.pushNamed(context, route, arguments: {"customerId": customers[index].id});
+            },
           );
         },
       ),

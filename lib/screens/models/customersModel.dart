@@ -1,5 +1,7 @@
+import 'package:mongo_dart/mongo_dart.dart';
+
 class CustomersM {
-  dynamic id;
+  ObjectId id;
   String customer_name;
   DateTime dt_join;
   String address;
@@ -22,7 +24,7 @@ class CustomersM {
 
   factory CustomersM.fromJson(dynamic json) {
     return CustomersM(
-        json['id'] as dynamic,
+        json['_id'] as ObjectId,
         json['customer_name'] as String,
         json['dt_join'] as DateTime,
         json['address'] as String,

@@ -77,5 +77,14 @@
                 }
             }
         ]
+    },
+    "STATE_MACHINE" : {
+        "customers" : {
+            "actions": {
+                "onTap": {
+                    "gotoRoute": "/orders"
+                }
+            }
+        }
     }
 }

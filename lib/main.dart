@@ -6,7 +6,7 @@ import 'package:mongo_dart/mongo_dart.dart';
 import 'package:order_management/screens/customers.dart';
 import 'package:order_management/screens/dashboard.dart';
 import 'package:order_management/screens/home.dart';
-import 'package:order_management/screens/orders.dart';
+import 'package:order_management/screens/customerOrders.dart';
 import 'package:order_management/screens/products.dart';
 import 'package:order_management/screens/settings.dart';
 import 'package:order_management/service/mainService.dart';
@@ -20,12 +20,9 @@ void main() async {
       await rootBundle.loadString("assets/configuration/credential.json");
   final db = await Db.create(jsonDecode(cred)["mongo"]["url"]);
   await db.open();
- 
+
   runApp(MyInheritedWidget(
-    child: MyApp(),
-    appConfig: jsonDecode(content),
-    db: db
-  ));
+      child: MyApp(), appConfig: jsonDecode(content), db: db));
 }
 
 class MyApp extends StatelessWidget {
@@ -43,7 +40,7 @@ class MyApp extends StatelessWidget {
         // When navigating to the "/second" route, build the SecondScreen widget.
         '/dashboard': (context) => Dashboard(),
         '/product': (context) => Products(),
-        '/orders': (context) => Orders(),
+        '/orders': (context) => CustomerOrders(),
         '/settings': (context) => Settings(),
         '/customers': (context) => Customers(),
         '/payment': (context) => Dashboard()
