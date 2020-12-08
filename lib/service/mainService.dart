@@ -174,12 +174,27 @@ class MyInheritedWidget extends InheritedWidget {
   }
 
   /// get customer data
-  dynamic getCustomerOrders(id) async {
+  dynamic getCustomerFutureOrders(id) async {
     print(id.id.hexString);
     // print(ObjectId.parse(id.id.hexString));
     var data = await db
         .collection("orders")
-        .find(where.eq("belongs_to_customer", id.id.hexString))
+        .find(where
+            .eq("belongs_to_customer", id.id.hexString)
+            .ne('status', "Delivered"))
+        .toList();
+    return data;
+  }
+
+    /// get customer data
+  dynamic getCustomerPastOrders(id) async {
+    print(id.id.hexString);
+    // print(ObjectId.parse(id.id.hexString));
+    var data = await db
+        .collection("orders")
+        .find(where
+            .eq("belongs_to_customer", id.id.hexString)
+            .eq('status', "Delivered"))
         .toList();
     return data;
   }

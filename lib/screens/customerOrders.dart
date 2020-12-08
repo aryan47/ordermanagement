@@ -13,20 +13,36 @@ class CustomerOrders extends StatefulWidget {
 }
 
 class _CustomerOrdersState extends State<CustomerOrders> {
-  var custOrders = [];
+  var custPastOrders = [];
+  var custFutureOrders = [];
+
   Map args;
   var src;
+  String title = '';
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     args = ModalRoute.of(context).settings.arguments;
 
     MyInheritedWidget.of(context)
-        .getCustomerOrders(args["customerId"])
+        .getCustomerPastOrders(args["customerId"])
         .then((data) {
       print(data);
       setState(() {
-        custOrders = data;
+        custPastOrders = data;
+        if (custPastOrders.length != 0)
+          title = custPastOrders[0]["customer_name"];
+      });
+    });
+
+    MyInheritedWidget.of(context)
+        .getCustomerFutureOrders(args["customerId"])
+        .then((data) {
+      print(data);
+      setState(() {
+        if (custFutureOrders.length != 0)
+          title = custFutureOrders[0]["customer_name"];
+        custFutureOrders = data;
       });
     });
   }
@@ -47,35 +63,39 @@ class _CustomerOrdersState extends State<CustomerOrders> {
               ),
             ],
           ),
-          title: Text('My Orders'),
+          title: Text(title),
         ),
         body: TabBarView(
           children: [
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: custOrders.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  isThreeLine: true,
-                  title: Text(
-                    "Qty: " + custOrders[index]['quantity'].toString(),
-                    style: TextStyle(color: Colors.blueAccent),
-                  ),
-                  subtitle: Text(DateFormat('dd-MMM-yyyy hh:mm')
-                      .format(custOrders[index]['dt_order_place'])),
-                  trailing: CustomDropdownButton(),
-                  onTap: () {
-                    // print(stateMachine);
-                    // String route = srv.getV("actions.onTap.gotoRoute", stateMachine);
-                    // Navigator.pushNamed(context, route, arguments: {"customerId": custOrders[index].id});
-                  },
-                );
-              },
-            ),
-            Icon(Icons.directions_transit),
+            buildListViewForOrders(custFutureOrders, true),
+            buildListViewForOrders(custPastOrders),
           ],
         ),
       ),
+    );
+  }
+
+  ListView buildListViewForOrders(orders, [bool showMore]) {
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: orders.length,
+      itemBuilder: (context, index) {
+        return ListTile(
+          isThreeLine: true,
+          title: Text(
+            "Qty: " + orders[index]['quantity'].toString(),
+            style: TextStyle(color: Colors.blueAccent),
+          ),
+          subtitle: Text(DateFormat('dd-MMM-yyyy hh:mm')
+              .format(orders[index]['dt_order_place'])),
+          trailing: showMore == true ? CustomDropdownButton() : null,
+          onTap: () {
+            // print(stateMachine);
+            // String route = srv.getV("actions.onTap.gotoRoute", stateMachine);
+            // Navigator.pushNamed(context, route, arguments: {"customerId": custOrders[index].id});
+          },
+        );
+      },
     );
   }
 }
