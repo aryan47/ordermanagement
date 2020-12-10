@@ -175,27 +175,69 @@ class MyInheritedWidget extends InheritedWidget {
 
   /// get customer data
   dynamic getCustomerFutureOrders(id) async {
-    print(id.id.hexString);
-    // print(ObjectId.parse(id.id.hexString));
+    if (id != null) {
+      var data = await db
+          .collection("orders")
+          .find(where
+              .eq("belongs_to_customer", id.id.hexString)
+              .ne('status', "Delivered")
+              .sortBy('dt_delivery', descending: true))
+          .toList();
+      return data;
+    } else {
+      var data = await db
+          .collection("orders")
+          .find(where
+              .ne('status', "Delivered")
+              .sortBy('dt_delivery', descending: true))
+          .toList();
+      return data;
+    }
+  }
+
+  /// get customer data
+  dynamic getCustomerPastOrders(id) async {
+    if (id != null) {
+      var data = await db
+          .collection("orders")
+          .find(where
+              .eq("belongs_to_customer", id.id.hexString)
+              .eq('status', "Delivered")
+              .sortBy('dt_delivery', descending: true))
+          .toList();
+      return data;
+    } else {
+      var data = await db
+          .collection("orders")
+          .find(where
+              .eq('status', "Delivered")
+              .sortBy('dt_delivery', descending: true))
+          .toList();
+      return data;
+    }
+  }
+
+  /// get customer typeahead
+  dynamic getTypeAhead(colName, value) async {
     var data = await db
-        .collection("orders")
-        .find(where
-            .eq("belongs_to_customer", id.id.hexString)
-            .ne('status', "Delivered"))
+        .collection(colName)
+        .find(where.match('name', value, caseInsensitive: true).limit(5))
         .toList();
     return data;
   }
 
-    /// get customer data
-  dynamic getCustomerPastOrders(id) async {
-    print(id.id.hexString);
-    // print(ObjectId.parse(id.id.hexString));
+  dynamic getRefModel(refModel, id) async {
     var data = await db
-        .collection("orders")
-        .find(where
-            .eq("belongs_to_customer", id.id.hexString)
-            .eq('status', "Delivered"))
+        .collection(refModel)
+        .find(where.id(ObjectId.parse(id)))
         .toList();
+    print(data);
+    return data;
+  }
+
+  dynamic saveForm(colName,model) async {
+    var data = await db.collection(colName).save(model);
+    print(data);
     return data;
   }
 }

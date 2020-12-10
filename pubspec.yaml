@@ -31,6 +31,7 @@ dependencies:
   rxdart: ^0.24.1
   mongo_dart: ^0.4.4
   intl: ^0.16.1
+  flutter_typeahead: ^1.9.1
 
 dev_dependencies:
   flutter_test:

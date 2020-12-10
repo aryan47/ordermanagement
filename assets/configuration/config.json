@@ -1,90 +1,173 @@
 {
-    "GENERAL_SETTINGS": {
-        "title": "Paani Supply"
+  "GENERAL_SETTINGS": {
+    "title": "Paani Wala"
+  },
+  "DRAWER": {
+    "value": true,
+    "header": {
+      "label": "Header"
     },
-    "DRAWER": {
-        "value": true,
-        "header": {
-            "label": "Header"
+    "items": [
+      {
+        "leading": {
+          "icon": "57832",
+          "alias": "list"
         },
-        "items": [
-            {
-                "leading": {
-                    "icon": "57832",
-                    "alias": "list"
-                },
-                "label": "Customers",
-                "actions": {
-                    "onTap": {
-                        "gotoRoute": "/customers"
-                    }
-                }
-            },
-            {
-                "leading": {
-                    "icon": "58822",
-                    "alias": "amount_due"
-                },
-                "label": "Amount Due",
-                "trailing": {
-                    "text": "354"
-                }
-            },
-            {
-                "leading": {
-                    "icon": "58917",
-                    "alias": "call"
-                },
-                "label": "Call Us"
-            },
-            {
-                "leading": {
-                    "icon": "59721",
-                    "alias": "power_settings_new"
-                },
-                "label": "Log Out"
-            }
-        ]
-    },
-    "BOTTOM_NAV_ITEMS": {
-        "value": true,
-        "items": [
-            {
-                "label": "Dashboard",
-                "icon": "",
-                "actions": {
-                    "onTap": {
-                        "gotoRoute": "/dashboard"
-                    }
-                }
-            },
-            {
-                "label": "Orders",
-                "icon": "",
-                "actions": {
-                    "onTap": {
-                        "gotoRoute": "/orders"
-                    }
-                }
-            },
-            {
-                "label": "Settings",
-                "icon": "",
-                "actions": {
-                    "onTap": {
-                        "gotoRoute": "/settings"
-                    }
-                }
-            }
-        ]
-    },
-    "STATE_MACHINE" : {
-        "customers" : {
-            "actions": {
-                "onTap": {
-                    "gotoRoute": "/orders"
-                }
-            }
+        "label": "Customers",
+        "actions": {
+          "onTap": {
+            "gotoRoute": "/customers"
+          }
         }
+      },
+      {
+        "leading": {
+          "icon": "58822",
+          "alias": "amount_due"
+        },
+        "label": "Amount Due",
+        "trailing": {
+          "text": "354"
+        }
+      },
+      {
+        "leading": {
+          "icon": "58917",
+          "alias": "call"
+        },
+        "label": "Call Us"
+      },
+      {
+        "leading": {
+          "icon": "59721",
+          "alias": "power_settings_new"
+        },
+        "label": "Log Out"
+      }
+    ]
+  },
+  "BOTTOM_NAV_ITEMS": {
+    "value": true,
+    "items": [
+      {
+        "label": "Dashboard",
+        "icon": "",
+        "actions": {
+          "onTap": {
+            "gotoRoute": "/dashboard"
+          }
+        }
+      },
+      {
+        "label": "Orders",
+        "icon": "",
+        "actions": {
+          "onTap": {
+            "gotoRoute": "/orders"
+          }
+        }
+      },
+      {
+        "label": "Settings",
+        "icon": "",
+        "actions": {
+          "onTap": {
+            "gotoRoute": "/settings"
+          }
+        }
+      }
+    ]
+  },
+  "STATE_MACHINE": {
+    "customers": {
+      "actions": {
+        "onTap": {
+          "gotoRoute": "/orders"
+        }
+      }
     }
+  },
+  "FORMS": {
+    "K_FORM_NEW_ORDERS": {
+      "title": "Place New Orders",
+      "fields": [
+        {
+          "name": "name",
+          "type": "K_FIELD_TYPEAHEAD",
+          "label": "Select Customer",
+          "placeholder": null,
+          "required": true,
+          "datasrc": {
+            "srctype": "model",
+            "src": "customers",
+            "key": "name",
+            "value": "name",
+            "handler": "getCustomerShortForm"
+          },
+          "parent": "belongs_to_customer"
+        },
+        {
+          "name": "quantity",
+          "type": "K_FIELD_NUMBER",
+          "label": "Enter Quantity",
+          "placeholder": null,
+          "required": true
+        },
+        {
+          "name": "is_new",
+          "type": "K_FIELD_CHECKBOX",
+          "label": "Is New Customer",
+          "placeholder": null,
+          "required": true
+        },
+        {
+          "name": "inst_amt",
+          "type": "K_FIELD_NUMBER",
+          "label": "Installation Amount",
+          "placeholder": null,
+          "required": true,
+          "show_cond": { "$is_new": true }
+        },
+        {
+          "name": "security_amt",
+          "type": "K_FIELD_NUMBER",
+          "label": "Security Amount",
+          "placeholder": null,
+          "required": true,
+          "show_cond": { "$is_new": true }
+        }
+      ],
+      "actions": {
+        "K_ACTION_SUBMIT": {
+          "label": "Submit",
+          "action": "K_ACTION_SUBMIT",
+          "modelsToUpdate": [
+            {
+              "targetModel": "orders",
+              "refModel": "customers",
+              "modelIdRef" : "belongs_to_customer",
+              "fieldmap": {
+              "phone_no": "$phone_no",
+                "dt_order_place": "$$K_CURRENT_DATE",
+                "dt_delivery": "",
+                "status": "Pending",
+                "per_jar_price": "$charge_per_order",
+                "payment_rcvd": "",
+                "last_action": "K_ACTION_SUBMIT"
+              }
+            }
+          ]
+        },
+        "K_ACTION_EDIT": {
+          "label": "Edit",
+          "action": "K_ACTION_EDIT",
+          "show_cond": { "$ne": ["$last_action", "K_ACTION_SUBMIT"] }
+        },
+        "K_ACTION_CANCEL": {
+          "label": "Cancel",
+          "action":"K_ACTION_CANCEL"
+        }
+      }
+    }
+  }
 }

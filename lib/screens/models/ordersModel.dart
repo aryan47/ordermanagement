@@ -2,7 +2,7 @@ import 'package:mongo_dart/mongo_dart.dart';
 
 class CustomersM {
   ObjectId _id;
-  String customer_name;
+  String name;
   String phone_no;
   DateTime dt_order_place;
   DateTime dt_delivery;
@@ -16,10 +16,11 @@ class CustomersM {
   int inst_amt;
   int security_amt;
   ObjectId belongs_to_customer;
+  String last_action;
 
   CustomersM(
       this._id,
-      this.customer_name,
+      this.name,
       this.phone_no,
       this.dt_order_place,
       this.dt_delivery,
@@ -32,12 +33,13 @@ class CustomersM {
       this.is_new,
       this.inst_amt,
       this.security_amt,
-      this.belongs_to_customer);
+      this.belongs_to_customer,
+      this.last_action);
 
   factory CustomersM.fromJson(dynamic json) {
     return CustomersM(
         json['_id'] as ObjectId,
-        json['customer_name'] as String,
+        json['name'] as String,
         json['phone_no'] as String,
         json['dt_order_place'] as DateTime,
         json['dt_delivery'] as DateTime,
@@ -50,7 +52,8 @@ class CustomersM {
         json['is_new'] as bool,
         json['inst_amt'] as int,
         json['security_amt'] as int,
-        json['belongs_to_customer'] as ObjectId);
+        json['belongs_to_customer'] as ObjectId,
+        json['last_action'] as String);
   }
 
   Map<String, dynamic> toMap() {

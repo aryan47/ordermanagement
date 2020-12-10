@@ -6,10 +6,11 @@ import 'package:mongo_dart/mongo_dart.dart';
 import 'package:order_management/screens/customers.dart';
 import 'package:order_management/screens/dashboard.dart';
 import 'package:order_management/screens/home.dart';
-import 'package:order_management/screens/customerOrders.dart';
+import 'package:order_management/screens/orders.dart';
 import 'package:order_management/screens/products.dart';
 import 'package:order_management/screens/settings.dart';
 import 'package:order_management/service/mainService.dart';
+import 'package:order_management/widgets/myCustomForms.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,10 +41,11 @@ class MyApp extends StatelessWidget {
         // When navigating to the "/second" route, build the SecondScreen widget.
         '/dashboard': (context) => Dashboard(),
         '/product': (context) => Products(),
-        '/orders': (context) => CustomerOrders(),
+        '/orders': (context) => Orders(),
         '/settings': (context) => Settings(),
         '/customers': (context) => Customers(),
-        '/payment': (context) => Dashboard()
+        '/payment': (context) => Dashboard(),
+        '/forms': (context) => MyCustomForm()
       },
     );
   }

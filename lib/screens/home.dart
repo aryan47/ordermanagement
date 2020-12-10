@@ -33,11 +33,6 @@ class _HomeState extends State<Home> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: null,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ),
       bottomNavigationBar: buildBottomNavigationBar(srv.buildBottomNavList(),
           srv.buildBottomNavRoutes(_currentIndex, context)),
     );

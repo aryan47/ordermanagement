@@ -1,0 +1,2 @@
+change all int to double
+change all specific name like name/product_name to name

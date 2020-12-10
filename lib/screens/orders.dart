@@ -5,44 +5,48 @@ import 'package:intl/intl.dart';
 import 'package:order_management/service/mainService.dart';
 import 'package:order_management/widgets/dropdownbutton.dart';
 
-class CustomerOrders extends StatefulWidget {
-  CustomerOrders({Key key}) : super(key: key);
+class Orders extends StatefulWidget {
+  Orders({Key key}) : super(key: key);
 
   @override
-  _CustomerOrdersState createState() => _CustomerOrdersState();
+  _OrdersState createState() => _OrdersState();
 }
 
-class _CustomerOrdersState extends State<CustomerOrders> {
-  var custPastOrders = [];
-  var custFutureOrders = [];
+class _OrdersState extends State<Orders> {
+  var pastOrders = [];
+  var futureOrders = [];
 
   Map args;
   var src;
   String title = '';
+  bool onlyOrders = false;
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     args = ModalRoute.of(context).settings.arguments;
 
+    if (args == null) {
+      args = new Map();
+      args["customerId"] = null;
+      onlyOrders = true;
+    }
     MyInheritedWidget.of(context)
         .getCustomerPastOrders(args["customerId"])
         .then((data) {
-      print(data);
       setState(() {
-        custPastOrders = data;
-        if (custPastOrders.length != 0)
-          title = custPastOrders[0]["customer_name"];
+        pastOrders = data;
+        if (pastOrders.length != 0)
+          title = onlyOrders ? "Orders List" : pastOrders[0]["name"];
       });
     });
 
     MyInheritedWidget.of(context)
         .getCustomerFutureOrders(args["customerId"])
         .then((data) {
-      print(data);
       setState(() {
-        if (custFutureOrders.length != 0)
-          title = custFutureOrders[0]["customer_name"];
-        custFutureOrders = data;
+        if (futureOrders.length != 0)
+          title = onlyOrders ? "Orders List" : futureOrders[0]["name"];
+        futureOrders = data;
       });
     });
   }
@@ -67,9 +71,17 @@ class _CustomerOrdersState extends State<CustomerOrders> {
         ),
         body: TabBarView(
           children: [
-            buildListViewForOrders(custFutureOrders, true),
-            buildListViewForOrders(custPastOrders),
+            buildListViewForOrders(futureOrders, true),
+            buildListViewForOrders(pastOrders),
           ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.pushNamed(context, "/forms",
+                arguments: {"formType": "K_FORM_NEW_ORDERS"});
+          },
+          tooltip: 'Add Orders',
+          child: Icon(Icons.add),
         ),
       ),
     );
@@ -90,7 +102,6 @@ class _CustomerOrdersState extends State<CustomerOrders> {
               .format(orders[index]['dt_order_place'])),
           trailing: showMore == true ? CustomDropdownButton() : null,
           onTap: () {
-            // print(stateMachine);
             // String route = srv.getV("actions.onTap.gotoRoute", stateMachine);
             // Navigator.pushNamed(context, route, arguments: {"customerId": custOrders[index].id});
           },
