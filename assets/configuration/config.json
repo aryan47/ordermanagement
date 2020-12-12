@@ -88,8 +88,9 @@
     }
   },
   "FORMS": {
-    "K_FORM_NEW_ORDERS": {
+    "K_FORM_ORDERS": {
       "title": "Place New Orders",
+      "type": "K_FORM_ORDERS",
       "fields": [
         {
           "name": "name",
@@ -126,7 +127,7 @@
           "label": "Installation Amount",
           "placeholder": null,
           "required": true,
-          "show_cond": { "$is_new": true }
+          "show_cond": { "is_new": true }
         },
         {
           "name": "security_amt",
@@ -134,7 +135,7 @@
           "label": "Security Amount",
           "placeholder": null,
           "required": true,
-          "show_cond": { "$is_new": true }
+          "show_cond": { "is_new": true }
         }
       ],
       "actions": {
@@ -145,9 +146,9 @@
             {
               "targetModel": "orders",
               "refModel": "customers",
-              "modelIdRef" : "belongs_to_customer",
+              "modelIdRef": "belongs_to_customer",
               "fieldmap": {
-              "phone_no": "$phone_no",
+                "phone_no": "$phone_no",
                 "dt_order_place": "$$K_CURRENT_DATE",
                 "dt_delivery": "",
                 "status": "Pending",
@@ -165,8 +166,11 @@
         },
         "K_ACTION_CANCEL": {
           "label": "Cancel",
-          "action":"K_ACTION_CANCEL"
+          "action": "K_ACTION_CANCEL"
         }
+      },
+      "addWatchers": {
+        "is_new": true
       }
     }
   }

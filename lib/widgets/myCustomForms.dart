@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:checkbox_formfield/checkbox_list_tile_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
@@ -42,7 +43,6 @@ class MyCustomFormState extends State<MyCustomForm> {
     srv = MyInheritedWidget.of(context);
     forms = srv.config["FORMS"];
     fref = forms[args["formType"]];
-
     title = fref["title"];
   }
 
@@ -50,10 +50,47 @@ class MyCustomFormState extends State<MyCustomForm> {
   Widget build(BuildContext context) {
     var keyboardType = TextInputType.text;
     List<TextInputFormatter> inputFormatters = [];
-    var onSaved;
-    var validator;
+
+    Widget buildCheckBox(fieldDef) {
+      var onChanged;
+      if (fref["addWatchers"][fieldDef["name"]] == true) {
+        onChanged = (value) {
+          setState(() {
+            targetModel[fieldDef['name']] = value;
+          });
+        };
+      }
+      return CheckboxListTileFormField(
+        onChanged: onChanged,
+        title: Text(fieldDef["label"]),
+        onSaved: (bool value) {
+          targetModel[fieldDef['name']] = value;
+        },
+        controlAffinity: ListTileControlAffinity.trailing,
+        contentPadding: EdgeInsets.symmetric(horizontal: 5.0),
+        validator: (bool value) {
+          if (value) {
+            return null;
+          } else {
+            return 'False!';
+          }
+        },
+      );
+    }
 
     Widget buildInput(fieldDef) {
+      var onSaved;
+      var onChanged;
+      var validator;
+
+      if (fref["addWatchers"][fieldDef["name"]] == true) {
+        onChanged = (value) {
+          setState(() {
+            targetModel[fieldDef['name']] = value;
+          });
+        };
+      }
+
       switch (fieldDef["type"]) {
         case "K_FIELD_NUMBER":
           keyboardType = TextInputType.number;
@@ -65,6 +102,15 @@ class MyCustomFormState extends State<MyCustomForm> {
             return null;
           };
           onSaved = (value) => targetModel[fieldDef['name']] = int.parse(value);
+
+          if (fref["addWatchers"][fieldDef["name"]] == true) {
+            onChanged = (value) {
+              setState(() {
+                targetModel[fieldDef['name']] = int.parse(value);
+              });
+            };
+          }
+
           break;
         default:
           validator = (value) {
@@ -73,10 +119,19 @@ class MyCustomFormState extends State<MyCustomForm> {
             }
             return null;
           };
-          onSaved = (value) => targetModel[fieldDef['name']] = int.parse(value);
+          onSaved = (value) => targetModel[fieldDef['name']] = value;
+
+          if (fref["addWatchers"][fieldDef["name"]] == true) {
+            onChanged = (value) {
+              setState(() {
+                targetModel[fieldDef['name']] = value;
+              });
+            };
+          }
       }
 
       return TextFormField(
+        onChanged: onChanged,
         decoration: InputDecoration(labelText: fieldDef["label"]),
         keyboardType: keyboardType,
         inputFormatters: inputFormatters, // Only numbers can be entered
@@ -130,6 +185,19 @@ class MyCustomFormState extends State<MyCustomForm> {
       );
     }
 
+    bool isCondSatisfied(src, cond) {
+      if (cond == null) {
+        return true;
+      }
+      if (cond["\$ne"] != null) {
+        var key = cond["\$ne"][0].toString().substring(1);
+        return src[key] == cond["\$ne"][1];
+      } else if (cond.entries.first.key != null) {
+        return src[cond.entries.first.key] == cond.entries.first.value;
+      }
+      return true;
+    }
+
     Widget addActionButtons(formRef) {
       List<Widget> buttons = [];
       var onPressed;
@@ -154,12 +222,13 @@ class MyCustomFormState extends State<MyCustomForm> {
             break;
           default:
         }
-
-        buttons.add(FlatButton(
-          child: Text(v["label"]),
-          color: Colors.blue,
-          onPressed: onPressed,
-        ));
+        if (isCondSatisfied(targetModel, v["show_cond"])) {
+          buttons.add(FlatButton(
+            child: Text(v["label"]),
+            color: Colors.blue,
+            onPressed: onPressed,
+          ));
+        }
       });
       return ButtonBar(children: buttons);
     }
@@ -169,7 +238,10 @@ class MyCustomFormState extends State<MyCustomForm> {
       fref = forms[args["formType"]];
 
       for (var i = 0; i < fref["fields"].length; i++) {
-        print(fref["fields"][i]["type"]);
+        if (isCondSatisfied(targetModel, fref["fields"][i]["show_cond"]) ==
+            false) {
+          continue;
+        }
         switch (fref["fields"][i]["type"]) {
           case "K_FIELD_TYPEAHEAD":
             fb.add(buildTypeAhead(fref["fields"][i]));
@@ -178,6 +250,7 @@ class MyCustomFormState extends State<MyCustomForm> {
             fb.add(buildInput(fref["fields"][i]));
             break;
           case "K_FIELD_CHECKBOX":
+            fb.add(buildCheckBox(fref["fields"][i]));
             break;
           default:
         }
@@ -206,7 +279,7 @@ class MyCustomFormState extends State<MyCustomForm> {
 
   relatedModelsUpdate(formAction) async {
     var modelsToUpdate = fref["actions"][formAction]["modelsToUpdate"];
-
+    targetModel["type"] = fref["type"];
     await Future.forEach(modelsToUpdate, (element) async {
       if (element["refModel"] != null) {
         refModel = await srv.getRefModel(

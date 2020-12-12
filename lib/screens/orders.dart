@@ -78,7 +78,7 @@ class _OrdersState extends State<Orders> {
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.pushNamed(context, "/forms",
-                arguments: {"formType": "K_FORM_NEW_ORDERS"});
+                arguments: {"formType": "K_FORM_ORDERS"});
           },
           tooltip: 'Add Orders',
           child: Icon(Icons.add),
