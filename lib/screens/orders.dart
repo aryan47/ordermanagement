@@ -36,7 +36,7 @@ class _OrdersState extends State<Orders> {
       setState(() {
         pastOrders = data;
         if (pastOrders.length != 0)
-          title = onlyOrders ? "Orders List" : pastOrders[0]["name"];
+          title = onlyOrders ? "Orders List" : pastOrders[0]["customer_name"];
       });
     });
 
@@ -45,7 +45,7 @@ class _OrdersState extends State<Orders> {
         .then((data) {
       setState(() {
         if (futureOrders.length != 0)
-          title = onlyOrders ? "Orders List" : futureOrders[0]["name"];
+          title = onlyOrders ? "Orders List" : futureOrders[0]["customer_name"];
         futureOrders = data;
       });
     });
