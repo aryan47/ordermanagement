@@ -52,7 +52,25 @@ class MyCustomFormState extends State<MyCustomForm> {
     List<TextInputFormatter> inputFormatters = [];
 
     Widget buildCheckBox(fieldDef) {
+      bool initialValue = false;
+      var validator;
       var onChanged;
+
+      /// set initial value
+      initialValue = targetModel[fieldDef['name']] != null
+          ? targetModel[fieldDef['name']]
+          : false;
+
+      if (fieldDef["required"] == true) {
+        validator = (value) {
+          if (value) {
+            return null;
+          } else {
+            return 'This field is required!';
+          }
+        };
+      }
+
       if (fref["addWatchers"][fieldDef["name"]] == true) {
         onChanged = (value) {
           setState(() {
@@ -62,19 +80,14 @@ class MyCustomFormState extends State<MyCustomForm> {
       }
       return CheckboxListTileFormField(
         onChanged: onChanged,
+        initialValue: initialValue,
         title: Text(fieldDef["label"]),
         onSaved: (bool value) {
           targetModel[fieldDef['name']] = value;
         },
         controlAffinity: ListTileControlAffinity.trailing,
         contentPadding: EdgeInsets.symmetric(horizontal: 5.0),
-        validator: (bool value) {
-          if (value) {
-            return null;
-          } else {
-            return 'False!';
-          }
-        },
+        validator: validator,
       );
     }
 
@@ -223,10 +236,16 @@ class MyCustomFormState extends State<MyCustomForm> {
           default:
         }
         if (isCondSatisfied(targetModel, v["show_cond"])) {
-          buttons.add(FlatButton(
-            child: Text(v["label"]),
-            color: Colors.blue,
-            onPressed: onPressed,
+          buttons.add(Container(
+            width: MediaQuery.of(context).size.width,
+            child: FlatButton(
+              child: Text(v["label"]),
+              color: Colors.blue,
+              onPressed: onPressed,
+              shape: new RoundedRectangleBorder(
+                borderRadius: new BorderRadius.circular(10.0),
+              ),
+            ),
           ));
         }
       });
@@ -264,13 +283,18 @@ class MyCustomFormState extends State<MyCustomForm> {
       appBar: AppBar(
         title: Text(title),
       ),
+      backgroundColor: Colors.grey[200],
       body: Container(
-        padding: EdgeInsets.all(5.0),
+        padding: EdgeInsets.all(2.0),
         child: Form(
           key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: formBuilder(),
+          child: Card(
+            elevation: 5,
+            child: ListView(
+              shrinkWrap: true,
+              padding: EdgeInsets.symmetric(vertical: 3, horizontal: 15),
+              children: formBuilder(),
+            ),
           ),
         ),
       ),
@@ -287,9 +311,13 @@ class MyCustomFormState extends State<MyCustomForm> {
         refModel = refModel[0];
         resolveFieldMap(element["fieldmap"], refModel);
         srv.saveForm(element["targetModel"], targetModel);
+        // update order list
+        Navigator.of(context).pop();
       } else {
         resolveFieldMap(element["fieldmap"], refModel);
         srv.saveForm(element["targetModel"], targetModel);
+        // update order list
+        Navigator.of(context).pop();
       }
     });
   }

@@ -115,13 +115,6 @@
           "required": true
         },
         {
-          "name": "is_new",
-          "type": "K_FIELD_CHECKBOX",
-          "label": "Is New Customer",
-          "placeholder": null,
-          "required": true
-        },
-        {
           "name": "inst_amt",
           "type": "K_FIELD_NUMBER",
           "label": "Installation Amount",
@@ -136,9 +129,20 @@
           "placeholder": null,
           "required": true,
           "show_cond": { "is_new": true }
+        },
+        {
+          "name": "is_new",
+          "type": "K_FIELD_CHECKBOX",
+          "label": "Is New Customer",
+          "placeholder": null,
+          "required": false
         }
       ],
       "actions": {
+        "K_ACTION_CANCEL": {
+          "label": "Cancel",
+          "action": "K_ACTION_CANCEL"
+        },
         "K_ACTION_SUBMIT": {
           "label": "Submit",
           "action": "K_ACTION_SUBMIT",
@@ -163,10 +167,6 @@
           "label": "Edit",
           "action": "K_ACTION_EDIT",
           "show_cond": { "$ne": ["$last_action", "K_ACTION_SUBMIT"] }
-        },
-        "K_ACTION_CANCEL": {
-          "label": "Cancel",
-          "action": "K_ACTION_CANCEL"
         }
       },
       "addWatchers": {
