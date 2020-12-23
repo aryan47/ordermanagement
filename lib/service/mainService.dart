@@ -179,7 +179,7 @@ class MyInheritedWidget extends InheritedWidget {
       var data = await db
           .collection("orders")
           .find(where
-              .eq("belongs_to_customer", id.id.hexString)
+              .eq("belongs_to_customer.id", id.id.hexString)
               .ne('status', "Delivered")
               .sortBy('dt_delivery', descending: true))
           .toList();
@@ -201,7 +201,7 @@ class MyInheritedWidget extends InheritedWidget {
       var data = await db
           .collection("orders")
           .find(where
-              .eq("belongs_to_customer", id.id.hexString)
+              .eq("belongs_to_customer.id", id.id.hexString)
               .eq('status', "Delivered")
               .sortBy('dt_delivery', descending: true))
           .toList();
@@ -235,7 +235,7 @@ class MyInheritedWidget extends InheritedWidget {
     return data;
   }
 
-  dynamic saveForm(colName,model) async {
+  dynamic saveForm(colName, model) async {
     var data = await db.collection(colName).save(model);
     print(data);
     return data;
