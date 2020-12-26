@@ -10,8 +10,8 @@
     "items": [
       {
         "leading": {
-          "icon": "57832",
-          "alias": "list"
+          "icon": "58491",
+          "alias": "supervisor_account_outlined"
         },
         "label": "Customers",
         "actions": {
@@ -50,8 +50,9 @@
     "value": true,
     "items": [
       {
-        "label": "Dashboard",
-        "icon": "",
+        "label": "Home",
+        "icon": "57898",
+        "alias": "home_outlined",
         "actions": {
           "onTap": {
             "gotoRoute": "/dashboard"
@@ -60,7 +61,8 @@
       },
       {
         "label": "Orders",
-        "icon": "",
+        "icon": "57832",
+        "alias": "list",
         "actions": {
           "onTap": {
             "gotoRoute": "/orders"
@@ -69,7 +71,8 @@
       },
       {
         "label": "Settings",
-        "icon": "",
+        "icon": "59846",
+        "alias": "settings",
         "actions": {
           "onTap": {
             "gotoRoute": "/settings"

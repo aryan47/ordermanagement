@@ -89,7 +89,7 @@ class MyInheritedWidget extends InheritedWidget {
     if (_exists("BOTTOM_NAV_ITEMS.value")) {
       for (var i = 0; i < getV("BOTTOM_NAV_ITEMS.items").length; i++) {
         list.add(BottomNavigationBarItem(
-          icon: new Icon(Icons.more),
+          icon: _getI("icon", getV("BOTTOM_NAV_ITEMS.items")[i]),
           title: new Text(getV("BOTTOM_NAV_ITEMS.items")[i]["label"]),
         ));
       }
