@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:order_management/screens/otp_page.dart';
+import 'package:order_management/screens/login.dart';
 import 'package:order_management/service/DBService.dart';
-import 'package:order_management/service/login_store.dart';
+import 'package:order_management/service/loginService.dart';
 import 'package:order_management/widgets/widgetUtils.dart';
 import 'package:provider/provider.dart';
 
