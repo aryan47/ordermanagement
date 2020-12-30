@@ -1,27 +1,42 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:order_management/screens/models/customersModel.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
 
 // ignore: must_be_immutable
-class MyInheritedWidget extends InheritedWidget {
-  MyInheritedWidget({Key key, @required Widget child, this.appConfig, this.db})
-      : super(key: key, child: child);
-
+class DBService {
   Map<String, dynamic> appConfig;
   dynamic db;
   List<CustomersM> custM;
-
-  // String _latestAppVersion;
-
   BehaviorSubject listLoaded = BehaviorSubject.seeded(false);
 
   Map<String, dynamic> get config => appConfig;
 
-  @override
-  bool updateShouldNotify(MyInheritedWidget oldWidget) =>
-      appConfig != oldWidget.appConfig;
+  Future initDB() async {
+    final content =
+        await rootBundle.loadString("assets/configuration/config.json");
+
+    final cred =
+        await rootBundle.loadString("assets/configuration/credential.json");
+
+    db = await Db.create(jsonDecode(cred)["mongo"]["url"]);
+
+    appConfig = jsonDecode(content);
+    print('initDB');
+    return await db.open();
+  }
+
+  // DBService({@required Widget child, this.appConfig, this.db})
+
+  // String _latestAppVersion;
+
+  // @override
+  // bool updateShouldNotify(Provider oldWidget) =>
+  //     appConfig != oldWidget.appConfig;
 
   // set latestAppVersion(String version) => _latestAppVersion = version;
   // String get latestAppVersion => _latestAppVersion;
@@ -29,9 +44,9 @@ class MyInheritedWidget extends InheritedWidget {
   // set appConfig(String share) => _appConfig = share;
   // BehaviorSubject get refresh => _refresh;
 
-  static MyInheritedWidget of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<MyInheritedWidget>();
-  }
+  // static Provider of(BuildContext context) {
+  //   return context.dependOnInheritedWidgetOfExactType<Provider>();
+  // }
 
   /// Check value exists inside Object
   bool _exists(String fetchV, [dynamic src]) {

@@ -1,12 +1,13 @@
 import 'dart:async';
-import 'dart:convert';
 
-import 'package:checkbox_formfield/checkbox_list_tile_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:order_management/service/mainService.dart';
+import 'package:order_management/service/DBService.dart';
 import 'package:order_management/service/utilsService.dart';
+import 'package:provider/provider.dart';
+
+import 'checkbox_list_tile_formfield.dart';
 
 // Create a Form widget.
 class MyCustomForm extends StatefulWidget {
@@ -40,7 +41,7 @@ class MyCustomFormState extends State<MyCustomForm> {
     super.didChangeDependencies();
 
     args = ModalRoute.of(context).settings.arguments;
-    srv = MyInheritedWidget.of(context);
+    srv = Provider.of<DBService>(context, listen: false);
     forms = srv.config["FORMS"];
     fref = forms[args["formType"]];
     title = fref["title"];

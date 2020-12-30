@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:order_management/screens/models/customersModel.dart';
-import 'package:order_management/service/mainService.dart';
+import 'package:order_management/service/DBService.dart';
+import 'package:provider/provider.dart';
 
 class Customers extends StatefulWidget {
   Customers({Key key}) : super(key: key);
@@ -17,7 +18,7 @@ class _CustomersState extends State<Customers> {
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
-    MyInheritedWidget.of(context).listLoaded.stream.listen((event) {
+    Provider.of<DBService>(context).listLoaded.stream.listen((event) {
       if (event) {
         setState(() {
           customers = srv.getCustomers();
@@ -29,7 +30,7 @@ class _CustomersState extends State<Customers> {
 
   @override
   Widget build(BuildContext context) {
-    srv = MyInheritedWidget.of(context);
+    srv = Provider.of<DBService>(context);
 
     return Scaffold(
       appBar: AppBar(

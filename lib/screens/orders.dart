@@ -3,8 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
-import 'package:order_management/service/mainService.dart';
+import 'package:order_management/service/DBService.dart';
 import 'package:order_management/widgets/dropdownbutton.dart';
+import 'package:provider/provider.dart';
 
 class Orders extends StatefulWidget {
   Orders({Key key}) : super(key: key);
@@ -38,7 +39,7 @@ class _OrdersState extends State<Orders> {
   }
 
   void getCustomerFutureOrders() {
-    MyInheritedWidget.of(context)
+    Provider.of<DBService>(context, listen: false)
         .getCustomerFutureOrders(args["customerId"])
         .then((data) {
       setState(() {
@@ -50,9 +51,7 @@ class _OrdersState extends State<Orders> {
   }
 
   void getCustomerPastOrders() {
-    MyInheritedWidget.of(context)
-        .getCustomerPastOrders(args["customerId"])
-        .then((data) {
+    Provider.of<DBService>(context,listen: false).getCustomerPastOrders(args["customerId"]).then((data) {
       setState(() {
         pastOrders = data;
         if (pastOrders.length != 0)
