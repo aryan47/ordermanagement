@@ -21,7 +21,7 @@ class _HomeState extends State<Home> {
   // @override
   // void initState() {
   //   super.initState();
-  //   Provider.of<LoginStore>(context, listen: false)
+  //   Provider.of<LoginService>(context, listen: false)
   //       .isAlreadyAuthenticated()
   //       .then((result) {
   //     if (result) {
@@ -29,9 +29,9 @@ class _HomeState extends State<Home> {
   //           MaterialPageRoute(builder: (_) => Home()),
   //           (Route<dynamic> route) => false);
   //     } else {
-  //       Navigator.of(context).pushAndRemoveUntil(
-  //           MaterialPageRoute(builder: (_) => OtpPage()),
-  //           (Route<dynamic> route) => false);
+  //       // Navigator.of(context).pushAndRemoveUntil(
+  //       //     MaterialPageRoute(builder: (_) => OtpPage()),
+  //       //     (Route<dynamic> route) => false);
   //     }
   //   });
   // }

@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:order_management/screens/customers.dart';
@@ -7,10 +9,11 @@ import 'package:order_management/screens/orders.dart';
 import 'package:order_management/screens/products.dart';
 import 'package:order_management/screens/settings.dart';
 import 'package:order_management/service/DBService.dart';
+import 'package:order_management/service/loginService.dart';
 import 'package:order_management/widgets/myCustomForms.dart';
 import 'package:provider/provider.dart';
 
-import 'service/login_store.dart';
+// import 'service/login_store.dart';
 import 'service/DBService.dart';
 
 void main() async {
@@ -31,38 +34,6 @@ void main() async {
 //   codeAutoRetrievalTimeout: (String verificationId) {},
 // );
 
-  // await Firebase.initializeApp();
-
-  // try {
-  //   await FirebaseAuth.instance.verifyPhoneNumber(
-  //     phoneNumber: '+917009224712',
-  //     verificationCompleted: (PhoneAuthCredential credential) async {
-  //       print('!!!!!!!!!!!!!verification completed');
-  //       await FirebaseAuth.instance.signInWithCredential(credential);
-  //     },
-  //     verificationFailed: (FirebaseAuthException e) {
-  //       print('!!!!!!!!!!!!!verification failed');
-  //     },
-  //     codeSent: (String verificationId, int resendToken) async {
-  //       print('!!!!!!!!!!!!!code sent');
-  //       String smsCode = '123456';
-
-  //       // Create a PhoneAuthCredential with the code
-  //       PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(
-  //           verificationId: verificationId, smsCode: smsCode);
-
-  //       // Sign the user in (or link) with the credential
-  //       await FirebaseAuth.instance.signInWithCredential(phoneAuthCredential);
-  //     },
-  //     codeAutoRetrievalTimeout: (String verificationId) {
-  //       print('!!!!!!!!!!!!!auto retrieval timeout');
-  //     },
-  //   );
-  // } catch (e) {
-  //   print('!!!!!!!!!!!!!error');
-  //   print(e);
-  // showSnackbar("Failed to Verify Phone Number: ${e}");
-  // }
 
   runApp(MyApp());
   // runApp(MyInheritedWidget(
@@ -75,9 +46,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        // Provider<LoginStore>(
-        //   create: (_) => LoginStore(),
-        // ),
+        Provider<LoginService>(
+          create: (_) => LoginService(),
+        ),
         Provider<DBService>(
           create: (_) => DBService(),
         )
