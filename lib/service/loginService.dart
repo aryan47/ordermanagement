@@ -1,19 +1,28 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 
 class LoginService {
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  Future<bool> isAlreadyAuthenticated() {}
+  FirebaseAuth _firebaseAuth;
+  Future<bool> isAlreadyAuthenticated() async {
+    await Firebase.initializeApp();
+    var user = FirebaseAuth.instance.currentUser;
+    print("isAlreadyAuthenticated......................");
+    print(user);
+    return user != null;
+  }
 
-  void initLogin(String phone) async {
+  void initLogin(String phone, context) async {
     await Firebase.initializeApp();
 
     try {
-      await _firebaseAuth.verifyPhoneNumber(
+      await FirebaseAuth.instance.verifyPhoneNumber(
         phoneNumber: phone != null ? phone : '+917009224712',
         verificationCompleted: (PhoneAuthCredential credential) async {
           print('!!!!!!!!!!!!!verification completed');
           await FirebaseAuth.instance.signInWithCredential(credential);
+          Navigator.pushReplacementNamed(context, "/home");
+          
         },
         verificationFailed: (FirebaseAuthException e) {
           print('!!!!!!!!!!!!!verification failed');
@@ -29,6 +38,8 @@ class LoginService {
 
           // Sign the user in (or link) with the credential
           await FirebaseAuth.instance.signInWithCredential(phoneAuthCredential);
+          Navigator.pushReplacementNamed(context, "/home");
+
         },
         codeAutoRetrievalTimeout: (String verificationId) {
           print('!!!!!!!!!!!!!auto retrieval timeout');
@@ -39,5 +50,9 @@ class LoginService {
       print(e);
       // showSnackbar("Failed to Verify Phone Number: ${e}");
     }
+  }
+
+  void signOut() {
+    FirebaseAuth.instance.signOut();
   }
 }

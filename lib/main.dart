@@ -62,6 +62,7 @@ class MyApp extends StatelessWidget {
         home: Home(),
         routes: {
           // When navigating to the "/second" route, build the SecondScreen widget.
+          '/home': (context) => Home(),
           '/dashboard': (context) => Dashboard(),
           '/product': (context) => Products(),
           '/orders': (context) => Orders(),

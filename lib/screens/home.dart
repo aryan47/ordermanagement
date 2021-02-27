@@ -17,31 +17,52 @@ class _HomeState extends State<Home> {
   int _currentIndex = 0;
   Map<String, dynamic> appConfig;
   var srv;
+  bool authChecked = false;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   Provider.of<LoginService>(context, listen: false)
-  //       .isAlreadyAuthenticated()
-  //       .then((result) {
-  //     if (result) {
-  //       Navigator.of(context).pushAndRemoveUntil(
-  //           MaterialPageRoute(builder: (_) => Home()),
-  //           (Route<dynamic> route) => false);
-  //     } else {
-  //       // Navigator.of(context).pushAndRemoveUntil(
-  //       //     MaterialPageRoute(builder: (_) => OtpPage()),
-  //       //     (Route<dynamic> route) => false);
-  //     }
-  //   });
-  // }
-  // @override
-  // void didChangeDependencies() async{
-  //   // TODO: implement didChangeDependencies
-  //   super.didChangeDependencies();
-  //   srv = Provider.of<DBService>(context, listen: false);
-  //   await srv.initDB();
-  // }
+  void checkAuth() {
+    if (authChecked == true) return;
+     Provider.of<LoginService>(context, listen: false)
+        .isAlreadyAuthenticated()
+        .then((result) {
+      authChecked = true;
+      if (result == true) {
+      } else {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (_) => Login()),
+            (Route<dynamic> route) => false);
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    print('initstate........');
+    checkAuth();
+  }
+
+  @override
+  void didChangeDependencies() async {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    srv = Provider.of<DBService>(context, listen: false);
+    print('didchangedependencies........');
+
+    // Provider.of<LoginService>(context, listen: false)
+    //     .isAlreadyAuthenticated()
+    //     .then((result) {
+    //   if (result == true) {
+    //     Navigator.of(context).pushAndRemoveUntil(
+    //         MaterialPageRoute(builder: (_) => Home()),
+    //         (Route<dynamic> route) => false);
+    //   } else {
+    //     Navigator.of(context).pushAndRemoveUntil(
+    //         MaterialPageRoute(builder: (_) => Login()),
+    //         (Route<dynamic> route) => false);
+    //   }
+    // });
+    // await srv.initDB();
+  }
 
   @override
   Widget build(BuildContext context) {

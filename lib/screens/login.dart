@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:order_management/service/loginService.dart';
+import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
   Login({Key key}) : super(key: key);
@@ -34,7 +36,15 @@ class _LoginState extends State<Login> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: FlatButton(
-                  child: Text("GET OTP", style: TextStyle(color: Colors.white),), color: Colors.blue, onPressed: () {}),
+                  child: Text(
+                    "GET OTP",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  color: Colors.blue,
+                  onPressed: () {
+                    Provider.of<LoginService>(context, listen: false)
+                        .initLogin("+917009224712", context);
+                  }),
             )
           ],
         ),

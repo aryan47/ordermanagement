@@ -1,9 +1,12 @@
 import 'dart:convert';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mongo_dart/mongo_dart.dart';
+import 'package:order_management/screens/login.dart';
 import 'package:order_management/screens/models/customersModel.dart';
+import 'package:order_management/service/loginService.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
 
@@ -145,9 +148,24 @@ class DBService {
   Map<String, Function> buildRoute(dynamic src, context) {
     Map<String, Function> routes = {};
     routes["onTap"] = () {
-      String route = getV("actions.onTap.gotoRoute", src);
-      loadDataFromDB(getV("actions.onTap.gotoRoute", src));
-      Navigator.pushNamed(context, route);
+      var actions = getV("actions.onTap", src);
+      actions = actions.keys.toList()[0];
+      switch (actions) {
+        case "gotoRoute":
+          String route = getV("actions.onTap.gotoRoute", src);
+          loadDataFromDB(getV("actions.onTap.gotoRoute", src));
+          Navigator.pushNamed(context, route);
+          break;
+        case "action":
+          if (getV("actions.onTap.action", src) == "C_ACTION_LOGOUT") {
+            // FirebaseAuth.instance.signOut();
+            LoginService().signOut();
+              Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (_) => Login()),
+            (Route<dynamic> route) => false);
+          }
+          break;
+      }
     };
     return routes;
   }

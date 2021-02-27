@@ -42,7 +42,12 @@
           "icon": "59721",
           "alias": "power_settings_new"
         },
-        "label": "Log Out"
+        "label": "Log Out",
+        "actions": {
+          "onTap": {
+            "action": "C_ACTION_LOGOUT"
+          }
+        }
       }
     ]
   },
