@@ -21,7 +21,7 @@ class _HomeState extends State<Home> {
 
   void checkAuth() {
     if (authChecked == true) return;
-     Provider.of<LoginService>(context, listen: false)
+    Provider.of<LoginService>(context, listen: false)
         .isAlreadyAuthenticated()
         .then((result) {
       authChecked = true;
@@ -75,6 +75,11 @@ class _HomeState extends State<Home> {
               snapshot.hasData == null) {
             return Container();
           }
+          Provider.of<LoginService>(context, listen: false)
+              .getCurrentUser(Provider.of<DBService>(context, listen: false).db)
+              .then((user) {
+            print(user);
+          });
           return Scaffold(
             drawer: buildDrawer(srv.buildDrawerList(context)),
             appBar: AppBar(

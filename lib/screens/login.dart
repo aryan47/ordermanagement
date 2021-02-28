@@ -11,6 +11,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  final phoneCtrl = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -22,6 +23,7 @@ class _LoginState extends State<Login> {
               padding: const EdgeInsets.only(
                   right: 8.0, left: 8.0, top: 45.0, bottom: 15),
               child: TextField(
+                  controller: phoneCtrl,
                   onChanged: null,
                   decoration: InputDecoration(
                       labelText: "Mobile Number",
@@ -42,8 +44,9 @@ class _LoginState extends State<Login> {
                   ),
                   color: Colors.blue,
                   onPressed: () {
+                    print(phoneCtrl.text);
                     Provider.of<LoginService>(context, listen: false)
-                        .initLogin("+917009224712", context);
+                        .initLogin("+91"+phoneCtrl.text, context);
                   }),
             )
           ],

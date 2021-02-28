@@ -159,10 +159,7 @@ class DBService {
         case "action":
           if (getV("actions.onTap.action", src) == "C_ACTION_LOGOUT") {
             // FirebaseAuth.instance.signOut();
-            LoginService().signOut();
-              Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (_) => Login()),
-            (Route<dynamic> route) => false);
+            LoginService().signOut(context);
           }
           break;
       }
