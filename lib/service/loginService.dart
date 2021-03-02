@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:order_management/screens/login.dart';
 import 'package:order_management/screens/models/usersModel.dart';
+import 'package:order_management/screens/otp.dart';
 import 'package:order_management/service/DBService.dart';
 import 'package:provider/provider.dart';
 
@@ -12,7 +13,6 @@ class LoginService {
   var db;
 
   Future<bool> isAlreadyAuthenticated() async {
-    await Firebase.initializeApp();
     var user = FirebaseAuth.instance.currentUser;
     print("isAlreadyAuthenticated......................");
     // createUser(user, db);
@@ -26,14 +26,13 @@ class LoginService {
 
     var data = await db
         .collection("users")
-        .find(where.eq("phoneNumber", user.phoneNumber)).toList();
+        .find(where.eq("phoneNumber", user.phoneNumber))
+        .toList();
 
     if (data == null || data.length == 0) {
       model["phoneNumber"] = user.phoneNumber;
       model["uid"] = user.uid;
       model["role"] = "K_USER";
-      print("---------create user");
-      print(user);
       var data = await db.collection("users").save(model);
       print(data);
     }
@@ -42,13 +41,15 @@ class LoginService {
 
   dynamic getCurrentUser(db) async {
     var user = FirebaseAuth.instance.currentUser;
-    print(user);
-    var data = await db
-        .collection("users")
-        .find(where.eq("phoneNumber", user.phoneNumber))
-        .toList();
-    print("----------get current user");
-    return data;
+    if (user != null) {
+      print(user);
+      var data = await db
+          .collection("users")
+          .find(where.eq("phoneNumber", user.phoneNumber))
+          .toList();
+      return data;
+    }
+    return null;
   }
 
   Future<void> initLogin(String phone, context) async {
@@ -66,10 +67,12 @@ class LoginService {
         },
         verificationFailed: (FirebaseAuthException e) {
           print('!!!!!!!!!!!!!verification failed');
+          print(e);
+          Navigator.pushReplacementNamed(context, "/home");
         },
         codeSent: (String verificationId, int resendToken) async {
           print('!!!!!!!!!!!!!code sent');
-          String smsCode = '123456';
+          String smsCode = await Navigator.pushNamed(context, "/otp");
 
           // Create a PhoneAuthCredential with the code
           PhoneAuthCredential phoneAuthCredential =

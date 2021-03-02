@@ -3,15 +3,22 @@ import 'package:flutter/services.dart';
 import 'package:order_management/service/loginService.dart';
 import 'package:provider/provider.dart';
 
-class Login extends StatefulWidget {
-  Login({Key key}) : super(key: key);
+class Otp extends StatefulWidget {
+  Otp({Key key}) : super(key: key);
 
   @override
-  _LoginState createState() => _LoginState();
+  _OtpState createState() => _OtpState();
 }
 
-class _LoginState extends State<Login> {
-  final phoneCtrl = TextEditingController();
+class _OtpState extends State<Otp> {
+  final optCtrl = TextEditingController();
+  var args;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // args = ModalRoute.of(context).settings.arguments;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -23,11 +30,10 @@ class _LoginState extends State<Login> {
               padding: const EdgeInsets.only(
                   right: 8.0, left: 8.0, top: 45.0, bottom: 15),
               child: TextField(
-                  controller: phoneCtrl,
+                  controller: optCtrl,
                   onChanged: null,
                   decoration: InputDecoration(
-                      labelText: "Mobile Number",
-                      prefixText: "+91",
+                      labelText: "Enter OTP",
                       border: new OutlineInputBorder(
                           borderSide: new BorderSide(color: Colors.teal))),
                   keyboardType: TextInputType.number,
@@ -39,14 +45,15 @@ class _LoginState extends State<Login> {
               padding: const EdgeInsets.all(8.0),
               child: FlatButton(
                   child: Text(
-                    "GET OTP",
+                    "Verify",
                     style: TextStyle(color: Colors.white),
                   ),
                   color: Colors.blue,
                   onPressed: () {
-                    print(phoneCtrl.text);
-                     Provider.of<LoginService>(context, listen: false)
-                        .initLogin("+91" + phoneCtrl.text, context);
+                    print(optCtrl.text);
+                    Navigator.pop(context, optCtrl.text);
+                    // Provider.of<LoginService>(context, listen: false)
+                    //     .initLogin("+91" + args.phoneNumber, optCtrl.text, context);
                   }),
             )
           ],
