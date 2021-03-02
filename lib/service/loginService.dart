@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 class LoginService {
   FirebaseAuth _firebaseAuth;
   var db;
+  var currentUser;
 
   Future<bool> isAlreadyAuthenticated() async {
     var user = FirebaseAuth.instance.currentUser;
@@ -62,17 +63,20 @@ class LoginService {
         verificationCompleted: (PhoneAuthCredential credential) async {
           print('!!!!!!!!!!!!!verification completed');
           await FirebaseAuth.instance.signInWithCredential(credential);
-          Navigator.pushReplacementNamed(context, "/home");
+          Navigator.pushReplacementNamed(context, "/products");
           createUser(db);
         },
         verificationFailed: (FirebaseAuthException e) {
           print('!!!!!!!!!!!!!verification failed');
           print(e);
-          Navigator.pushReplacementNamed(context, "/home");
+          Navigator.pushReplacementNamed(context, "/auth");
         },
         codeSent: (String verificationId, int resendToken) async {
           print('!!!!!!!!!!!!!code sent');
-          String smsCode = await Navigator.pushNamed(context, "/otp");
+          String smsCode = await Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Otp()),
+          );
 
           // Create a PhoneAuthCredential with the code
           PhoneAuthCredential phoneAuthCredential =
@@ -81,7 +85,7 @@ class LoginService {
 
           // Sign the user in (or link) with the credential
           await FirebaseAuth.instance.signInWithCredential(phoneAuthCredential);
-          Navigator.pushReplacementNamed(context, "/home");
+          Navigator.pushReplacementNamed(context, "/auth");
           createUser(db);
         },
         codeAutoRetrievalTimeout: (String verificationId) {

@@ -4,7 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:order_management/screens/customers.dart';
 import 'package:order_management/screens/dashboard.dart';
-import 'package:order_management/screens/home.dart';
+import 'package:order_management/screens/authmgr.dart';
 import 'package:order_management/screens/orders.dart';
 import 'package:order_management/screens/otp.dart';
 import 'package:order_management/screens/products.dart';
@@ -35,7 +35,7 @@ void main() async {
 //   codeAutoRetrievalTimeout: (String verificationId) {},
 // );
 
-    await Firebase.initializeApp();
+  await Firebase.initializeApp();
 
   runApp(MyApp());
   // runApp(MyInheritedWidget(
@@ -61,13 +61,13 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: Home(),
+        home: AuthMgr(),
         routes: {
           // When navigating to the "/second" route, build the SecondScreen widget.
-          '/home': (context) => Home(),
+          '/auth': (context) => AuthMgr(),
           '/otp': (context) => Otp(),
           '/dashboard': (context) => Dashboard(),
-          '/product': (context) => Products(),
+          '/products': (context) => Products(),
           '/orders': (context) => Orders(),
           '/settings': (context) => Settings(),
           '/customers': (context) => Customers(),
