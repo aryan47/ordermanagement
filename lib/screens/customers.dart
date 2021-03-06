@@ -30,7 +30,7 @@ class _CustomersState extends State<Customers> {
 
   @override
   Widget build(BuildContext context) {
-    srv = Provider.of<DBService>(context);
+    srv = Provider.of<DBService>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(

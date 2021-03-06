@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:order_management/service/DBService.dart';
+import 'package:order_management/service/loginService.dart';
 import 'package:order_management/service/utilsService.dart';
 import 'package:provider/provider.dart';
 
@@ -33,6 +34,8 @@ class MyCustomFormState extends State<MyCustomForm> {
   var args;
   var fref;
   var srv;
+  var loginSrv;
+
   String title = "";
   var parent;
 
@@ -42,6 +45,8 @@ class MyCustomFormState extends State<MyCustomForm> {
 
     args = ModalRoute.of(context).settings.arguments;
     srv = Provider.of<DBService>(context, listen: false);
+    loginSrv = Provider.of<LoginService>(context, listen: false);
+
     forms = srv.config["FORMS"];
     fref = forms[args["formType"]];
     title = fref["title"];
@@ -96,7 +101,9 @@ class MyCustomFormState extends State<MyCustomForm> {
       var onSaved;
       var onChanged;
       var validator;
+      var initialValue;
 
+      // Add listener(watcher), which gets triggered in value change
       if (fref["addWatchers"][fieldDef["name"]] == true) {
         onChanged = (value) {
           setState(() {
@@ -107,6 +114,10 @@ class MyCustomFormState extends State<MyCustomForm> {
 
       switch (fieldDef["type"]) {
         case "K_FIELD_NUMBER":
+
+          /// set initial value
+          initialValue = getInitialValue(fieldDef);
+          if (initialValue != null) initialValue = initialValue.toString();
           keyboardType = TextInputType.number;
           inputFormatters.add(FilteringTextInputFormatter.digitsOnly);
           validator = (value) {
@@ -145,6 +156,7 @@ class MyCustomFormState extends State<MyCustomForm> {
       }
 
       return TextFormField(
+        initialValue: initialValue,
         onChanged: onChanged,
         decoration: InputDecoration(labelText: fieldDef["label"]),
         keyboardType: keyboardType,
@@ -162,6 +174,22 @@ class MyCustomFormState extends State<MyCustomForm> {
       if (datasrc["srctype"] == "model") {
         src = datasrc["src"];
       }
+
+      /// if Navigated from products page then hide the typeahead
+      if (srv.getV("redirectFrom", args) == "products") {
+        if (fieldDef["parent"] != null) {
+          // parent = getShortForm()[datasrc["handler"]](loginSrv.currentUser);
+          parent = loginSrv.currentUser["belongs_to_customer"];
+          targetModel[fieldDef["parent"]] = parent;
+        }
+        targetModel[fieldDef['name']] =
+            loginSrv.currentUser["belongs_to_customer"]["name"] ??
+                loginSrv.currentUser["phoneNumber"];
+        return Container();
+      }
+
+      /// set initial value
+      this._typeAheadController.text = getInitialValue(fieldDef);
 
       return TypeAheadFormField(
         textFieldConfiguration: TextFieldConfiguration(
@@ -255,7 +283,7 @@ class MyCustomFormState extends State<MyCustomForm> {
 
     List<Widget> formBuilder() {
       List<Widget> fb = [];
-      fref = forms[args["formType"]];
+      // fref = forms[args["formType"]];
 
       for (var i = 0; i < fref["fields"].length; i++) {
         if (isCondSatisfied(targetModel, fref["fields"][i]["show_cond"]) ==
@@ -276,6 +304,8 @@ class MyCustomFormState extends State<MyCustomForm> {
         }
       }
       print(fb);
+
+      // Add action buttons such as submit, cancel etc.
       fb.add(addActionButtons(fref));
       return fb;
     }
@@ -302,6 +332,19 @@ class MyCustomFormState extends State<MyCustomForm> {
     );
   }
 
+  dynamic getInitialValue(fieldDef) {
+    var initialValue;
+    var values = srv.getV("values", args);
+    if (targetModel[fieldDef['name']] != null)
+      initialValue = targetModel[fieldDef['name']];
+    else if (values != null) {
+      initialValue = resolveFields(values[fieldDef["name"]]);
+    } else {
+      initialValue = null;
+    }
+    return initialValue;
+  }
+
   relatedModelsUpdate(formAction) async {
     var modelsToUpdate = fref["actions"][formAction]["modelsToUpdate"];
     targetModel["type"] = fref["type"];
@@ -321,6 +364,19 @@ class MyCustomFormState extends State<MyCustomForm> {
         Navigator.of(context).pop();
       }
     });
+  }
+
+  resolveFields(field) {
+    var resolvedValue;
+    switch (field) {
+      case "\$\$K_CURRENT_CUSTOMER_NAME":
+        print(loginSrv.currentUser);
+        resolvedValue = loginSrv.currentUser["belongs_to_customer"];
+        break;
+      default:
+        resolvedValue = field;
+    }
+    return resolvedValue;
   }
 
   resolveFieldMap(fieldmap, refModel) {

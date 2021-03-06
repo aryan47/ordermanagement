@@ -6,6 +6,7 @@ import 'package:order_management/screens/login.dart';
 import 'package:order_management/screens/models/usersModel.dart';
 import 'package:order_management/screens/otp.dart';
 import 'package:order_management/service/DBService.dart';
+import 'package:order_management/service/utilsService.dart';
 import 'package:provider/provider.dart';
 
 class LoginService {
@@ -31,10 +32,33 @@ class LoginService {
         .toList();
 
     if (data == null || data.length == 0) {
+      var customer = await db
+          .collection("customers")
+          .find(where.eq("phone_no", user.phoneNumber))
+          .toList();
+      if (customer != null && customer.length != 0) {
+        model["belongs_to_customer"] = customer[0];
+      } else {
+        // create customer and add reference to the user collection
+        Map<String, dynamic> cust = {};
+        cust["dt_join"] = new DateTime.now();
+        cust["phone_no"] = user.phoneNumber;
+        cust["is_active"] = true;
+        await db.collection("customers").save(cust);
+        var custData = await db
+            .collection("customers")
+            .find(where.eq("phone_no", user.phoneNumber))
+            .toList();
+
+        model["belongs_to_customer"] =
+            getShortForm()["getCustomerShortForm"](custData[0]);
+      }
+
       model["phoneNumber"] = user.phoneNumber;
       model["uid"] = user.uid;
       model["role"] = "K_USER";
       var data = await db.collection("users").save(model);
+
       print(data);
     }
     return user;

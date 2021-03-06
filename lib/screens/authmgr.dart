@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:order_management/screens/home.dart';
 import 'package:order_management/screens/login.dart';
 import 'package:order_management/service/DBService.dart';
 import 'package:order_management/service/loginService.dart';
@@ -35,7 +36,7 @@ class _AuthMgrState extends State<AuthMgr> {
 
   dynamic extractCurrentUser() {
     _loginSrv.getCurrentUser(_dbSrv.db).then((user) {
-      _loginSrv.currentUser = user[0];
+      _loginSrv.currentUser = user !=null ? user[0]: user;
       print(_loginSrv.currentUser);
       return user;
     });
@@ -55,8 +56,7 @@ class _AuthMgrState extends State<AuthMgr> {
     return FutureBuilder<dynamic>(
         future: initialize(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.none &&
-              snapshot.hasData == null) {
+          if ((snapshot.connectionState == ConnectionState.none || snapshot.connectionState == ConnectionState.waiting)) {
             return Container();
           }
           print("home build method called==========================");
@@ -65,16 +65,7 @@ class _AuthMgrState extends State<AuthMgr> {
             appBar: AppBar(
               title: Text("Product Management"),
             ),
-            body: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    'You have pushed the button this many times:',
-                  )
-                ],
-              ),
-            ),
+            body: Home(),
             bottomNavigationBar: buildBottomNavigationBar(
                 _dbSrv.buildBottomNavList(),
                 _dbSrv.buildBottomNavRoutes(_currentIndex, context)),

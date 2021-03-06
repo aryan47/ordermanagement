@@ -51,7 +51,9 @@ class _OrdersState extends State<Orders> {
   }
 
   void getCustomerPastOrders() {
-    Provider.of<DBService>(context,listen: false).getCustomerPastOrders(args["customerId"]).then((data) {
+    Provider.of<DBService>(context, listen: false)
+        .getCustomerPastOrders(args["customerId"])
+        .then((data) {
       setState(() {
         pastOrders = data;
         if (pastOrders.length != 0)
@@ -121,7 +123,8 @@ class _OrdersState extends State<Orders> {
               style: TextStyle(color: Colors.blueAccent),
             ),
           ),
-          title: Text(orders[index]["belongs_to_customer"]["name"]),
+          title: Text(orders[index]["belongs_to_customer"]["name"] ??
+              orders[index]["belongs_to_customer"]["phone_no"]),
           subtitle: Text(DateFormat('dd-MMM-yyyy h:mm a')
               .format((orders[index]['dt_order_place']).toLocal())),
           trailing: showMore == true ? CustomDropdownButton() : null,

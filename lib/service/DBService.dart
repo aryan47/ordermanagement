@@ -174,9 +174,8 @@ class DBService {
       _currentIndex = index;
       String route = getV(
           "actions.onTap.gotoRoute", getV("BOTTOM_NAV_ITEMS.items")[index]);
-      print(route);
 
-      Navigator.pushNamed(context, route);
+      if (route != null) Navigator.pushNamed(context, route);
     };
     return routes;
   }

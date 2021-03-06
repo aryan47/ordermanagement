@@ -59,9 +59,7 @@
         "icon": "57898",
         "alias": "home_outlined",
         "actions": {
-          "onTap": {
-            "gotoRoute": "/products"
-          }
+          "onTap": {}
         }
       },
       {
@@ -91,6 +89,17 @@
       "actions": {
         "onTap": {
           "gotoRoute": "/orders"
+        }
+      }
+    },
+    "products": {
+      "actions": {
+        "onTap": {
+          "gotoRoute": "/forms",
+          "arguments": {
+            "formType": "K_FORM_ORDERS",
+            "redirectFrom": "products"
+          }
         }
       }
     }
@@ -128,7 +137,9 @@
           "label": "Installation Amount",
           "placeholder": null,
           "required": true,
-          "show_cond": { "is_new": true }
+          "show_cond": {
+            "is_new": true
+          }
         },
         {
           "name": "security_amt",
@@ -136,7 +147,9 @@
           "label": "Security Amount",
           "placeholder": null,
           "required": true,
-          "show_cond": { "is_new": true }
+          "show_cond": {
+            "is_new": true
+          }
         },
         {
           "name": "is_new",
@@ -174,7 +187,12 @@
         "K_ACTION_EDIT": {
           "label": "Edit",
           "action": "K_ACTION_EDIT",
-          "show_cond": { "$ne": ["$last_action", "K_ACTION_SUBMIT"] }
+          "show_cond": {
+            "$ne": [
+              "$last_action",
+              "K_ACTION_SUBMIT"
+            ]
+          }
         }
       },
       "addWatchers": {
