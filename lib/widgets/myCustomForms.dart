@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:order_management/service/DBService.dart';
+import 'package:order_management/service/appConfigService.dart';
 import 'package:order_management/service/loginService.dart';
 import 'package:order_management/service/utilsService.dart';
 import 'package:provider/provider.dart';
@@ -44,7 +44,7 @@ class MyCustomFormState extends State<MyCustomForm> {
     super.didChangeDependencies();
 
     args = ModalRoute.of(context).settings.arguments;
-    srv = Provider.of<DBService>(context, listen: false);
+    srv = Provider.of<appConfigService>(context, listen: false);
     loginSrv = Provider.of<LoginService>(context, listen: false);
 
     forms = srv.config["FORMS"];
@@ -270,7 +270,7 @@ class MyCustomFormState extends State<MyCustomForm> {
         src = datasrc["src"];
       }
 
-      /// if Navigated from products page then hide the typeahead
+      /// if role is K_USER then hide the customer typeahead
       if (loginSrv.currentUser["belongs_to_customer"] != null) {
         if (fieldDef["parent"] != null) {
           // parent = getShortForm()[datasrc["handler"]](loginSrv.currentUser);

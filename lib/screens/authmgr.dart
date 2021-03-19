@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:order_management/screens/home.dart';
 import 'package:order_management/screens/login.dart';
-import 'package:order_management/service/DBService.dart';
+import 'package:order_management/service/appConfigService.dart';
 import 'package:order_management/service/loginService.dart';
 import 'package:order_management/widgets/widgetUtils.dart';
 import 'package:provider/provider.dart';
@@ -36,7 +36,7 @@ class _AuthMgrState extends State<AuthMgr> {
 
   dynamic extractCurrentUser() {
     _loginSrv.getCurrentUser(_dbSrv.db).then((user) {
-      _loginSrv.currentUser = user !=null ? user[0]: user;
+      _loginSrv.currentUser = user != null ? user[0] : user;
       print(_loginSrv.currentUser);
       return user;
     });
@@ -44,7 +44,7 @@ class _AuthMgrState extends State<AuthMgr> {
 
   Future initialize() async {
     _loginSrv = Provider.of<LoginService>(context, listen: false);
-    _dbSrv = Provider.of<DBService>(context, listen: false);
+    _dbSrv = Provider.of<appConfigService>(context, listen: false);
     var data = await _dbSrv.initDB();
     checkAuth();
     extractCurrentUser();
@@ -56,7 +56,8 @@ class _AuthMgrState extends State<AuthMgr> {
     return FutureBuilder<dynamic>(
         future: initialize(),
         builder: (context, snapshot) {
-          if ((snapshot.connectionState == ConnectionState.none || snapshot.connectionState == ConnectionState.waiting)) {
+          if ((snapshot.connectionState == ConnectionState.none ||
+              snapshot.connectionState == ConnectionState.waiting)) {
             return Container();
           }
           print("home build method called==========================");

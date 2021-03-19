@@ -107,7 +107,7 @@
     "K_FORM_ORDERS": {
       "title": "Place New Orders",
       "type": "K_FORM_ORDERS",
-      "targetModel" : "orders",
+      "targetModel": "orders",
       "fields": [
         {
           "name": "address",
@@ -118,7 +118,9 @@
           "gotoform": "K_FORM_ADDRESS",
           "autoFillHandler": {
             "handler": "getLogInCustAddress",
-            "params": ["$$K_LOGGED_IN_CUSTOMER_ID"]
+            "params": [
+              "$$K_LOGGED_IN_CUSTOMER_ID"
+            ]
           }
         },
         {
@@ -214,7 +216,7 @@
     "K_FORM_ADDRESS": {
       "title": "Add Address",
       "type": "K_FORM_ADDRESS",
-      "key" : "address",
+      "key": "address",
       "fields": [
         {
           "name": "name",
@@ -256,7 +258,7 @@
           "modelsToUpdate": [
             {
               "targetModel": "customers",
-              "targetModelRef": "$$K_LOGGED_IN_CUSTOMER_ID"           
+              "targetModelRef": "$$K_LOGGED_IN_CUSTOMER_ID"
             }
           ]
         },
@@ -271,8 +273,22 @@
           }
         }
       },
-      "addWatchers": {
-        
+      "addWatchers": {}
+    }
+  },
+  "USER_PRIVILEGES": {
+    "K_USER": {
+      "DRAWER": {
+        "Customers": false,
+        "Amount Due": false
+      },
+      "FORMS": {
+        "K_FORM_ORDERS": {
+          "fields": {
+            "name": false,
+            "is_new": false
+          }
+        }
       }
     }
   }

@@ -9,37 +9,20 @@ import 'package:order_management/screens/orders.dart';
 import 'package:order_management/screens/otp.dart';
 import 'package:order_management/screens/products.dart';
 import 'package:order_management/screens/settings.dart';
-import 'package:order_management/service/DBService.dart';
+import 'package:order_management/service/appConfigService.dart';
 import 'package:order_management/service/loginService.dart';
 import 'package:order_management/widgets/myCustomForms.dart';
 import 'package:provider/provider.dart';
 
 // import 'service/login_store.dart';
-import 'service/DBService.dart';
+import 'service/appConfigService.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // final content =
-  //     await rootBundle.loadString("assets/configuration/config.json");
-
-  // final cred =
-  //     await rootBundle.loadString("assets/configuration/credential.json");
-  // final db = await Db.create(jsonDecode(cred)["mongo"]["url"]);
-  // await db.open();
-
-//   await FirebaseAuth.instance.verifyPhoneNumber(
-//   phoneNumber: '+917009224712',
-//   verificationCompleted: (PhoneAuthCredential credential) {},
-//   verificationFailed: (FirebaseAuthException e) {},
-//   codeSent: (String verificationId, int resendToken) {},
-//   codeAutoRetrievalTimeout: (String verificationId) {},
-// );
 
   await Firebase.initializeApp();
 
   runApp(MyApp());
-  // runApp(MyInheritedWidget(
-  //     child: MyApp(), appConfig: jsonDecode(content), db: db));
 }
 
 class MyApp extends StatelessWidget {
@@ -51,8 +34,8 @@ class MyApp extends StatelessWidget {
         Provider<LoginService>(
           create: (_) => LoginService(),
         ),
-        Provider<DBService>(
-          create: (_) => DBService(),
+        Provider<appConfigService>(
+          create: (_) => appConfigService(),
         )
       ],
       child: MaterialApp(

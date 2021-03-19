@@ -5,7 +5,7 @@ import 'package:mongo_dart/mongo_dart.dart';
 import 'package:order_management/screens/login.dart';
 import 'package:order_management/screens/models/usersModel.dart';
 import 'package:order_management/screens/otp.dart';
-import 'package:order_management/service/DBService.dart';
+import 'package:order_management/service/appConfigService.dart';
 import 'package:order_management/service/utilsService.dart';
 import 'package:provider/provider.dart';
 
@@ -79,7 +79,7 @@ class LoginService {
 
   Future<void> initLogin(String phone, context) async {
     await Firebase.initializeApp();
-    db = Provider.of<DBService>(context, listen: false).db;
+    db = Provider.of<appConfigService>(context, listen: false).db;
 
     try {
       await FirebaseAuth.instance.verifyPhoneNumber(

@@ -1,17 +1,15 @@
 import 'dart:convert';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mongo_dart/mongo_dart.dart';
-import 'package:order_management/screens/login.dart';
 import 'package:order_management/screens/models/customersModel.dart';
 import 'package:order_management/service/loginService.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
 
 // ignore: must_be_immutable
-class DBService {
+class appConfigService {
   Map<String, dynamic> appConfig;
   dynamic db;
   List<CustomersM> custM;
@@ -33,7 +31,7 @@ class DBService {
     return await db.open();
   }
 
-  // DBService({@required Widget child, this.appConfig, this.db})
+  // appConfigService({@required Widget child, this.appConfig, this.db})
 
   // String _latestAppVersion;
 

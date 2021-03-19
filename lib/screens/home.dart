@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:order_management/service/DBService.dart';
+import 'package:order_management/service/appConfigService.dart';
 import 'package:order_management/service/productsService.dart';
 import 'package:provider/provider.dart';
 
@@ -23,7 +23,7 @@ class _HomeState extends State<Home> {
   }
 
   Future initHome() async {
-    dbSrv = Provider.of<DBService>(context, listen: false);
+    dbSrv = Provider.of<appConfigService>(context, listen: false);
     products = await ProductService().getProducts(dbSrv.db);
     stateMachine = dbSrv.config["STATE_MACHINE"]["products"];
     return products;

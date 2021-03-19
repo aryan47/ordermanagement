@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
-import 'package:order_management/service/DBService.dart';
+import 'package:order_management/service/appConfigService.dart';
 import 'package:order_management/widgets/dropdownbutton.dart';
 import 'package:provider/provider.dart';
 
@@ -39,7 +39,7 @@ class _OrdersState extends State<Orders> {
   }
 
   void getCustomerFutureOrders() {
-    Provider.of<DBService>(context, listen: false)
+    Provider.of<appConfigService>(context, listen: false)
         .getCustomerFutureOrders(args["customerId"])
         .then((data) {
       setState(() {
@@ -51,7 +51,7 @@ class _OrdersState extends State<Orders> {
   }
 
   void getCustomerPastOrders() {
-    Provider.of<DBService>(context, listen: false)
+    Provider.of<appConfigService>(context, listen: false)
         .getCustomerPastOrders(args["customerId"])
         .then((data) {
       setState(() {
