@@ -255,7 +255,7 @@ class DBService {
     return data;
   }
 
-  dynamic getRefModel(refModel, id) async {
+  dynamic getModelByID(refModel, id) async {
     var data = await db
         .collection(refModel)
         .find(where.id(ObjectId.parse(id)))
@@ -264,8 +264,23 @@ class DBService {
     return data;
   }
 
-  dynamic saveForm(colName, model) async {
-    var data = await db.collection(colName).save(model);
+  dynamic saveForm(colName, model, [refId, key]) async {
+    var refItem;
+    var modelToUpdate = model;
+    if (refId != null) {
+      refItem = await db
+          .collection(colName)
+          .find(where.id(ObjectId.parse(refId)))
+          .toList();
+      if (key != null) {
+        refItem[0][key] = model;
+        modelToUpdate = refItem[0];
+      } else {
+        refItem[0].addAll(model);
+        modelToUpdate = refItem[0];
+      }
+    }
+    var data = await db.collection(colName).save(modelToUpdate);
     print(data);
     return data;
   }

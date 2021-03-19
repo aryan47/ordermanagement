@@ -108,7 +108,20 @@
     "K_FORM_ORDERS": {
       "title": "Place New Orders",
       "type": "K_FORM_ORDERS",
+      "targetModel" : "orders",
       "fields": [
+        {
+          "name": "address",
+          "type": "K_FIELD_FORM",
+          "label": "Add Address",
+          "placeholder": null,
+          "required": true,
+          "gotoform": "K_FORM_ADDRESS",
+          "autoFillHandler": {
+            "handler": "getLogInCustAddress",
+            "params": ["$$K_LOGGED_IN_CUSTOMER_ID"]
+          }
+        },
         {
           "name": "name",
           "type": "K_FIELD_TYPEAHEAD",
@@ -197,6 +210,70 @@
       },
       "addWatchers": {
         "is_new": true
+      }
+    },
+    "K_FORM_ADDRESS": {
+      "title": "Add Address",
+      "type": "K_FORM_ADDRESS",
+      "key" : "address",
+      "fields": [
+        {
+          "name": "name",
+          "type": "K_FIELD_TEXT",
+          "label": "Full Name",
+          "placeholder": null,
+          "required": true
+        },
+        {
+          "name": "address",
+          "type": "K_FIELD_TEXT",
+          "label": "Enter Address",
+          "placeholder": null,
+          "required": true
+        },
+        {
+          "name": "landmark",
+          "type": "K_FIELD_TEXT",
+          "label": "Enter Landmark",
+          "placeholder": null,
+          "required": true
+        },
+        {
+          "name": "pin_code",
+          "type": "K_FIELD_NUMBER",
+          "label": "Pin Code",
+          "placeholder": null,
+          "required": true
+        }
+      ],
+      "actions": {
+        "K_ACTION_CANCEL": {
+          "label": "Cancel",
+          "action": "K_ACTION_CANCEL"
+        },
+        "K_ACTION_SUBMIT": {
+          "label": "Submit",
+          "action": "K_ACTION_SUBMIT",
+          "modelsToUpdate": [
+            {
+              "targetModel": "customers",
+              "targetModelRef": "$$K_LOGGED_IN_CUSTOMER_ID"           
+            }
+          ]
+        },
+        "K_ACTION_EDIT": {
+          "label": "Edit",
+          "action": "K_ACTION_EDIT",
+          "show_cond": {
+            "$ne": [
+              "$last_action",
+              "K_ACTION_SUBMIT"
+            ]
+          }
+        }
+      },
+      "addWatchers": {
+        
       }
     }
   }

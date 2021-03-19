@@ -57,6 +57,20 @@ class MyCustomFormState extends State<MyCustomForm> {
     var keyboardType = TextInputType.text;
     List<TextInputFormatter> inputFormatters = [];
 
+    Widget loadWidget(Function loadData, fieldDef) {
+      return FutureBuilder(
+        builder: (context, projectSnap) {
+          if (projectSnap.connectionState == ConnectionState.none ||
+              projectSnap.connectionState == ConnectionState.waiting) {
+            //print('project snapshot data is: ${projectSnap.data}');
+            return CircularProgressIndicator();
+          }
+          return Text(projectSnap.data ?? fieldDef["label"]);
+        },
+        future: loadData(),
+      );
+    }
+
     Widget buildCheckBox(fieldDef) {
       bool initialValue = false;
       var validator;
@@ -137,6 +151,28 @@ class MyCustomFormState extends State<MyCustomForm> {
           }
 
           break;
+        case "K_FIELD_TEXT":
+
+          /// set initial value
+          initialValue = getInitialValue(fieldDef);
+          if (initialValue != null) initialValue = initialValue.toString();
+          validator = (value) {
+            if (value.isEmpty) {
+              return 'This field is required.';
+            }
+            return null;
+          };
+          onSaved = (value) => targetModel[fieldDef['name']] = value;
+
+          if (fref["addWatchers"][fieldDef["name"]] == true) {
+            onChanged = (value) {
+              setState(() {
+                targetModel[fieldDef['name']] = int.parse(value);
+              });
+            };
+          }
+
+          break;
         default:
           validator = (value) {
             if (value.isEmpty) {
@@ -160,10 +196,69 @@ class MyCustomFormState extends State<MyCustomForm> {
         onChanged: onChanged,
         decoration: InputDecoration(labelText: fieldDef["label"]),
         keyboardType: keyboardType,
-        inputFormatters: inputFormatters, // Only numbers can be entered
+        inputFormatters: inputFormatters.length != 0 ? inputFormatters : null,
         validator: validator,
         onSaved: onSaved,
       );
+    }
+
+    Widget buildChildForm(fieldDef) {
+      var onSaved;
+      var onChanged;
+      var validator;
+      Map<String, dynamic> initialValue = {"value": ""};
+      Widget button;
+
+      if (fieldDef["required"] == true) {
+        validator = (value) {
+          if (value) {
+            return null;
+          } else {
+            return 'This field is required!';
+          }
+        };
+      }
+
+      // hardcoded to fill address from customers model
+      Future<dynamic> loadData() async {
+        if (fieldDef["autoFillHandler"] != null &&
+            fieldDef["autoFillHandler"]["handler"] != null) {
+          var resolveParams =
+              resolveFields(fieldDef["autoFillHandler"]["params"]);
+          var res =
+              await getShortForm()[fieldDef["autoFillHandler"]["handler"]](
+                  srv, resolveParams);
+          return res;
+
+          // var refId = resolveFields(fieldDef["autoFillHandler"]);
+          // var data = await srv.getModelByID("customers", refId);
+        } else {
+          return null;
+        }
+      }
+
+      switch (fieldDef["type"]) {
+        case "K_FIELD_FORM":
+          button = Container(
+            width: MediaQuery.of(context).size.width,
+            child: OutlineButton(
+              // Text(initialValue["value"] ?? fieldDef["label"])
+              child: loadWidget(loadData, fieldDef),
+              color: Colors.blue,
+              onPressed: () {
+                Navigator.pushNamed(context, "/forms",
+                    arguments: {"formType": "K_FORM_ADDRESS"});
+              },
+              shape: new RoundedRectangleBorder(
+                borderRadius: new BorderRadius.circular(10.0),
+              ),
+            ),
+          );
+
+          break;
+        default:
+      }
+      return button;
     }
 
     Widget buildTypeAhead(fieldDef) {
@@ -297,8 +392,17 @@ class MyCustomFormState extends State<MyCustomForm> {
           case "K_FIELD_NUMBER":
             fb.add(buildInput(fref["fields"][i]));
             break;
+          case "K_FIELD_TEXT":
+            fb.add(buildInput(fref["fields"][i]));
+            break;
           case "K_FIELD_CHECKBOX":
             fb.add(buildCheckBox(fref["fields"][i]));
+            break;
+          case "K_FIELD_FORM":
+            fb.add(buildChildForm(fref["fields"][i]));
+
+            // Future.delayed(
+            //     Duration.zero, () => buildChildForm(fref["fields"][i]));
             break;
           default:
         }
@@ -338,7 +442,7 @@ class MyCustomFormState extends State<MyCustomForm> {
     if (targetModel[fieldDef['name']] != null)
       initialValue = targetModel[fieldDef['name']];
     else if (values != null) {
-      initialValue = resolveFields(values[fieldDef["name"]]);
+      initialValue = resolveFields(values[fieldDef["name"]])[0];
     } else {
       initialValue = null;
     }
@@ -346,36 +450,61 @@ class MyCustomFormState extends State<MyCustomForm> {
   }
 
   relatedModelsUpdate(formAction) async {
+    var refId;
     var modelsToUpdate = fref["actions"][formAction]["modelsToUpdate"];
     targetModel["type"] = fref["type"];
     await Future.forEach(modelsToUpdate, (element) async {
       if (element["refModel"] != null) {
-        refModel = await srv.getRefModel(
+        refModel = await srv.getModelByID(
             element["refModel"], targetModel[element["modelIdRef"]]["id"]);
         refModel = refModel[0];
         resolveFieldMap(element["fieldmap"], refModel);
-        srv.saveForm(element["targetModel"], targetModel);
+        // if we have to update other collection then we have to provide targetModelRef
+        // eg: update customer from address form
+        if (element["targetModelRef"] != null) {
+          refId = resolveFields(element["targetModelRef"])[0];
+        }
+        srv.saveForm(element["targetModel"], targetModel, refId, fref['key']);
         // update order list
         Navigator.of(context).pop();
       } else {
-        resolveFieldMap(element["fieldmap"], refModel);
-        srv.saveForm(element["targetModel"], targetModel);
+        // resolveFieldMap(element["fieldmap"], refModel);
+        // if we have to update other collection then we have to provide targetModelRef
+        // eg: update customer from address form
+        if (element["targetModelRef"] != null) {
+          refId = resolveFields(element["targetModelRef"])[0];
+        }
+        srv.saveForm(element["targetModel"], targetModel, refId, fref['key']);
         // update order list
         Navigator.of(context).pop();
       }
     });
   }
 
+// used to resolve reserved constants
   resolveFields(field) {
-    var resolvedValue;
-    switch (field) {
-      case "\$\$K_CURRENT_CUSTOMER_NAME":
-        print(loginSrv.currentUser);
-        resolvedValue = loginSrv.currentUser["belongs_to_customer"];
-        break;
-      default:
-        resolvedValue = field;
+    List resolvedValue = [];
+    // if array
+    if (field.runtimeType != [].runtimeType) {
+      field = [field];
     }
+    field.forEach((field) {
+      switch (field) {
+        case "\$\$K_LOGGED_IN_CUSTOMER":
+          print("current user: ");
+          print(loginSrv.currentUser);
+          resolvedValue.add(loginSrv.currentUser["belongs_to_customer"]);
+          break;
+        case "\$\$K_LOGGED_IN_CUSTOMER_ID":
+          print("current user: ");
+          print(loginSrv.currentUser);
+          resolvedValue.add(loginSrv.currentUser["belongs_to_customer"]["id"]);
+          break;
+        default:
+          resolvedValue = field;
+      }
+    });
+
     return resolvedValue;
   }
 
