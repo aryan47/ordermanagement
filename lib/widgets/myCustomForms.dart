@@ -44,7 +44,7 @@ class MyCustomFormState extends State<MyCustomForm> {
     super.didChangeDependencies();
 
     args = ModalRoute.of(context).settings.arguments;
-    srv = Provider.of<appConfigService>(context, listen: false);
+    srv = Provider.of<AppConfigService>(context, listen: false);
     loginSrv = Provider.of<LoginService>(context, listen: false);
 
     forms = srv.config["FORMS"];

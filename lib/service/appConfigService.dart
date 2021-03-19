@@ -9,7 +9,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
 
 // ignore: must_be_immutable
-class appConfigService {
+class AppConfigService {
   Map<String, dynamic> appConfig;
   dynamic db;
   List<CustomersM> custM;
@@ -30,25 +30,7 @@ class appConfigService {
     print('initDB');
     return await db.open();
   }
-
-  // appConfigService({@required Widget child, this.appConfig, this.db})
-
-  // String _latestAppVersion;
-
-  // @override
-  // bool updateShouldNotify(Provider oldWidget) =>
-  //     appConfig != oldWidget.appConfig;
-
-  // set latestAppVersion(String version) => _latestAppVersion = version;
-  // String get latestAppVersion => _latestAppVersion;
-
-  // set appConfig(String share) => _appConfig = share;
-  // BehaviorSubject get refresh => _refresh;
-
-  // static Provider of(BuildContext context) {
-  //   return context.dependOnInheritedWidgetOfExactType<Provider>();
-  // }
-
+  
   /// Check value exists inside Object
   bool _exists(String fetchV, [dynamic src]) {
     if (src == null) src = appConfig;

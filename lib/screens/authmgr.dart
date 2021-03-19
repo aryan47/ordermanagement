@@ -44,7 +44,7 @@ class _AuthMgrState extends State<AuthMgr> {
 
   Future initialize() async {
     _loginSrv = Provider.of<LoginService>(context, listen: false);
-    _dbSrv = Provider.of<appConfigService>(context, listen: false);
+    _dbSrv = Provider.of<AppConfigService>(context, listen: false);
     var data = await _dbSrv.initDB();
     checkAuth();
     extractCurrentUser();

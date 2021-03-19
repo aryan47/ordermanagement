@@ -79,7 +79,7 @@ class LoginService {
 
   Future<void> initLogin(String phone, context) async {
     await Firebase.initializeApp();
-    db = Provider.of<appConfigService>(context, listen: false).db;
+    db = Provider.of<AppConfigService>(context, listen: false).db;
 
     try {
       await FirebaseAuth.instance.verifyPhoneNumber(

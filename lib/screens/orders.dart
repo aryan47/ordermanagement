@@ -39,7 +39,7 @@ class _OrdersState extends State<Orders> {
   }
 
   void getCustomerFutureOrders() {
-    Provider.of<appConfigService>(context, listen: false)
+    Provider.of<AppConfigService>(context, listen: false)
         .getCustomerFutureOrders(args["customerId"])
         .then((data) {
       setState(() {
@@ -51,7 +51,7 @@ class _OrdersState extends State<Orders> {
   }
 
   void getCustomerPastOrders() {
-    Provider.of<appConfigService>(context, listen: false)
+    Provider.of<AppConfigService>(context, listen: false)
         .getCustomerPastOrders(args["customerId"])
         .then((data) {
       setState(() {

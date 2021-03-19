@@ -1,5 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:order_management/screens/customers.dart';
@@ -34,8 +32,8 @@ class MyApp extends StatelessWidget {
         Provider<LoginService>(
           create: (_) => LoginService(),
         ),
-        Provider<appConfigService>(
-          create: (_) => appConfigService(),
+        Provider<AppConfigService>(
+          create: (_) => AppConfigService(),
         )
       ],
       child: MaterialApp(

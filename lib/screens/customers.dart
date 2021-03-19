@@ -18,7 +18,7 @@ class _CustomersState extends State<Customers> {
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
-    Provider.of<appConfigService>(context).listLoaded.stream.listen((event) {
+    Provider.of<AppConfigService>(context).listLoaded.stream.listen((event) {
       if (event) {
         setState(() {
           customers = srv.getCustomers();
@@ -30,7 +30,7 @@ class _CustomersState extends State<Customers> {
 
   @override
   Widget build(BuildContext context) {
-    srv = Provider.of<appConfigService>(context, listen: false);
+    srv = Provider.of<AppConfigService>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(

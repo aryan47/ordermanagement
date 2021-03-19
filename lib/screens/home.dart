@@ -13,7 +13,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  var _dbSrv;
   List products;
   var stateMachine;
   var dbSrv;
@@ -23,7 +22,7 @@ class _HomeState extends State<Home> {
   }
 
   Future initHome() async {
-    dbSrv = Provider.of<appConfigService>(context, listen: false);
+    dbSrv = Provider.of<AppConfigService>(context, listen: false);
     products = await ProductService().getProducts(dbSrv.db);
     stateMachine = dbSrv.config["STATE_MACHINE"]["products"];
     return products;
