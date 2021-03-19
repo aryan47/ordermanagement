@@ -271,7 +271,7 @@ class MyCustomFormState extends State<MyCustomForm> {
       }
 
       /// if Navigated from products page then hide the typeahead
-      if (srv.getV("redirectFrom", args) == "products") {
+      if (loginSrv.currentUser["belongs_to_customer"] != null) {
         if (fieldDef["parent"] != null) {
           // parent = getShortForm()[datasrc["handler"]](loginSrv.currentUser);
           parent = loginSrv.currentUser["belongs_to_customer"];

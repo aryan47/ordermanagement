@@ -97,8 +97,7 @@
         "onTap": {
           "gotoRoute": "/forms",
           "arguments": {
-            "formType": "K_FORM_ORDERS",
-            "redirectFrom": "products"
+            "formType": "K_FORM_ORDERS"
           }
         }
       }
