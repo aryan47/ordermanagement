@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:order_management/service/appConfigService.dart';
 import 'package:order_management/service/productsService.dart';
+import 'package:order_management/service/utilService.dart';
 import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
@@ -47,9 +48,9 @@ class _HomeState extends State<Home> {
                   trailing: Icon(Icons.keyboard_arrow_right),
                   onTap: () async {
                     String route =
-                        dbSrv.getV("actions.onTap.gotoRoute", stateMachine);
+                        getV("actions.onTap.gotoRoute", stateMachine);
                     dynamic arguments =
-                        dbSrv.getV("actions.onTap.arguments", stateMachine);
+                        getV("actions.onTap.arguments", stateMachine);
 
                     await Navigator.pushNamed(context, route,
                         arguments: arguments);

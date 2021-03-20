@@ -1,5 +1,0 @@
-change all int to double
-change all specific name like name/product_name to name
-change config.json -> config.yaml
-===============================
-save address to customer --> ref current user

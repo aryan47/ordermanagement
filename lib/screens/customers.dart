@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:order_management/screens/models/customersModel.dart';
 import 'package:order_management/service/appConfigService.dart';
+import 'package:order_management/service/utilService.dart';
 import 'package:provider/provider.dart';
 
 class Customers extends StatefulWidget {
@@ -46,7 +47,7 @@ class _CustomersState extends State<Customers> {
             trailing: Icon(Icons.keyboard_arrow_right),
             onTap: () {
               print(stateMachine);
-              String route = srv.getV("actions.onTap.gotoRoute", stateMachine);
+              String route = getV("actions.onTap.gotoRoute", stateMachine);
               Navigator.pushNamed(context, route,
                   arguments: {"customerId": customers[index].id});
             },

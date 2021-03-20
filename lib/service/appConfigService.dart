@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:order_management/screens/models/customersModel.dart';
 import 'package:order_management/service/loginService.dart';
+import 'package:order_management/service/utilService.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
 
@@ -30,65 +31,15 @@ class AppConfigService {
     print('initDB');
     return await db.open();
   }
-  
-  /// Check value exists inside Object
-  bool _exists(String fetchV, [dynamic src]) {
-    if (src == null) src = appConfig;
-    List<String> keys;
-    bool res = false;
-    var item;
-
-    if (fetchV.isEmpty) return res;
-
-    if (src == null || src.isEmpty) return res;
-
-    keys = fetchV.split(".");
-    item = src[keys[0]];
-
-    for (int count = 0; count < keys.length; count++) {
-      if (count == 0) continue;
-      res = true;
-      if (item == null) return false;
-      item = item[keys[count]];
-    }
-    return res;
-  }
-
-  /// Get value from inside object
-  dynamic getV(String fetchV, [dynamic src]) {
-    if (src == null) src = appConfig;
-
-    if (fetchV.isEmpty || src.isEmpty) return null;
-    List<String> keys = fetchV.split(".");
-
-    dynamic _fetchValue(List keys, dynamic src) {
-      if (keys == null || keys.length == 0 || src == null) return null;
-      if (keys.length == 1) return src[keys[0]];
-
-      return _fetchValue(keys.sublist(1), src[keys.first]);
-    }
-
-    return _fetchValue(keys, src);
-  }
-
-  /// Get icon from config
-  Widget _getI(icons, [dynamic src]) {
-    if (icons == null) return null;
-    if (src != null) icons = getV(icons, src);
-
-    if (icons == null) return null;
-
-    return Icon(IconData(int.parse(icons), fontFamily: 'MaterialIcons'));
-  }
 
   /// Build bottom navigation list based on config
   List<BottomNavigationBarItem> buildBottomNavList() {
     List<BottomNavigationBarItem> list = [];
-    if (_exists("BOTTOM_NAV_ITEMS.value")) {
-      for (var i = 0; i < getV("BOTTOM_NAV_ITEMS.items").length; i++) {
+    if (exists("BOTTOM_NAV_ITEMS.value",appConfig)) {
+      for (var i = 0; i < getV("BOTTOM_NAV_ITEMS.items", appConfig).length; i++) {
         list.add(BottomNavigationBarItem(
-          icon: _getI("icon", getV("BOTTOM_NAV_ITEMS.items")[i]),
-          title: new Text(getV("BOTTOM_NAV_ITEMS.items")[i]["label"]),
+          icon: getI("icon", getV("BOTTOM_NAV_ITEMS.items", appConfig)[i]),
+          title: new Text(getV("BOTTOM_NAV_ITEMS.items", appConfig)[i]["label"]),
         ));
       }
     }
@@ -99,24 +50,24 @@ class AppConfigService {
   List<Widget> buildDrawerList(context) {
     List<Widget> list = [];
 
-    if (_exists("DRAWER.value")) {
-      if (_exists("DRAWER.header")) {
+    if (exists("DRAWER.value", appConfig)) {
+      if (exists("DRAWER.header", appConfig)) {
         list.add(DrawerHeader(
-          child: Text(getV("DRAWER.header.label")),
+          child: Text(getV("DRAWER.header.label", appConfig)),
           decoration: BoxDecoration(
             color: Colors.blue,
           ),
         ));
       }
 
-      for (var i = 0; i < getV("DRAWER.items").length; i++) {
+      for (var i = 0; i < getV("DRAWER.items",appConfig).length; i++) {
         Map<String, Function> actions =
-            buildRoute(getV("DRAWER.items")[i], context);
+            buildRoute(getV("DRAWER.items",appConfig)[i], context);
 
         list.add(ListTile(
-          leading: _getI("leading.icon", getV("DRAWER.items")[i]),
-          title: new Text(getV("DRAWER.items")[i]["label"]),
-          trailing: Text(getV("trailing.text", getV("DRAWER.items")[i]) ?? ""),
+          leading: getI("leading.icon", getV("DRAWER.items",appConfig)[i]),
+          title: new Text(getV("DRAWER.items",appConfig)[i]["label"]),
+          trailing: Text(getV("trailing.text", getV("DRAWER.items",appConfig)[i]) ?? ""),
           onTap: actions["onTap"],
         ));
       }
@@ -153,7 +104,7 @@ class AppConfigService {
     routes["onTap"] = (int index) {
       _currentIndex = index;
       String route = getV(
-          "actions.onTap.gotoRoute", getV("BOTTOM_NAV_ITEMS.items")[index]);
+          "actions.onTap.gotoRoute", getV("BOTTOM_NAV_ITEMS.items", appConfig)[index]);
 
       if (route != null) Navigator.pushNamed(context, route);
     };

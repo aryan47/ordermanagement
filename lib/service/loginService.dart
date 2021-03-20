@@ -6,7 +6,7 @@ import 'package:order_management/screens/login.dart';
 import 'package:order_management/screens/models/usersModel.dart';
 import 'package:order_management/screens/otp.dart';
 import 'package:order_management/service/appConfigService.dart';
-import 'package:order_management/service/utilsService.dart';
+import 'package:order_management/service/handlerService.dart';
 import 'package:provider/provider.dart';
 
 class LoginService {
