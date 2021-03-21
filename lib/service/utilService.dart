@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 // Map<String, dynamic> appConfig;
@@ -54,4 +53,27 @@ Widget getI(icons, dynamic src) {
   if (icons == null) return null;
 
   return Icon(IconData(int.parse(icons), fontFamily: 'MaterialIcons'));
+}
+
+void applyUserPrivileges(Map config, userRole) {
+  if (userRole == null) {
+    return;
+  }
+  Map userPriv = getV("USER_PRIVILEGES." + userRole, config);
+  if (userPriv != null && userPriv.isNotEmpty) {
+    userPriv.forEach((k, v) {
+      // get items from config
+      List items = getV(k, config);
+      List itemsCopy = [];
+      var privEachItem = userPriv[k];
+
+      for (var i = 0; i < items.length; i++) {
+        if (privEachItem[items[i]['key']] != false) {
+          itemsCopy.add(items[i]);
+        }
+      }
+      items.clear();
+      items.addAll(itemsCopy);
+    });
+  }
 }

@@ -14,6 +14,7 @@
           "alias": "supervisor_account_outlined"
         },
         "label": "Customers",
+        "key": "Customers",
         "actions": {
           "onTap": {
             "gotoRoute": "/customers"
@@ -26,6 +27,7 @@
           "alias": "amount_due"
         },
         "label": "Amount Due",
+        "key": "Amount Due",
         "trailing": {
           "text": "354"
         }
@@ -35,7 +37,8 @@
           "icon": "58917",
           "alias": "call"
         },
-        "label": "Call Us"
+        "label": "Call Us",
+        "key": "Call Us"
       },
       {
         "leading": {
@@ -43,6 +46,7 @@
           "alias": "power_settings_new"
         },
         "label": "Log Out",
+        "key": "Log Out",
         "actions": {
           "onTap": {
             "action": "C_ACTION_LOGOUT"
@@ -111,6 +115,7 @@
       "fields": [
         {
           "name": "address",
+          "key": "address",
           "type": "K_FIELD_FORM",
           "label": "Add Address",
           "placeholder": null,
@@ -125,6 +130,7 @@
         },
         {
           "name": "name",
+          "key": "name",
           "type": "K_FIELD_TYPEAHEAD",
           "label": "Select Customer",
           "placeholder": null,
@@ -140,6 +146,7 @@
         },
         {
           "name": "quantity",
+          "key": "quantity",
           "type": "K_FIELD_NUMBER",
           "label": "Enter Quantity",
           "placeholder": null,
@@ -147,6 +154,7 @@
         },
         {
           "name": "inst_amt",
+          "key": "inst_amt",
           "type": "K_FIELD_NUMBER",
           "label": "Installation Amount",
           "placeholder": null,
@@ -157,6 +165,7 @@
         },
         {
           "name": "security_amt",
+          "key": "security_amt",
           "type": "K_FIELD_NUMBER",
           "label": "Security Amount",
           "placeholder": null,
@@ -167,6 +176,7 @@
         },
         {
           "name": "is_new",
+          "key": "is_new",
           "type": "K_FIELD_CHECKBOX",
           "label": "Is New Customer",
           "placeholder": null,
@@ -220,6 +230,7 @@
       "fields": [
         {
           "name": "name",
+          "key": "name",
           "type": "K_FIELD_TEXT",
           "label": "Full Name",
           "placeholder": null,
@@ -227,6 +238,7 @@
         },
         {
           "name": "address",
+          "key": "address",
           "type": "K_FIELD_TEXT",
           "label": "Enter Address",
           "placeholder": null,
@@ -234,6 +246,7 @@
         },
         {
           "name": "landmark",
+          "key": "landmark",
           "type": "K_FIELD_TEXT",
           "label": "Enter Landmark",
           "placeholder": null,
@@ -241,6 +254,7 @@
         },
         {
           "name": "pin_code",
+          "key": "pin_code",
           "type": "K_FIELD_NUMBER",
           "label": "Pin Code",
           "placeholder": null,
@@ -278,17 +292,13 @@
   },
   "USER_PRIVILEGES": {
     "K_USER": {
-      "DRAWER": {
+      "DRAWER.items": {
         "Customers": false,
         "Amount Due": false
       },
-      "FORMS": {
-        "K_FORM_ORDERS": {
-          "fields": {
-            "name": false,
-            "is_new": false
-          }
-        }
+      "FORMS.K_FORM_ORDERS.fields": {
+        "name": false,
+        "is_new": false
       }
     }
   }

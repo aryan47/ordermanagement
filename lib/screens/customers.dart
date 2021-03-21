@@ -43,7 +43,7 @@ class _CustomersState extends State<Customers> {
         itemBuilder: (context, index) {
           return ListTile(
             title: Text('${customers[index].name}'),
-            subtitle: Text(customers[index].address),
+            subtitle: Text(customers[index].address["address"]),
             trailing: Icon(Icons.keyboard_arrow_right),
             onTap: () {
               print(stateMachine);

@@ -3,6 +3,7 @@ import 'package:order_management/screens/home.dart';
 import 'package:order_management/screens/login.dart';
 import 'package:order_management/service/appConfigService.dart';
 import 'package:order_management/service/loginService.dart';
+import 'package:order_management/service/utilService.dart';
 import 'package:order_management/widgets/widgetUtils.dart';
 import 'package:provider/provider.dart';
 
@@ -34,12 +35,10 @@ class _AuthMgrState extends State<AuthMgr> {
     });
   }
 
-  dynamic extractCurrentUser() {
-    _loginSrv.getCurrentUser(_dbSrv.db).then((user) {
-      _loginSrv.currentUser = user != null ? user[0] : user;
-      print(_loginSrv.currentUser);
-      return user;
-    });
+  dynamic extractCurrentUser() async {
+    var user = await _loginSrv.getCurrentUser(_dbSrv.db);
+    _loginSrv.currentUser = user != null ? user[0] : user;
+    return _loginSrv.currentUser;
   }
 
   Future initialize() async {
@@ -47,7 +46,9 @@ class _AuthMgrState extends State<AuthMgr> {
     _dbSrv = Provider.of<AppConfigService>(context, listen: false);
     var data = await _dbSrv.initDB();
     checkAuth();
-    extractCurrentUser();
+    await extractCurrentUser();
+    var currentUser = _loginSrv.currentUser !=null ? _loginSrv.currentUser["role"]:null;
+    applyUserPrivileges(_dbSrv.appConfig, currentUser);
     return data;
   }
 
@@ -62,7 +63,8 @@ class _AuthMgrState extends State<AuthMgr> {
           }
           print("home build method called==========================");
           return Scaffold(
-            drawer: buildDrawer(_dbSrv.buildDrawerList(context)),
+            drawer: buildDrawer(
+                _dbSrv.buildDrawerList(context)),
             appBar: AppBar(
               title: Text("Product Management"),
             ),

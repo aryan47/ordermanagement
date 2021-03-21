@@ -35,11 +35,14 @@ class AppConfigService {
   /// Build bottom navigation list based on config
   List<BottomNavigationBarItem> buildBottomNavList() {
     List<BottomNavigationBarItem> list = [];
-    if (exists("BOTTOM_NAV_ITEMS.value",appConfig)) {
-      for (var i = 0; i < getV("BOTTOM_NAV_ITEMS.items", appConfig).length; i++) {
+    if (exists("BOTTOM_NAV_ITEMS.value", appConfig)) {
+      for (var i = 0;
+          i < getV("BOTTOM_NAV_ITEMS.items", appConfig).length;
+          i++) {
         list.add(BottomNavigationBarItem(
           icon: getI("icon", getV("BOTTOM_NAV_ITEMS.items", appConfig)[i]),
-          title: new Text(getV("BOTTOM_NAV_ITEMS.items", appConfig)[i]["label"]),
+          title:
+              new Text(getV("BOTTOM_NAV_ITEMS.items", appConfig)[i]["label"]),
         ));
       }
     }
@@ -49,7 +52,6 @@ class AppConfigService {
   // Build drawer list
   List<Widget> buildDrawerList(context) {
     List<Widget> list = [];
-
     if (exists("DRAWER.value", appConfig)) {
       if (exists("DRAWER.header", appConfig)) {
         list.add(DrawerHeader(
@@ -60,14 +62,15 @@ class AppConfigService {
         ));
       }
 
-      for (var i = 0; i < getV("DRAWER.items",appConfig).length; i++) {
+      for (var i = 0; i < getV("DRAWER.items", appConfig).length; i++) {
         Map<String, Function> actions =
-            buildRoute(getV("DRAWER.items",appConfig)[i], context);
+            buildRoute(getV("DRAWER.items", appConfig)[i], context);
 
         list.add(ListTile(
-          leading: getI("leading.icon", getV("DRAWER.items",appConfig)[i]),
-          title: new Text(getV("DRAWER.items",appConfig)[i]["label"]),
-          trailing: Text(getV("trailing.text", getV("DRAWER.items",appConfig)[i]) ?? ""),
+          leading: getI("leading.icon", getV("DRAWER.items", appConfig)[i]),
+          title: new Text(getV("DRAWER.items", appConfig)[i]["label"]),
+          trailing: Text(
+              getV("trailing.text", getV("DRAWER.items", appConfig)[i]) ?? ""),
           onTap: actions["onTap"],
         ));
       }
@@ -103,8 +106,8 @@ class AppConfigService {
     Map<String, Function> routes = {};
     routes["onTap"] = (int index) {
       _currentIndex = index;
-      String route = getV(
-          "actions.onTap.gotoRoute", getV("BOTTOM_NAV_ITEMS.items", appConfig)[index]);
+      String route = getV("actions.onTap.gotoRoute",
+          getV("BOTTOM_NAV_ITEMS.items", appConfig)[index]);
 
       if (route != null) Navigator.pushNamed(context, route);
     };
@@ -139,7 +142,7 @@ class AppConfigService {
       var data = await db
           .collection("orders")
           .find(where
-              .eq("belongs_to_customer.id", id.id.hexString)
+              .eq("belongs_to_customer.id", id)
               .ne('status', "Delivered")
               .sortBy('dt_delivery', descending: true))
           .toList();
@@ -161,7 +164,7 @@ class AppConfigService {
       var data = await db
           .collection("orders")
           .find(where
-              .eq("belongs_to_customer.id", id.id.hexString)
+              .eq("belongs_to_customer.id", id)
               .eq('status', "Delivered")
               .sortBy('dt_delivery', descending: true))
           .toList();

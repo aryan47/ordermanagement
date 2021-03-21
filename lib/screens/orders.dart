@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:order_management/service/appConfigService.dart';
+import 'package:order_management/service/loginService.dart';
 import 'package:order_management/widgets/dropdownbutton.dart';
 import 'package:provider/provider.dart';
 
@@ -23,24 +24,33 @@ class _OrdersState extends State<Orders> {
   String title = '';
   bool onlyOrders = false;
   var result;
+  var _loginSrv;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     args = ModalRoute.of(context).settings.arguments;
+    _loginSrv = Provider.of<LoginService>(context, listen: false);
 
-    if (args == null) {
-      args = new Map();
-      args["customerId"] = null;
-      onlyOrders = true;
-    }
-    getCustomerPastOrders();
+    // if (args == null) {
+    //   args = new Map();
+    //   args["customerId"] = null;
+    //   onlyOrders = true;
+    // }
+    getCustomerPastOrders(_loginSrv.currentUser);
 
-    getCustomerFutureOrders();
+    getCustomerFutureOrders(_loginSrv.currentUser);
   }
 
-  void getCustomerFutureOrders() {
+  void getCustomerFutureOrders(currentUsr) {
+    var customerId;
+    if (currentUsr["role"] == "K_USER") {
+      customerId = currentUsr["belongs_to_customer"]["id"];
+    } else {
+      // customerId = args["customerI"]
+    }
     Provider.of<AppConfigService>(context, listen: false)
-        .getCustomerFutureOrders(args["customerId"])
+        .getCustomerFutureOrders(customerId)
         .then((data) {
       setState(() {
         if (futureOrders.length != 0)
@@ -50,9 +60,20 @@ class _OrdersState extends State<Orders> {
     });
   }
 
-  void getCustomerPastOrders() {
+  void getCustomerPastOrders(currentUsr) {
+    var customerId;
+    // if (args == null) {
+    //   args = new Map();
+    //   args["customerId"] = null;
+    //   onlyOrders = true;
+    // }
+    if (currentUsr["role"] == "K_USER") {
+      customerId = currentUsr["belongs_to_customer"]["id"];
+    } else {
+      // customerId = args["customerI"]
+    }
     Provider.of<AppConfigService>(context, listen: false)
-        .getCustomerPastOrders(args["customerId"])
+        .getCustomerPastOrders(customerId)
         .then((data) {
       setState(() {
         pastOrders = data;
@@ -78,7 +99,7 @@ class _OrdersState extends State<Orders> {
               ),
             ],
           ),
-          title: Text(title),
+          title: Text(title ?? ""),
         ),
         body: TabBarView(
           children: [
@@ -91,9 +112,9 @@ class _OrdersState extends State<Orders> {
             result = await Navigator.pushNamed(context, "/forms",
                 arguments: {"formType": "K_FORM_ORDERS"});
             setState(() {
-              getCustomerPastOrders();
+              getCustomerPastOrders(_loginSrv.currentUser);
 
-              getCustomerFutureOrders();
+              getCustomerFutureOrders(_loginSrv.currentUser);
             });
           },
           tooltip: 'Add Orders',

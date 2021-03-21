@@ -4,7 +4,7 @@ class CustomersM {
   ObjectId id;
   String name;
   DateTime dt_join;
-  String address;
+  Map<String, dynamic> address;
   String landmark;
   int pincode;
   String phone_no;
@@ -19,7 +19,7 @@ class CustomersM {
         json['_id'] as ObjectId,
         json['name'] as String,
         json['dt_join'] as DateTime,
-        json['address'] as String,
+        json['address'] as Map<String, dynamic>,
         json['landmark'] as String,
         json['pincode'] as int,
         json['phone_no'] as String,
