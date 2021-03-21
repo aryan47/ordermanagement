@@ -46,13 +46,16 @@ dynamic getV(String fetchV, dynamic src) {
 }
 
 /// Get icon from config
-Widget getI(icons, dynamic src) {
+Widget getI(String icons, dynamic src, [double size = 30]) {
   if (icons == null) return null;
   if (src != null) icons = getV(icons, src);
 
   if (icons == null) return null;
 
-  return Icon(IconData(int.parse(icons), fontFamily: 'MaterialIcons'));
+  return Icon(
+    IconData(int.parse(icons), fontFamily: 'MaterialIcons'),
+    size: size,
+  );
 }
 
 void applyUserPrivileges(Map config, userRole) {

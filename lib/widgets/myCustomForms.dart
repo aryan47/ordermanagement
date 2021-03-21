@@ -7,6 +7,7 @@ import 'package:order_management/service/appConfigService.dart';
 import 'package:order_management/service/loginService.dart';
 import 'package:order_management/service/handlerService.dart';
 import 'package:order_management/service/utilService.dart';
+import 'package:order_management/widgets/widgetUtils.dart';
 import 'package:provider/provider.dart';
 
 import 'checkbox_list_tile_formfield.dart';
@@ -204,10 +205,10 @@ class MyCustomFormState extends State<MyCustomForm> {
     }
 
     Widget buildChildForm(fieldDef) {
-      var onSaved;
-      var onChanged;
-      var validator;
-      Map<String, dynamic> initialValue = {"value": ""};
+      // var onSaved;
+      // var onChanged;
+      Function validator;
+      // Map<String, dynamic> initialValue = {"value": ""};
       Widget button;
 
       if (fieldDef["required"] == true) {
@@ -240,22 +241,7 @@ class MyCustomFormState extends State<MyCustomForm> {
 
       switch (fieldDef["type"]) {
         case "K_FIELD_FORM":
-          button = Container(
-            width: MediaQuery.of(context).size.width,
-            child: OutlineButton(
-              // Text(initialValue["value"] ?? fieldDef["label"])
-              child: loadWidget(loadData, fieldDef),
-              color: Colors.blue,
-              onPressed: () {
-                Navigator.pushNamed(context, "/forms",
-                    arguments: {"formType": "K_FORM_ADDRESS"});
-              },
-              shape: new RoundedRectangleBorder(
-                borderRadius: new BorderRadius.circular(10.0),
-              ),
-            ),
-          );
-
+          button = subFormPanel(context, loadWidget, loadData, fieldDef);
           break;
         default:
       }
@@ -482,7 +468,7 @@ class MyCustomFormState extends State<MyCustomForm> {
     });
   }
 
-// used to resolve reserved constants
+  // used to resolve reserved constants
   resolveFields(field) {
     List resolvedValue = [];
     // if array

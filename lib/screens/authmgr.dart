@@ -61,7 +61,6 @@ class _AuthMgrState extends State<AuthMgr> {
               snapshot.connectionState == ConnectionState.waiting)) {
             return Container();
           }
-          print("home build method called==========================");
           return Scaffold(
             drawer: buildDrawer(
                 _dbSrv.buildDrawerList(context)),

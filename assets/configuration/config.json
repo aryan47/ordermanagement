@@ -118,6 +118,11 @@
           "key": "address",
           "type": "K_FIELD_FORM",
           "label": "Add Address",
+          "content": {
+            "icon":"59456",
+            "alias": "location_on",
+            "heading": "Deliver to:"
+          },
           "placeholder": null,
           "required": true,
           "gotoform": "K_FORM_ADDRESS",
