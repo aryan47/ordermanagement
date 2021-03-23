@@ -8,10 +8,11 @@ import 'package:order_management/service/loginService.dart';
 import 'package:order_management/service/utilService.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
+import 'package:yaml/yaml.dart';
 
 // ignore: must_be_immutable
 class AppConfigService {
-  Map<String, dynamic> appConfig;
+  dynamic appConfig;
   dynamic db;
   List<CustomersM> custM;
   BehaviorSubject listLoaded = BehaviorSubject.seeded(false);
@@ -20,14 +21,16 @@ class AppConfigService {
 
   Future initDB() async {
     final content =
-        await rootBundle.loadString("assets/configuration/config.json");
+        await rootBundle.loadString("assets/configuration/config.yaml");
 
     final cred =
         await rootBundle.loadString("assets/configuration/credential.json");
 
     db = await Db.create(jsonDecode(cred)["mongo"]["url"]);
 
-    appConfig = jsonDecode(content);
+    // appConfig = jsonDecode(content);
+    dynamic yamlContent = loadYaml(content);
+    appConfig = json.decode(json.encode(yamlContent));
     print('initDB');
     return await db.open();
   }

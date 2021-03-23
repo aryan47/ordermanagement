@@ -1,0 +1,221 @@
+---
+GENERAL_SETTINGS:
+  title: Paani Wala
+DRAWER:
+  value: true
+  header:
+    label: Hello $$K_LOGGED_IN_CUSTOMER_NAME
+  items:
+  - leading:
+      icon: '58491'
+      alias: supervisor_account_outlined
+    label: Customers
+    key: Customers
+    actions:
+      onTap:
+        gotoRoute: "/customers"
+  - leading:
+      icon: '58822'
+      alias: amount_due
+    label: Amount Due
+    key: Amount Due
+    trailing:
+      text: '354'
+  - leading:
+      icon: '58917'
+      alias: call
+    label: Call Us
+    key: Call Us
+  - leading:
+      icon: '59721'
+      alias: power_settings_new
+    label: Log Out
+    key: Log Out
+    actions:
+      onTap:
+        action: C_ACTION_LOGOUT
+BOTTOM_NAV_ITEMS:
+  value: true
+  items:
+  - label: Home
+    icon: '57898'
+    alias: home_outlined
+    actions:
+      onTap: {}
+  - label: Orders
+    icon: '57832'
+    alias: list
+    actions:
+      onTap:
+        gotoRoute: "/orders"
+  - label: Settings
+    icon: '59846'
+    alias: settings
+    actions:
+      onTap:
+        gotoRoute: "/settings"
+STATE_MACHINE:
+  customers:
+    actions:
+      onTap:
+        gotoRoute: "/orders"
+  products:
+    actions:
+      onTap:
+        gotoRoute: "/forms"
+        arguments:
+          formType: K_FORM_ORDERS
+FORMS:
+  K_FORM_ORDERS:
+    title: Place New Orders
+    type: K_FORM_ORDERS
+    targetModel: orders
+    fields:
+    - name: address
+      key: address
+      type: K_FIELD_FORM
+      label: Add Address
+      # Used to display the content in the current form
+      content:
+        icon: '59456'
+        alias: location_on
+        heading: 'Deliver to:'
+      placeholder:
+      required: true
+      gotoform: K_FORM_ADDRESS
+      # Handler to auto fill the content in the current form
+      autoFillHandler:
+        handler: getLogInCustAddress
+        params:
+        - "$$K_LOGGED_IN_CUSTOMER_ID"
+    - name: name
+      key: name
+      type: K_FIELD_TYPEAHEAD
+      label: Select Customer
+      placeholder:
+      required: true
+      # Fetches the customers from the db and run a handler 
+      datasrc:
+        srctype: model
+        src: customers
+        key: name
+        value: name
+        handler: getCustomerShortForm
+      # This parent field stores the value in `belongs_to_customer` as well
+      parent: belongs_to_customer
+    - name: quantity
+      key: quantity
+      type: K_FIELD_NUMBER
+      label: Enter Quantity
+      placeholder:
+      required: true
+    - name: inst_amt
+      key: inst_amt
+      type: K_FIELD_NUMBER
+      label: Installation Amount
+      placeholder:
+      required: true
+      show_cond:
+        is_new: true
+    - name: security_amt
+      key: security_amt
+      type: K_FIELD_NUMBER
+      label: Security Amount
+      placeholder:
+      required: true
+      # If is_new field is true then only this checkbox will be enabled
+      show_cond:
+        is_new: true
+    - name: is_new
+      key: is_new
+      type: K_FIELD_CHECKBOX
+      label: Is New Customer
+      placeholder:
+      required: false
+    actions:
+      K_ACTION_CANCEL:
+        label: Cancel
+        action: K_ACTION_CANCEL
+      K_ACTION_SUBMIT:
+        label: Submit
+        action: K_ACTION_SUBMIT
+        # This is the array of models to update at K_ACTION_SUBMIT
+        modelsToUpdate:
+        # Where to store
+        - targetModel: orders
+        # Joins to `customers` table/document
+          refModel: customers
+          # Ref key for join
+          modelIdRef: belongs_to_customer
+          # Maps field from refModel to targetModel
+          fieldmap:
+            phone_no: "$phone_no"
+            dt_order_place: "$$K_CURRENT_DATE"
+            dt_delivery: ''
+            status: Pending
+            per_jar_price: "$charge_per_order"
+            payment_rcvd: ''
+            last_action: K_ACTION_SUBMIT
+      K_ACTION_EDIT:
+        label: Edit
+        action: K_ACTION_EDIT
+        show_cond:
+          "$ne":
+          - "$last_action"
+          - K_ACTION_SUBMIT
+    addWatchers:
+      is_new: true
+  K_FORM_ADDRESS:
+    title: Add Address
+    type: K_FORM_ADDRESS
+    key: address
+    fields:
+    - name: name
+      key: name
+      type: K_FIELD_TEXT
+      label: Full Name
+      placeholder:
+      required: true
+    - name: address
+      key: address
+      type: K_FIELD_TEXT
+      label: Enter Address
+      placeholder:
+      required: true
+    - name: landmark
+      key: landmark
+      type: K_FIELD_TEXT
+      label: Enter Landmark
+      placeholder:
+      required: true
+    - name: pin_code
+      key: pin_code
+      type: K_FIELD_NUMBER
+      label: Pin Code
+      placeholder:
+      required: true
+    actions:
+      K_ACTION_CANCEL:
+        label: Cancel
+        action: K_ACTION_CANCEL
+      K_ACTION_SUBMIT:
+        label: Submit
+        action: K_ACTION_SUBMIT
+        modelsToUpdate:
+        - targetModel: customers
+          targetModelRef: "$$K_LOGGED_IN_CUSTOMER_ID"
+      K_ACTION_EDIT:
+        label: Edit
+        action: K_ACTION_EDIT
+        show_cond:
+          "$ne":
+          - "$last_action"
+          - K_ACTION_SUBMIT
+    addWatchers: {}
+USER_PRIVILEGES:
+  K_USER:
+    DRAWER.items:
+      Customers: false
+      Amount Due: false
+    FORMS.K_FORM_ORDERS.fields:
+      is_new: false

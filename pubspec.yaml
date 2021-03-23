@@ -36,6 +36,7 @@ dependencies:
   firebase_auth: ^0.18.4+1
   provider: ^4.3.2+3
   mobx: ^1.2.1+4
+  yaml: ^3.1.0
   # sms_autofill: any
 
 dev_dependencies:

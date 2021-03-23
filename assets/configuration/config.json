@@ -5,7 +5,7 @@
   "DRAWER": {
     "value": true,
     "header": {
-      "label": "Header"
+      "label": "Hello $$K_LOGGED_IN_CUSTOMER_NAME"
     },
     "items": [
       {
