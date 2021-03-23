@@ -24,23 +24,3 @@ Widget buildDrawer(list) {
     ),
   );
 }
-
-Widget subFormPanel(
-    context, loadWidget, loadData, Map<String, dynamic> fieldDef) {
-  return Card(
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        ListTile(
-          leading: getI("content.icon", fieldDef, 50),
-          title: Text(getV("content.heading", fieldDef)),
-          subtitle: loadWidget(loadData, fieldDef),
-          onTap: () {
-            Navigator.pushNamed(context, "/forms",
-                arguments: {"formType": "K_FORM_ADDRESS"});
-          },
-        ),
-      ],
-    ),
-  );
-}

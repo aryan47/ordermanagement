@@ -1,4 +1,3 @@
-
 Map<String, Function> getShortForm() {
   Map<String, Function> data;
   data = {
@@ -11,10 +10,9 @@ Map<String, Function> getShortForm() {
       data["address"] = customer["address"];
       return data;
     },
-    "getLogInCustAddress": (srv, params) async {
+    "getLogInCustAddress": (data) async {
       List<dynamic> res = [];
       print('inside getlogin cust address');
-      List data = await srv.getModelByID("customers", params[0]);
       if (data.isNotEmpty && data[0]["address"] != null) {
         res.add(data[0]["address"]["name"]);
         res.add(data[0]["address"]["address"]);

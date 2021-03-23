@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:order_management/screens/customers.dart';
 import 'package:order_management/screens/dashboard.dart';
 import 'package:order_management/screens/authmgr.dart';
@@ -17,7 +18,7 @@ import 'service/appConfigService.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  debugPaintSizeEnabled= false;
   await Firebase.initializeApp();
 
   runApp(MyApp());

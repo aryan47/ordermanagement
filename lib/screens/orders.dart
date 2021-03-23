@@ -21,7 +21,7 @@ class _OrdersState extends State<Orders> {
 
   Map args;
   var src;
-  String title = '';
+  String title = "Orders List";
   bool onlyOrders = false;
   var result;
   var _loginSrv;

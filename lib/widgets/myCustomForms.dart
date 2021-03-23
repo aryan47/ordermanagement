@@ -7,6 +7,7 @@ import 'package:order_management/service/appConfigService.dart';
 import 'package:order_management/service/loginService.dart';
 import 'package:order_management/service/handlerService.dart';
 import 'package:order_management/service/utilService.dart';
+import 'package:order_management/widgets/card_formfield.dart';
 import 'package:order_management/widgets/widgetUtils.dart';
 import 'package:provider/provider.dart';
 
@@ -58,20 +59,6 @@ class MyCustomFormState extends State<MyCustomForm> {
   Widget build(BuildContext context) {
     var keyboardType = TextInputType.text;
     List<TextInputFormatter> inputFormatters = [];
-
-    Widget loadWidget(Function loadData, fieldDef) {
-      return FutureBuilder(
-        builder: (context, projectSnap) {
-          if (projectSnap.connectionState == ConnectionState.none ||
-              projectSnap.connectionState == ConnectionState.waiting) {
-            //print('project snapshot data is: ${projectSnap.data}');
-            return CircularProgressIndicator();
-          }
-          return Text(projectSnap.data ?? fieldDef["label"]);
-        },
-        future: loadData(),
-      );
-    }
 
     Widget buildCheckBox(fieldDef) {
       bool initialValue = false;
@@ -207,8 +194,12 @@ class MyCustomFormState extends State<MyCustomForm> {
     Widget buildChildForm(fieldDef) {
       // var onSaved;
       // var onChanged;
+      // _formKey.currentState.
       Function validator;
       // Map<String, dynamic> initialValue = {"value": ""};
+      var initialValue;
+      var originalValue;
+
       Widget button;
 
       if (fieldDef["required"] == true) {
@@ -227,10 +218,12 @@ class MyCustomFormState extends State<MyCustomForm> {
             fieldDef["autoFillHandler"]["handler"] != null) {
           var resolveParams =
               resolveFields(fieldDef["autoFillHandler"]["params"]);
+          List data = await srv.getModelByID("customers", resolveParams[0]);
+
           var res =
               await getShortForm()[fieldDef["autoFillHandler"]["handler"]](
-                  srv, resolveParams);
-          return res;
+                  data);
+          return {"shortForm": res, "originalData": data[0]};
 
           // var refId = resolveFields(fieldDef["autoFillHandler"]);
           // var data = await srv.getModelByID("customers", refId);
@@ -241,7 +234,44 @@ class MyCustomFormState extends State<MyCustomForm> {
 
       switch (fieldDef["type"]) {
         case "K_FIELD_FORM":
-          button = subFormPanel(context, loadWidget, loadData, fieldDef);
+          button = FutureBuilder(
+            builder: (context, projectSnap) {
+              if (projectSnap.data == null ||
+                  projectSnap.connectionState == ConnectionState.none ||
+                  projectSnap.connectionState == ConnectionState.waiting) {
+                //print('project snapshot data is: ${projectSnap.data}');
+                return Center(child: CircularProgressIndicator());
+              }
+              if(projectSnap.data !=null && projectSnap.data["shortForm"]!=null ){
+                initialValue = projectSnap.data["shortForm"];
+              }
+               if(projectSnap.data !=null && projectSnap.data["originalData"]!=null ){
+                originalValue = projectSnap.data["originalData"];
+              }
+              return CardFormField(
+                context: context,
+                fieldDef: fieldDef,
+                initialValue:initialValue,
+                originalValue: originalValue,
+                onChanged: (value) async {
+                  await loadData();
+                  setState(() {});
+                },
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'This Field is required';
+                  }
+                  return null;
+                },
+                onSaved: (value) {
+                  // targetModel[fieldDef['name']] = value;
+                  // targetModel[fieldDef[]]
+                },
+              );
+            },
+            future: loadData(),
+          );
+
           break;
         default:
       }
@@ -257,8 +287,8 @@ class MyCustomFormState extends State<MyCustomForm> {
         src = datasrc["src"];
       }
 
-      /// if role is K_USER then hide the customer typeahead
-      if (loginSrv.currentUser["belongs_to_customer"] != null) {
+      /// if role is K_USER then hide the customer typeahead and set the customer in form
+      if (loginSrv.currentUser["role"] == "K_USER") {
         if (fieldDef["parent"] != null) {
           // parent = getShortForm()[datasrc["handler"]](loginSrv.currentUser);
           parent = loginSrv.currentUser["belongs_to_customer"];
@@ -451,9 +481,10 @@ class MyCustomFormState extends State<MyCustomForm> {
         if (element["targetModelRef"] != null) {
           refId = resolveFields(element["targetModelRef"])[0];
         }
-        srv.saveForm(element["targetModel"], targetModel, refId, fref['key']);
+        var result = await srv.saveForm(
+            element["targetModel"], targetModel, refId, fref['key']);
         // update order list
-        Navigator.of(context).pop();
+        Navigator.of(context).pop(result);
       } else {
         // resolveFieldMap(element["fieldmap"], refModel);
         // if we have to update other collection then we have to provide targetModelRef
@@ -461,21 +492,22 @@ class MyCustomFormState extends State<MyCustomForm> {
         if (element["targetModelRef"] != null) {
           refId = resolveFields(element["targetModelRef"])[0];
         }
-        srv.saveForm(element["targetModel"], targetModel, refId, fref['key']);
+        var result = await srv.saveForm(
+            element["targetModel"], targetModel, refId, fref['key']);
         // update order list
-        Navigator.of(context).pop();
+        Navigator.of(context).pop(result);
       }
     });
   }
 
   // used to resolve reserved constants
-  resolveFields(field) {
+  resolveFields(paramFields) {
     List resolvedValue = [];
     // if array
-    if (field.runtimeType != [].runtimeType) {
-      field = [field];
+    if (paramFields.runtimeType != [].runtimeType) {
+      paramFields = [paramFields];
     }
-    field.forEach((field) {
+    paramFields.forEach((field) {
       switch (field) {
         case "\$\$K_LOGGED_IN_CUSTOMER":
           print("current user: ");
@@ -488,7 +520,7 @@ class MyCustomFormState extends State<MyCustomForm> {
           resolvedValue.add(loginSrv.currentUser["belongs_to_customer"]["id"]);
           break;
         default:
-          resolvedValue = field;
+          resolvedValue.add(field);
       }
     });
 

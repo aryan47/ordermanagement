@@ -216,6 +216,6 @@ class AppConfigService {
     }
     var data = await db.collection(colName).save(modelToUpdate);
     print(data);
-    return data;
+    return modelToUpdate;
   }
 }

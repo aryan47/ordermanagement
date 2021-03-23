@@ -302,7 +302,6 @@
         "Amount Due": false
       },
       "FORMS.K_FORM_ORDERS.fields": {
-        "name": false,
         "is_new": false
       }
     }

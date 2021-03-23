@@ -4,5 +4,9 @@ change config.json -> config.yaml
 ===============================
 save address to customer --> ref current user (DONE)
 =====================================
-code refactor --> segregatte appconfigservice into commonservice and dbservice
-put user_privilege in all the components.
+code refactor --> segregatte appconfigservice into commonservice and dbservice (DONE)
+put user_privilege in all the components. (DONE)
+=======================================
+in admin app fetch address based on customer select or hide the address.
+From order list hide approve and cancel for K_USER
+attach order desc and id in order to identify order.
