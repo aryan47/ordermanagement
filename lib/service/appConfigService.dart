@@ -53,12 +53,16 @@ class AppConfigService {
   }
 
   // Build drawer list
-  List<Widget> buildDrawerList(context) {
+  List<Widget> buildDrawerList(context, _loginSrv) {
     List<Widget> list = [];
     if (exists("DRAWER.value", appConfig)) {
       if (exists("DRAWER.header", appConfig)) {
         list.add(DrawerHeader(
-          child: Text(getV("DRAWER.header.label", appConfig)),
+          child: Center(
+            child: Text(
+              transformText(getV("DRAWER.header.label", appConfig), _loginSrv),
+            style:TextStyle(color: Colors.white)),
+          ),
           decoration: BoxDecoration(
             color: Colors.blue,
           ),

@@ -63,7 +63,7 @@ class _AuthMgrState extends State<AuthMgr> {
           }
           return Scaffold(
             drawer: buildDrawer(
-                _dbSrv.buildDrawerList(context)),
+                _dbSrv.buildDrawerList(context,_loginSrv)),
             appBar: AppBar(
               title: Text("Product Management"),
             ),

@@ -80,3 +80,25 @@ void applyUserPrivileges(Map config, userRole) {
     });
   }
 }
+
+String transformText(String text, loginSrv) {
+  var textArrResult = [];
+  var textArr = text.split(" ");
+  textArr.asMap().forEach((index, field) {
+    switch (field) {
+      case "\$\$K_LOGGED_IN_CUSTOMER_NAME":
+        print("current user: ");
+        // textArr.removeAt(index);
+        textArrResult.add(loginSrv.currentUser["belongs_to_customer"]["name"] ??
+            loginSrv.currentUser["belongs_to_customer"]["phone_no"]);
+        break;
+      case "\$\$K_LOGGED_IN_CUSTOMER_ID":
+        // textArr.removeAt(index);
+        textArrResult.add(loginSrv.currentUser["belongs_to_customer"]["id"]);
+        break;
+      default:
+        textArrResult.add(field);
+    }
+  });
+  return textArrResult.join(" ");
+}
