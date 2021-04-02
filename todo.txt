@@ -12,3 +12,5 @@ From order list hide approve and cancel for K_USER
 attach order desc and id in order to identify order.
 Login screen styling
 put refresh on order list
+========================================
+merge resolvefields and transformtext
