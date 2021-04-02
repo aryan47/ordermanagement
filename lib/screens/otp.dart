@@ -41,6 +41,18 @@ class _OtpState extends State<Otp> {
                     FilteringTextInputFormatter.digitsOnly
                   ]),
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Waiting for OTP "),
+                SizedBox(
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                    ),
+                    height: 15,
+                    width: 15)
+              ],
+            ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: FlatButton(

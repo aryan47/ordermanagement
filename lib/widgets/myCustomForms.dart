@@ -33,14 +33,8 @@ class MyCustomFormState extends State<MyCustomForm> {
   final TextEditingController _typeAheadController = TextEditingController();
   Map<String, dynamic> targetModel = {};
   dynamic refModel = {};
-  var forms;
-  var args;
-  var fref;
-  var srv;
-  var loginSrv;
-
+  var forms, args, fref, product, srv, loginSrv, parent;
   String title = "";
-  var parent;
 
   @override
   void didChangeDependencies() {
@@ -52,6 +46,7 @@ class MyCustomFormState extends State<MyCustomForm> {
 
     forms = srv.config["FORMS"];
     fref = forms[args["formType"]];
+    product = args["product"];
     title = fref["title"];
   }
 
@@ -242,23 +237,25 @@ class MyCustomFormState extends State<MyCustomForm> {
                 //print('project snapshot data is: ${projectSnap.data}');
                 return Center(child: CircularProgressIndicator());
               }
-              if(projectSnap.data !=null && projectSnap.data["shortForm"]!=null ){
+              if (projectSnap.data != null &&
+                  projectSnap.data["shortForm"] != null) {
                 initialValue = projectSnap.data["shortForm"];
               }
-               if(projectSnap.data !=null && projectSnap.data["originalData"]!=null ){
+              if (projectSnap.data != null &&
+                  projectSnap.data["originalData"] != null) {
                 originalValue = projectSnap.data["originalData"];
               }
               return CardFormField(
                 context: context,
                 fieldDef: fieldDef,
-                initialValue:initialValue,
+                initialValue: initialValue,
                 originalValue: originalValue,
                 onChanged: (value) async {
                   await loadData();
                   setState(() {});
                 },
                 validator: (value) {
-                  if (value.isEmpty) {
+                  if (value == null) {
                     return 'This Field is required';
                   }
                   return null;
@@ -470,6 +467,7 @@ class MyCustomFormState extends State<MyCustomForm> {
     var refId;
     var modelsToUpdate = fref["actions"][formAction]["modelsToUpdate"];
     targetModel["type"] = fref["type"];
+    targetModel["product"] = product;
     await Future.forEach(modelsToUpdate, (element) async {
       if (element["refModel"] != null) {
         refModel = await srv.getModelByID(

@@ -49,9 +49,10 @@ class _HomeState extends State<Home> {
                   onTap: () async {
                     String route =
                         getV("actions.onTap.gotoRoute", stateMachine);
-                    dynamic arguments =
+                    var arguments =
                         getV("actions.onTap.arguments", stateMachine);
-
+                    var product = products[index];
+                    arguments.addAll({"product": product});
                     await Navigator.pushNamed(context, route,
                         arguments: arguments);
                   },

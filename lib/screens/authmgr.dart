@@ -47,8 +47,15 @@ class _AuthMgrState extends State<AuthMgr> {
     var data = await _dbSrv.initDB();
     checkAuth();
     await extractCurrentUser();
-    var currentUser = _loginSrv.currentUser !=null ? _loginSrv.currentUser["role"]:null;
+    var currentUser =
+        _loginSrv.currentUser != null ? _loginSrv.currentUser["role"] : null;
     applyUserPrivileges(_dbSrv.appConfig, currentUser);
+    
+    if (_loginSrv.currentUser != null &&
+        _loginSrv.currentUser["belongs_to_customer"]["name"] == null) {
+      // get the name and save it
+      Navigator.pushReplacementNamed(context, "/login-profile");
+    }
     return data;
   }
 
@@ -62,8 +69,7 @@ class _AuthMgrState extends State<AuthMgr> {
             return Container();
           }
           return Scaffold(
-            drawer: buildDrawer(
-                _dbSrv.buildDrawerList(context,_loginSrv)),
+            drawer: buildDrawer(_dbSrv.buildDrawerList(context, _loginSrv)),
             appBar: AppBar(
               title: Text("Product Management"),
             ),

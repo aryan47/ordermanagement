@@ -86,9 +86,14 @@ class LoginService {
         phoneNumber: phone != null ? phone : '+917009224712',
         verificationCompleted: (PhoneAuthCredential credential) async {
           print('!!!!!!!!!!!!!verification completed');
-          await FirebaseAuth.instance.signInWithCredential(credential);
-          Navigator.pushReplacementNamed(context, "/products");
-          createUser(db);
+          var status =
+              await FirebaseAuth.instance.signInWithCredential(credential);
+          if (status.user != null) {
+            await createUser(db);
+            Navigator.pushReplacementNamed(context, "/auth");
+          } else {
+            print("wrong otp===========================");
+          }
         },
         verificationFailed: (FirebaseAuthException e) {
           print('!!!!!!!!!!!!!verification failed');
@@ -102,15 +107,18 @@ class LoginService {
             MaterialPageRoute(builder: (context) => Otp()),
           );
 
-          // Create a PhoneAuthCredential with the code
-          PhoneAuthCredential phoneAuthCredential =
-              PhoneAuthProvider.credential(
-                  verificationId: verificationId, smsCode: smsCode);
+          if (smsCode != null) {
+            // Create a PhoneAuthCredential with the code
+            PhoneAuthCredential phoneAuthCredential =
+                PhoneAuthProvider.credential(
+                    verificationId: verificationId, smsCode: smsCode);
 
-          // Sign the user in (or link) with the credential
-          await FirebaseAuth.instance.signInWithCredential(phoneAuthCredential);
-          Navigator.pushReplacementNamed(context, "/auth");
-          createUser(db);
+            // Sign the user in (or link) with the credential
+            await FirebaseAuth.instance
+                .signInWithCredential(phoneAuthCredential);
+            await createUser(db);
+            Navigator.pushReplacementNamed(context, "/auth");
+          }
         },
         codeAutoRetrievalTimeout: (String verificationId) {
           print('!!!!!!!!!!!!!auto retrieval timeout');

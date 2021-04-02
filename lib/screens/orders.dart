@@ -67,7 +67,8 @@ class _OrdersState extends State<Orders> {
     //   args["customerId"] = null;
     //   onlyOrders = true;
     // }
-    if (currentUsr["role"] == "K_USER") {
+    if (currentUsr["role"] == "K_USER" &&
+        currentUsr["belongs_to_customer"] != null) {
       customerId = currentUsr["belongs_to_customer"]["id"];
     } else {
       // customerId = args["customerI"]
@@ -107,19 +108,19 @@ class _OrdersState extends State<Orders> {
             buildListViewForOrders(pastOrders),
           ],
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            result = await Navigator.pushNamed(context, "/forms",
-                arguments: {"formType": "K_FORM_ORDERS"});
-            setState(() {
-              getCustomerPastOrders(_loginSrv.currentUser);
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: () async {
+        //     result = await Navigator.pushNamed(context, "/forms",
+        //         arguments: {"formType": "K_FORM_ORDERS"});
+        //     setState(() {
+        //       getCustomerPastOrders(_loginSrv.currentUser);
 
-              getCustomerFutureOrders(_loginSrv.currentUser);
-            });
-          },
-          tooltip: 'Add Orders',
-          child: Icon(Icons.add),
-        ),
+        //       getCustomerFutureOrders(_loginSrv.currentUser);
+        //     });
+        //   },
+        //   tooltip: 'Add Orders',
+        //   child: Icon(Icons.add),
+        // ),
       ),
     );
   }

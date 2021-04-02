@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:order_management/screens/customers.dart';
 import 'package:order_management/screens/dashboard.dart';
 import 'package:order_management/screens/authmgr.dart';
+import 'package:order_management/screens/login_profile.dart';
 import 'package:order_management/screens/orders.dart';
 import 'package:order_management/screens/otp.dart';
 import 'package:order_management/screens/products.dart';
@@ -47,6 +48,7 @@ class MyApp extends StatelessWidget {
         routes: {
           // When navigating to the "/second" route, build the SecondScreen widget.
           '/auth': (context) => AuthMgr(),
+          '/login-profile': (context) => LoginProfile(),
           '/otp': (context) => Otp(),
           '/dashboard': (context) => Dashboard(),
           '/products': (context) => Products(),

@@ -60,8 +60,9 @@ class AppConfigService {
         list.add(DrawerHeader(
           child: Center(
             child: Text(
-              transformText(getV("DRAWER.header.label", appConfig), _loginSrv),
-            style:TextStyle(color: Colors.white)),
+                transformText(
+                    getV("DRAWER.header.label", appConfig), _loginSrv),
+                style: TextStyle(color: Colors.white)),
           ),
           decoration: BoxDecoration(
             color: Colors.blue,
@@ -204,7 +205,12 @@ class AppConfigService {
     print(data);
     return data;
   }
-
+  
+/// Saves the form in the [colName]
+/// [model] data to update 
+/// [refId] used while update operation. refId should be the id field of the collection
+/// [key] used if the data is nested
+/// returns the updated model data
   dynamic saveForm(colName, model, [refId, key]) async {
     var refItem;
     var modelToUpdate = model;
@@ -221,8 +227,7 @@ class AppConfigService {
         modelToUpdate = refItem[0];
       }
     }
-    var data = await db.collection(colName).save(modelToUpdate);
-    print(data);
+    await db.collection(colName).save(modelToUpdate);
     return modelToUpdate;
   }
 }
