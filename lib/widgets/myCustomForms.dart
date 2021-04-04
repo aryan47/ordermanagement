@@ -467,7 +467,8 @@ class MyCustomFormState extends State<MyCustomForm> {
     var refId;
     var modelsToUpdate = fref["actions"][formAction]["modelsToUpdate"];
     targetModel["type"] = fref["type"];
-    targetModel["product"] = product;
+    // If product is available then attach to the form; Make this generic, hardcoded for now.
+    if (product != null) targetModel["product"] = product;
     await Future.forEach(modelsToUpdate, (element) async {
       if (element["refModel"] != null) {
         refModel = await srv.getModelByID(

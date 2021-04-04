@@ -46,11 +46,14 @@ class _AuthMgrState extends State<AuthMgr> {
     _dbSrv = Provider.of<AppConfigService>(context, listen: false);
     var data = await _dbSrv.initDB();
     checkAuth();
+    // Get the current loggedin user
     await extractCurrentUser();
     var currentUser =
         _loginSrv.currentUser != null ? _loginSrv.currentUser["role"] : null;
+    // Modify the configuration based on user privileges
     applyUserPrivileges(_dbSrv.appConfig, currentUser);
     
+    // If user name is not present then send user to login-profile page
     if (_loginSrv.currentUser != null &&
         _loginSrv.currentUser["belongs_to_customer"]["name"] == null) {
       // get the name and save it

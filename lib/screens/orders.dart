@@ -1,9 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:order_management/service/appConfigService.dart';
+import 'package:order_management/service/handlerService.dart';
 import 'package:order_management/service/loginService.dart';
 import 'package:order_management/widgets/dropdownbutton.dart';
 import 'package:provider/provider.dart';
@@ -20,11 +18,14 @@ class _OrdersState extends State<Orders> {
   var futureOrders = [];
 
   Map args;
-  var src;
+  var src,
+      result,
+      _loginSrv,
+      _appConfig,
+      selectedOrderId,
+      selectedProductAction;
   String title = "Orders List";
-  bool onlyOrders = false;
-  var result;
-  var _loginSrv;
+  bool onlyOrders = true;
 
   @override
   void didChangeDependencies() {
@@ -37,6 +38,15 @@ class _OrdersState extends State<Orders> {
     //   args["customerId"] = null;
     //   onlyOrders = true;
     // }
+
+    _appConfig = Provider.of<AppConfigService>(context, listen: false);
+
+    // stateMachine = _appConfig.config["PRODUCT_ACTIONS"];
+
+    loadOrders();
+  }
+
+  void loadOrders() {
     getCustomerPastOrders(_loginSrv.currentUser);
 
     getCustomerFutureOrders(_loginSrv.currentUser);
@@ -81,6 +91,27 @@ class _OrdersState extends State<Orders> {
         if (pastOrders.length != 0)
           title = onlyOrders ? "Orders List" : pastOrders[0]["customer_name"];
       });
+    });
+  }
+
+  void onCustomDropdownTap(action, refData) async {
+    selectedProductAction = action;
+    var state;
+    switch (selectedProductAction) {
+      case "K_ACTION_DELIVERED":
+        state = "K_STATE_COMPLETE";
+        break;
+      case "K_ACTION_CANCELLED":
+        state = "K_STATE_CANCEL";
+        break;
+      default:
+        state = "NO_ACTION";
+    }
+    await getHandler()[_appConfig.config["STATE_MACHINE"]["PRODUCT_ACTIONS"]
+            ["actions"]["onTap"]
+        ["handler"]](_appConfig, action, state, refData["_id"].id.hexString);
+    setState(() {
+      loadOrders();
     });
   }
 
@@ -149,8 +180,19 @@ class _OrdersState extends State<Orders> {
               orders[index]["belongs_to_customer"]["phone_no"]),
           subtitle: Text(DateFormat('dd-MMM-yyyy h:mm a')
               .format((orders[index]['dt_order_place']).toLocal())),
-          trailing: showMore == true ? CustomDropdownButton() : null,
+          trailing: showMore == true
+              ? CustomDropdownButton(
+                  data: _appConfig.config["PRODUCT_ACTIONS"],
+                  refData: orders[index],
+                  onCustomDropdownTap: onCustomDropdownTap)
+              : null,
           onTap: () {
+            // print(orders[index]);
+            // selectedOrderId = orders[index];
+
+            // getHandler()[_appConfig.config["STATE_MACHINE"]["PRODUCT_ACTIONS"]
+            //         ["actions"]["onTap"]
+            //     ["handler"]](_appConfig, selectedProductState, selectedOrderId);
             // String route = srv.getV("actions.onTap.gotoRoute", stateMachine);
             // Navigator.pushNamed(context, route, arguments: {"customerId": custOrders[index].id});
           },

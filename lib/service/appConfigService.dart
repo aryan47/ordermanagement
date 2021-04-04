@@ -151,7 +151,8 @@ class AppConfigService {
           .collection("orders")
           .find(where
               .eq("belongs_to_customer.id", id)
-              .ne('status', "Delivered")
+              .eq('status', "K_STATE_NEW")
+              .eq('last_action', "K_ACTION_CREATE")
               .sortBy('dt_delivery', descending: true))
           .toList();
       return data;
@@ -159,7 +160,8 @@ class AppConfigService {
       var data = await db
           .collection("orders")
           .find(where
-              .ne('status', "Delivered")
+              .eq('status', "K_STATE_NEW")
+              .eq('last_action', "K_ACTION_CREATE")
               .sortBy('dt_delivery', descending: true))
           .toList();
       return data;
@@ -173,7 +175,8 @@ class AppConfigService {
           .collection("orders")
           .find(where
               .eq("belongs_to_customer.id", id)
-              .eq('status', "Delivered")
+              .ne('status', "K_STATE_NEW")
+              .ne('last_action', "K_ACTION_CREATE")
               .sortBy('dt_delivery', descending: true))
           .toList();
       return data;
@@ -181,7 +184,8 @@ class AppConfigService {
       var data = await db
           .collection("orders")
           .find(where
-              .eq('status', "Delivered")
+              .ne('status', "K_STATE_NEW")
+              .ne('last_action', "K_ACTION_CREATE")
               .sortBy('dt_delivery', descending: true))
           .toList();
       return data;
@@ -205,12 +209,13 @@ class AppConfigService {
     print(data);
     return data;
   }
-  
-/// Saves the form in the [colName]
-/// [model] data to update 
-/// [refId] used while update operation. refId should be the id field of the collection
-/// [key] used if the data is nested
-/// returns the updated model data
+
+  /// Saves the form in the [colName]
+  /// [model] data to update
+  /// [refId] used while update operation. refId should be the id field of the collection
+  /// [key] used if the data is nested
+  /// eg: `saveForm('customers', {"name": userCtrl.text},_loginSrv.currentUser["belongs_to_customer"]["id"])`
+  /// returns the updated model data
   dynamic saveForm(colName, model, [refId, key]) async {
     var refItem;
     var modelToUpdate = model;

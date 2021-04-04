@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import '../service/handlerService.dart';
 
 class CustomDropdownButton extends StatefulWidget {
-  CustomDropdownButton({Key key}) : super(key: key);
-
+  final List data;
+  final Function onCustomDropdownTap;
+  // Used to store refData; it is used if we want to pass data to oncustomDropdownTap function
+  final refData;
+  CustomDropdownButton(
+      {Key key, @required this.data, this.refData, this.onCustomDropdownTap})
+      : super(key: key);
   @override
   _CustomDropdownButtonState createState() => _CustomDropdownButtonState();
 }
@@ -23,15 +29,16 @@ class _CustomDropdownButtonState extends State<CustomDropdownButton> {
         color: Colors.transparent,
       ),
       onChanged: (String newValue) {
-        setState(() {
-          dropdownValue = newValue;
-        });
+        dropdownValue = newValue;
+        // productAction(dropdownValue);
+        // getShortForm()[fieldDef["autoFillHandler"]["handler"]](data);
+        widget.onCustomDropdownTap(dropdownValue, widget.refData);
+        setState(() {});
       },
-      items: <String>['Delivered','Cancel']
-          .map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
+      items: widget.data.map((var eachData) {
+        return new DropdownMenuItem<String>(
+          value: eachData.keys.first,
+          child: new Text(eachData.values.first),
         );
       }).toList(),
     );

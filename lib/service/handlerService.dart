@@ -23,3 +23,13 @@ Map<String, Function> getShortForm() {
   };
   return data;
 }
+
+getHandler()  {
+  Map<String, Function> data;
+  data = {
+    "productAction": (srv, action,state, orderId) async {
+      await srv.saveForm('orders', {"last_action": action, "status": state}, orderId);
+    }
+  };
+  return data;
+}
