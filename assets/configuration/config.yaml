@@ -61,9 +61,9 @@ PRODUCT_STATES:
   - K_STATE_CANCEL: "Cancel"
 
 PRODUCT_ACTIONS:
-  - K_ACTION_CREATE: "Created"
-  - K_ACTION_DELIVERED: "Delivered"
-  - K_ACTION_CANCELLED: "Cancel"
+  K_ACTION_CREATE: "Created"
+  K_ACTION_DELIVERED: "Delivered"
+  K_ACTION_CANCELLED: "Cancel"
 
 STATE_MACHINE:
   PRODUCT_ACTIONS:
@@ -151,10 +151,10 @@ FORMS:
       K_ACTION_CANCEL:
         label: Cancel
         action: K_ACTION_CANCEL
-      K_ACTION_SUBMIT:
+      K_ACTION_CREATE:
         label: Submit
-        action: K_ACTION_SUBMIT
-        # This is the array of models to update at K_ACTION_SUBMIT
+        action: K_ACTION_CREATE
+        # This is the array of models to update at K_ACTION_CREATE
         modelsToUpdate:
           # Where to store
           - targetModel: orders
@@ -177,7 +177,7 @@ FORMS:
         show_cond:
           "$ne":
             - "$last_action"
-            - K_ACTION_SUBMIT
+            - K_ACTION_CREATE
     addWatchers:
       is_new: true
   K_FORM_ADDRESS:
@@ -213,9 +213,9 @@ FORMS:
       K_ACTION_CANCEL:
         label: Cancel
         action: K_ACTION_CANCEL
-      K_ACTION_SUBMIT:
+      K_ACTION_CREATE:
         label: Submit
-        action: K_ACTION_SUBMIT
+        action: K_ACTION_CREATE
         modelsToUpdate:
           - targetModel: customers
             targetModelRef: "$$K_LOGGED_IN_CUSTOMER_ID"
@@ -225,7 +225,7 @@ FORMS:
         show_cond:
           "$ne":
             - "$last_action"
-            - K_ACTION_SUBMIT
+            - K_ACTION_CREATE
     addWatchers: {}
 USER_PRIVILEGES:
   K_USER:
@@ -234,3 +234,5 @@ USER_PRIVILEGES:
       Amount Due: false
     FORMS.K_FORM_ORDERS.fields:
       is_new: false
+    PRODUCT_ACTIONS:
+      K_ACTION_CREATE: false

@@ -1,3 +1,4 @@
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:order_management/service/appConfigService.dart';
@@ -176,8 +177,7 @@ class _OrdersState extends State<Orders> {
               style: TextStyle(color: Colors.blueAccent),
             ),
           ),
-          title: Text(orders[index]["belongs_to_customer"]["name"] ??
-              orders[index]["belongs_to_customer"]["phone_no"]),
+          title: buildTitle(orders, index),
           subtitle: Text(DateFormat('dd-MMM-yyyy h:mm a')
               .format((orders[index]['dt_order_place']).toLocal())),
           trailing: showMore == true
@@ -185,7 +185,7 @@ class _OrdersState extends State<Orders> {
                   data: _appConfig.config["PRODUCT_ACTIONS"],
                   refData: orders[index],
                   onCustomDropdownTap: onCustomDropdownTap)
-              : null,
+              : getProductStatus(orders, index),
           onTap: () {
             // print(orders[index]);
             // selectedOrderId = orders[index];
@@ -199,5 +199,35 @@ class _OrdersState extends State<Orders> {
         );
       },
     );
+  }
+
+  Widget getProductStatus(orders, int index) {
+    var color;
+    var status =
+        _appConfig.config["PRODUCT_ACTIONS"][orders[index]["last_action"]];
+    // print(status);
+    switch (orders[index]["last_action"]) {
+      case "K_ACTION_CREATE":
+        color = Colors.orange;
+        break;
+      case "K_ACTION_DELIVERED":
+        color = Colors.green;
+        break;
+      case "K_ACTION_CANCELLED":
+        color = Colors.red;
+        break;
+      default:
+        color = Colors.black;
+    }
+    if (status == null) return Text("");
+    return Text(status, style: TextStyle(color: color));
+  }
+
+  Text buildTitle(orders, int index) {
+    if (_loginSrv.currentUser["role"] == "K_USER") {
+      return Text(orders[index]["product"]["name"]);
+    }
+    return Text(orders[index]["belongs_to_customer"]["name"] ??
+        orders[index]["belongs_to_customer"]["phone_no"]);
   }
 }

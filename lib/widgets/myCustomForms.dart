@@ -354,7 +354,7 @@ class MyCustomFormState extends State<MyCustomForm> {
       var onPressed;
       fref["actions"].forEach((k, v) {
         switch (v["action"]) {
-          case "K_ACTION_SUBMIT":
+          case "K_ACTION_CREATE":
             onPressed = () {
               if (_formKey.currentState.validate()) {
                 // If the form is valid, display a Snackbar.

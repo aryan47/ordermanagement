@@ -66,17 +66,20 @@ void applyUserPrivileges(Map config, userRole) {
   if (userPriv != null && userPriv.isNotEmpty) {
     userPriv.forEach((k, v) {
       // get items from config
-      List items = getV(k, config);
-      List itemsCopy = [];
+      dynamic items = getV(k, config);
       var privEachItem = userPriv[k];
-
-      for (var i = 0; i < items.length; i++) {
-        if (privEachItem[items[i]['key']] != false) {
-          itemsCopy.add(items[i]);
+      if (items is List) {
+        List itemsCopy = [];
+        for (var i = 0; i < items.length; i++) {
+          if (privEachItem[items[i]['key']] != false) {
+            itemsCopy.add(items[i]);
+          }
         }
+        items.clear();
+        items.addAll(itemsCopy);
+      } else if (items is Map) {
+        items.removeWhere((k, v) => privEachItem[k] == false);
       }
-      items.clear();
-      items.addAll(itemsCopy);
     });
   }
 }
@@ -89,14 +92,18 @@ String transformText(String text, loginSrv) {
       case "\$\$K_LOGGED_IN_CUSTOMER_NAME":
         print("current user: ");
         // textArr.removeAt(index);
-        if (loginSrv != null && loginSrv.currentUser != null && loginSrv.currentUser["belongs_to_customer"] != null)
+        if (loginSrv != null &&
+            loginSrv.currentUser != null &&
+            loginSrv.currentUser["belongs_to_customer"] != null)
           textArrResult.add(loginSrv.currentUser["belongs_to_customer"]
                   ["name"] ??
               loginSrv.currentUser["belongs_to_customer"]["phone_no"]);
         break;
       case "\$\$K_LOGGED_IN_CUSTOMER_ID":
         // textArr.removeAt(index);
-        if (loginSrv != null && loginSrv.currentUser != null && loginSrv.currentUser["belongs_to_customer"] != null)
+        if (loginSrv != null &&
+            loginSrv.currentUser != null &&
+            loginSrv.currentUser["belongs_to_customer"] != null)
           textArrResult.add(loginSrv.currentUser["belongs_to_customer"]["id"]);
         break;
       default:
