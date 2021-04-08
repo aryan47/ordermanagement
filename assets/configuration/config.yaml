@@ -1,6 +1,7 @@
 ---
 GENERAL_SETTINGS:
-  title: Paani Wala
+  title: Paani Wala,
+  phone: "+917009224712"
 DRAWER:
   value: true
   header:
@@ -26,6 +27,9 @@ DRAWER:
         alias: call
       label: Call Us
       key: Call Us
+      actions:
+        onTap:
+          action: C_ACTION_CALL
     - leading:
         icon: "59721"
         alias: power_settings_new

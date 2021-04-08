@@ -38,6 +38,7 @@ dependencies:
   mobx: ^1.2.1+4
   yaml: ^3.1.0
   badges: ^1.2.0
+  url_launcher: ^6.0.3
   # sms_autofill: any
 
 dev_dependencies:

@@ -8,6 +8,7 @@ import 'package:order_management/service/loginService.dart';
 import 'package:order_management/service/utilService.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:yaml/yaml.dart';
 
 // ignore: must_be_immutable
@@ -102,6 +103,8 @@ class AppConfigService {
           if (getV("actions.onTap.action", src) == "C_ACTION_LOGOUT") {
             // FirebaseAuth.instance.signOut();
             LoginService().signOut(context);
+          } else if (getV("actions.onTap.action", src) == "C_ACTION_CALL") {
+            launch("tel:" + this.appConfig["GENERAL_SETTINGS"]["phone"]);
           }
           break;
       }
