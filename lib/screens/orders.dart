@@ -5,6 +5,7 @@ import 'package:order_management/service/appConfigService.dart';
 import 'package:order_management/service/handlerService.dart';
 import 'package:order_management/service/loginService.dart';
 import 'package:order_management/widgets/dropdownbutton.dart';
+import 'package:order_management/widgets/widgetUtils.dart';
 import 'package:provider/provider.dart';
 
 class Orders extends StatefulWidget {
@@ -44,7 +45,7 @@ class _OrdersState extends State<Orders> {
 
     // stateMachine = _appConfig.config["PRODUCT_ACTIONS"];
 
-    loadOrders();
+    // loadOrders();
   }
 
   void loadOrders() {
@@ -53,25 +54,25 @@ class _OrdersState extends State<Orders> {
     getCustomerFutureOrders(_loginSrv.currentUser);
   }
 
-  void getCustomerFutureOrders(currentUsr) {
+  Future getCustomerFutureOrders(currentUsr) {
     var customerId;
     if (currentUsr["role"] == "K_USER") {
       customerId = currentUsr["belongs_to_customer"]["id"];
     } else {
       // customerId = args["customerI"]
     }
-    Provider.of<AppConfigService>(context, listen: false)
-        .getCustomerFutureOrders(customerId)
-        .then((data) {
-      setState(() {
-        if (futureOrders.length != 0)
-          title = onlyOrders ? "Orders List" : futureOrders[0]["customer_name"];
-        futureOrders = data;
-      });
-    });
+    return Provider.of<AppConfigService>(context, listen: false)
+        .getCustomerFutureOrders(customerId);
+    //     .then((data) {
+    //   setState(() {
+    //     if (futureOrders.length != 0)
+    //       title = onlyOrders ? "Orders List" : futureOrders[0]["customer_name"];
+    //     futureOrders = data;
+    //   });
+    // });
   }
 
-  void getCustomerPastOrders(currentUsr) {
+  Future getCustomerPastOrders(currentUsr) {
     var customerId;
     // if (args == null) {
     //   args = new Map();
@@ -84,15 +85,18 @@ class _OrdersState extends State<Orders> {
     } else {
       // customerId = args["customerI"]
     }
-    Provider.of<AppConfigService>(context, listen: false)
-        .getCustomerPastOrders(customerId)
-        .then((data) {
-      setState(() {
-        pastOrders = data;
-        if (pastOrders.length != 0)
-          title = onlyOrders ? "Orders List" : pastOrders[0]["customer_name"];
-      });
-    });
+    return Provider.of<AppConfigService>(context, listen: false)
+        .getCustomerPastOrders(customerId);
+    //     .then((data) {
+    //   print("==============data");
+    //   print(data);
+    //   setState(() {
+    //     pastOrders = data;
+    //     if (pastOrders.length != 0)
+    //       title = onlyOrders ? "Orders List" : pastOrders[0]["customer_name"];
+    //   });
+    //   return Future.value(pastOrders);
+    // });
   }
 
   void onCustomDropdownTap(action, refData) async {
@@ -136,8 +140,27 @@ class _OrdersState extends State<Orders> {
         ),
         body: TabBarView(
           children: [
-            buildListViewForOrders(futureOrders, true),
-            buildListViewForOrders(pastOrders),
+            customLoader(
+                future: getCustomerFutureOrders(_loginSrv.currentUser),
+                builder: (data) {
+                  futureOrders = data;
+                  if (futureOrders.length != 0)
+                    title = onlyOrders
+                        ? "Orders List"
+                        : futureOrders[0]["customer_name"];
+
+                  return buildListViewForOrders(futureOrders, true);
+                }),
+            customLoader(
+                future: getCustomerPastOrders(_loginSrv.currentUser),
+                builder: (data) {
+                  pastOrders = data;
+                  if (pastOrders.length != 0)
+                    title = onlyOrders
+                        ? "Orders List"
+                        : pastOrders[0]["customer_name"];
+                  return buildListViewForOrders(pastOrders);
+                }),
           ],
         ),
         // floatingActionButton: FloatingActionButton(

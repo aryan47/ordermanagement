@@ -14,3 +14,6 @@ Login screen styling
 put refresh on order list
 ========================================
 merge resolvefields and transformtext
+check order not getting listed in order list screen (DONE)
+=====================================
+add loader/spinner in order (DONE)
