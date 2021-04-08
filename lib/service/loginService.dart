@@ -7,6 +7,7 @@ import 'package:order_management/screens/models/usersModel.dart';
 import 'package:order_management/screens/otp.dart';
 import 'package:order_management/service/appConfigService.dart';
 import 'package:order_management/service/handlerService.dart';
+import 'package:order_management/widgets/widgetUtils.dart';
 import 'package:provider/provider.dart';
 
 class LoginService {
@@ -79,6 +80,7 @@ class LoginService {
 
   Future<void> initLogin(String phone, context) async {
     await Firebase.initializeApp();
+    showLoaderDialog(context);
     db = Provider.of<AppConfigService>(context, listen: false).db;
 
     try {
@@ -102,10 +104,11 @@ class LoginService {
         },
         codeSent: (String verificationId, int resendToken) async {
           print('!!!!!!!!!!!!!code sent');
-          String smsCode = await Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => Otp()),
-          );
+          String smsCode = await showMyDialog(context);
+          // String smsCode = await Navigator.push(
+          //   context,
+          //   MaterialPageRoute(builder: (context) => Otp()),
+          // );
 
           if (smsCode != null) {
             // Create a PhoneAuthCredential with the code
@@ -117,6 +120,8 @@ class LoginService {
             await FirebaseAuth.instance
                 .signInWithCredential(phoneAuthCredential);
             await createUser(db);
+            // Used to close the showLoaderDialog
+            Navigator.of(context).pop();
             Navigator.pushReplacementNamed(context, "/auth");
           }
         },

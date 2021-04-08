@@ -17,3 +17,5 @@ merge resolvefields and transformtext
 check order not getting listed in order list screen (DONE)
 =====================================
 add loader/spinner in order (DONE)
+put validation in login screen
+handle failed otp and wrong phone number

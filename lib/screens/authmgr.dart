@@ -37,7 +37,7 @@ class _AuthMgrState extends State<AuthMgr> {
 
   dynamic extractCurrentUser() async {
     var user = await _loginSrv.getCurrentUser(_dbSrv.db);
-    _loginSrv.currentUser = user != null ? user[0] : user;
+    _loginSrv.currentUser = user != null && user.length > 0 ? user[0] : user;
     return _loginSrv.currentUser;
   }
 
@@ -52,7 +52,7 @@ class _AuthMgrState extends State<AuthMgr> {
         _loginSrv.currentUser != null ? _loginSrv.currentUser["role"] : null;
     // Modify the configuration based on user privileges
     applyUserPrivileges(_dbSrv.appConfig, currentUser);
-    
+
     // If user name is not present then send user to login-profile page
     if (_loginSrv.currentUser != null &&
         _loginSrv.currentUser["belongs_to_customer"]["name"] == null) {
@@ -69,12 +69,30 @@ class _AuthMgrState extends State<AuthMgr> {
         builder: (context, snapshot) {
           if ((snapshot.connectionState == ConnectionState.none ||
               snapshot.connectionState == ConnectionState.waiting)) {
-            return Container();
+            return Scaffold(
+                appBar: AppBar(
+                    title: Text(_dbSrv != null && _dbSrv.appConfig != null
+                        ? _dbSrv.appConfig["GENERAL_SETTINGS"]["title"]
+                        : ""),
+                    automaticallyImplyLeading: false),
+                body: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: CircularProgressIndicator(),
+                      ),
+                    ],
+                  ),
+                ));
           }
           return Scaffold(
             drawer: buildDrawer(_dbSrv.buildDrawerList(context, _loginSrv)),
             appBar: AppBar(
-              title: Text("Product Management"),
+              title: Text(_dbSrv != null && _dbSrv.appConfig != null
+                  ? _dbSrv.appConfig["GENERAL_SETTINGS"]["title"]
+                  : ""),
             ),
             body: Home(),
             bottomNavigationBar: buildBottomNavigationBar(
