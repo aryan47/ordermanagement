@@ -39,6 +39,7 @@ class LoginService {
           .toList();
       if (customer != null && customer.length != 0) {
         model["belongs_to_customer"] = customer[0];
+        return user;
       } else {
         // create customer and add reference to the user collection
         Map<String, dynamic> cust = {};
@@ -58,11 +59,9 @@ class LoginService {
       model["phoneNumber"] = user.phoneNumber;
       model["uid"] = user.uid;
       model["role"] = "K_USER";
-      var data = await db.collection("users").save(model);
-
-      print(data);
+      await db.collection("users").save(model);
+      return user;
     }
-    return user;
   }
 
   dynamic getCurrentUser(db) async {
