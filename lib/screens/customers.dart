@@ -43,13 +43,13 @@ class _CustomersState extends State<Customers> {
         itemBuilder: (context, index) {
           return ListTile(
             title: Text('${customers[index].name}'),
-            subtitle: Text(customers[index].address["address"]),
+            subtitle: Text(customers[index].address !=null ? customers[index].address["address"]:""),
             trailing: Icon(Icons.keyboard_arrow_right),
             onTap: () {
               print(stateMachine);
               String route = getV("actions.onTap.gotoRoute", stateMachine);
               Navigator.pushNamed(context, route,
-                  arguments: {"customerId": customers[index].id});
+                  arguments: {"customer": customers[index]});
             },
           );
         },

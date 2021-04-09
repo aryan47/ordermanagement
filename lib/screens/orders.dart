@@ -26,7 +26,7 @@ class _OrdersState extends State<Orders> {
       _appConfig,
       selectedOrderId,
       selectedProductAction;
-  String title = "Orders List";
+  String title;
   bool onlyOrders = true;
 
   @override
@@ -59,7 +59,11 @@ class _OrdersState extends State<Orders> {
     if (currentUsr["role"] == "K_USER") {
       customerId = currentUsr["belongs_to_customer"]["id"];
     } else {
-      // customerId = args["customerI"]
+      // if comming from cutomer screen
+      if (args != null) {
+        customerId = args["customer"].id.id.hexString;
+        title = args["customer"].name;
+      }
     }
     return Provider.of<AppConfigService>(context, listen: false)
         .getCustomerFutureOrders(customerId);
@@ -83,7 +87,10 @@ class _OrdersState extends State<Orders> {
         currentUsr["belongs_to_customer"] != null) {
       customerId = currentUsr["belongs_to_customer"]["id"];
     } else {
-      // customerId = args["customerI"]
+      if (args != null) {
+        customerId = args["customer"].id.id.hexString;
+        title = args["customer"].name;
+      }
     }
     return Provider.of<AppConfigService>(context, listen: false)
         .getCustomerPastOrders(customerId);
@@ -136,7 +143,7 @@ class _OrdersState extends State<Orders> {
               ),
             ],
           ),
-          title: Text(title ?? ""),
+          title: Text(title ?? "Orders List"),
         ),
         body: TabBarView(
           children: [
@@ -144,10 +151,10 @@ class _OrdersState extends State<Orders> {
                 future: getCustomerFutureOrders(_loginSrv.currentUser),
                 builder: (data) {
                   futureOrders = data;
-                  if (futureOrders.length != 0)
-                    title = onlyOrders
-                        ? "Orders List"
-                        : futureOrders[0]["customer_name"];
+                  // if (futureOrders.length != 0)
+                  //   title = onlyOrders
+                  //       ? "Orders List"
+                  //       : futureOrders[0]["customer_name"];
 
                   return buildListViewForOrders(futureOrders, true);
                 }),
@@ -155,10 +162,10 @@ class _OrdersState extends State<Orders> {
                 future: getCustomerPastOrders(_loginSrv.currentUser),
                 builder: (data) {
                   pastOrders = data;
-                  if (pastOrders.length != 0)
-                    title = onlyOrders
-                        ? "Orders List"
-                        : pastOrders[0]["customer_name"];
+                  // if (pastOrders.length != 0)
+                  // title = onlyOrders
+                  //     ? "Orders List"
+                  //     : pastOrders[0]["customer_name"];
                   return buildListViewForOrders(pastOrders);
                 }),
           ],
