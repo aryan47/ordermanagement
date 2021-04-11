@@ -21,7 +21,7 @@ class _CustomDropdownButtonState extends State<CustomDropdownButton> {
     return DropdownButton<String>(
       value: null,
       // itemHeight: 10,
-      icon: Icon(Icons.more_vert),
+      icon: Icon(Icons.more_vert, color: Theme.of(context).primaryColor),
       // iconSize: 10,
       // style: TextStyle(color: Colors.deepPurple),
       underline: Container(

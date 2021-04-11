@@ -378,7 +378,8 @@ class MyCustomFormState extends State<MyCustomForm> {
             width: MediaQuery.of(context).size.width,
             child: FlatButton(
               child: Text(v["label"]),
-              color: Colors.blue,
+              color: Theme.of(context).primaryColor,
+              //
               onPressed: onPressed,
               shape: new RoundedRectangleBorder(
                 borderRadius: new BorderRadius.circular(10.0),

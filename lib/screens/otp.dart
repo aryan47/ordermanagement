@@ -60,7 +60,7 @@ class _OtpState extends State<Otp> {
                     "Verify",
                     style: TextStyle(color: Colors.white),
                   ),
-                  color: Colors.blue,
+                  // color: Colors.blue,
                   onPressed: () {
                     print(optCtrl.text);
                     Navigator.pop(context, optCtrl.text);

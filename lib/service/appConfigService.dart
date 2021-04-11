@@ -66,7 +66,7 @@ class AppConfigService {
                 style: TextStyle(color: Colors.white)),
           ),
           decoration: BoxDecoration(
-            color: Colors.blue,
+            color: Theme.of(context).primaryColor,
           ),
         ));
       }

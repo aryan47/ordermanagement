@@ -19,7 +19,7 @@ import 'service/appConfigService.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  debugPaintSizeEnabled= false;
+  debugPaintSizeEnabled = false;
   await Firebase.initializeApp();
 
   runApp(MyApp());
@@ -41,7 +41,11 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
+          primaryColor: Color.fromARGB(255, 9, 105, 163),
           primarySwatch: Colors.blue,
+          buttonColor: Color.fromARGB(255, 9, 105, 163),
+
+          // primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         home: AuthMgr(),

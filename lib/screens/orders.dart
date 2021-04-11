@@ -200,11 +200,13 @@ class _OrdersState extends State<Orders> {
             ),
             padding: const EdgeInsets.all(5.0),
             decoration: BoxDecoration(
-                border: Border.all(color: Colors.blueAccent),
+                border: Border.all(
+                  color: Theme.of(context).primaryColor,
+                ),
                 borderRadius: BorderRadius.circular(8.0)),
             child: Text(
               "Qty: " + orders[index]['quantity'].toString(),
-              style: TextStyle(color: Colors.blueAccent),
+              style: TextStyle(color: Theme.of(context).primaryColor),
             ),
           ),
           title: buildTitle(orders, index),
