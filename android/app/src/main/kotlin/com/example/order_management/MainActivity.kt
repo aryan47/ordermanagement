@@ -1,4 +1,4 @@
-package com.example.order_management
+package com.nirjal
 
 import io.flutter.embedding.android.FlutterActivity
 

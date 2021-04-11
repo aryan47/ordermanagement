@@ -53,12 +53,26 @@ Future showMyDialog(context) async {
     barrierDismissible: false, // user must tap button!
     builder: (BuildContext context) {
       return AlertDialog(
-        contentPadding: EdgeInsets.all(10.0),
-        actionsPadding: EdgeInsets.all(5.0),
-        buttonPadding: EdgeInsets.all(5.0),
+        contentPadding: EdgeInsets.only(left: 24.0),
+        actionsPadding: EdgeInsets.all(0.0),
+        buttonPadding: EdgeInsets.all(0.0),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(20.0))),
         title: Padding(
           padding: const EdgeInsets.only(left: 0.0),
-          child: Text('Enter OTP'),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Detecting OTP',
+                  style: TextStyle(
+                      fontSize: 18, color: Color.fromARGB(255, 9, 105, 163))),
+              SizedBox(height: 5),
+              Text(
+                'We have sent a 6-digits OTP on mobile number',
+                style: TextStyle(fontSize: 13, color: Colors.black),
+              )
+            ],
+          ),
         ),
         content: SingleChildScrollView(
           child: ListBody(
@@ -67,9 +81,10 @@ Future showMyDialog(context) async {
                   controller: optCtrl,
                   onChanged: null,
                   decoration: InputDecoration(
-                      labelText: "Enter OTP",
-                      border: new OutlineInputBorder(
-                          borderSide: new BorderSide(color: Colors.teal))),
+                    labelText: "Enter OTP",
+                    // border: new OutlineInputBorder(
+                    //     borderSide: new BorderSide(color: Colors.teal)),
+                  ),
                   keyboardType: TextInputType.number,
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.digitsOnly
@@ -78,7 +93,8 @@ Future showMyDialog(context) async {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Waiting for OTP "),
+                  Text("Waiting for OTP ",
+                      style: TextStyle(fontSize: 13, color: Colors.black)),
                   SizedBox(
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
@@ -92,7 +108,8 @@ Future showMyDialog(context) async {
         ),
         actions: <Widget>[
           TextButton(
-            child: Text('Verify'),
+            child: Text('Verify',
+                style: TextStyle(color: Color.fromARGB(255, 9, 105, 163))),
             onPressed: () {
               Navigator.of(context).pop(optCtrl.text);
             },

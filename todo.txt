@@ -19,3 +19,7 @@ check order not getting listed in order list screen (DONE)
 add loader/spinner in order (DONE)
 put validation in login screen
 handle failed otp and wrong phone number
+check customers for admin (code breakings)
+add cancel remarks
+--no-tree-shake-icons
+ flutter build appbundle --no-tree-shake-icons

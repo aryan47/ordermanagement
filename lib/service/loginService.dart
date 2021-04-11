@@ -122,6 +122,9 @@ class LoginService {
             // Used to close the showLoaderDialog
             Navigator.of(context).pop();
             Navigator.pushReplacementNamed(context, "/auth");
+          } else {
+            Navigator.of(context).pop();
+            Navigator.pushReplacementNamed(context, "/auth");
           }
         },
         codeAutoRetrievalTimeout: (String verificationId) {
