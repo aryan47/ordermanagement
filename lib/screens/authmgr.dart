@@ -28,9 +28,11 @@ class _AuthMgrState extends State<AuthMgr> {
       authChecked = true;
       if (result == true) {
       } else {
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (_) => Login()),
-            (Route<dynamic> route) => false);
+        Navigator.pushReplacementNamed(context, "/login");
+
+        // Navigator.of(context).pushAndRemoveUntil(
+        //     MaterialPageRoute(builder: (_) => Login()),
+        //     (Route<dynamic> route) => false);
       }
     });
   }
@@ -70,22 +72,17 @@ class _AuthMgrState extends State<AuthMgr> {
           if ((snapshot.connectionState == ConnectionState.none ||
               snapshot.connectionState == ConnectionState.waiting)) {
             return Scaffold(
-                appBar: AppBar(
-                    title: Text(_dbSrv != null && _dbSrv.appConfig != null
-                        ? _dbSrv.appConfig["GENERAL_SETTINGS"]["title"]
-                        : ""),
-                    automaticallyImplyLeading: false),
-                body: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: CircularProgressIndicator(),
-                      ),
-                    ],
-                  ),
-                ));
+              backgroundColor: Theme.of(context).primaryColor,
+              body: Center(
+                  child: Text(
+                'Nirjal',
+                style: TextStyle(
+                    letterSpacing: 10,
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
+              )),
+            );
           }
           return Scaffold(
             drawer: buildDrawer(_dbSrv.buildDrawerList(context, _loginSrv)),

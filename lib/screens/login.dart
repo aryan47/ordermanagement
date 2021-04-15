@@ -127,7 +127,6 @@ class _LoginState extends State<Login> {
                   ),
                   InkWell(
                     onTap: () {
-                      print(phoneCtrl.text.length);
                       if (phoneCtrl.text.length < 10 ||
                           phoneCtrl.text.length > 10) {
                         final snackBar = SnackBar(

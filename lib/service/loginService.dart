@@ -91,6 +91,8 @@ class LoginService {
               await FirebaseAuth.instance.signInWithCredential(credential);
           if (status.user != null) {
             await createUser(db);
+            // used to remove login screen on back navigation
+            Navigator.of(context).pop();
             Navigator.pushReplacementNamed(context, "/auth");
           } else {
             print("wrong otp===========================");
@@ -116,8 +118,18 @@ class LoginService {
                     verificationId: verificationId, smsCode: smsCode);
 
             // Sign the user in (or link) with the credential
-            await FirebaseAuth.instance
-                .signInWithCredential(phoneAuthCredential);
+            try {
+              await FirebaseAuth.instance
+                  .signInWithCredential(phoneAuthCredential);
+            } catch (e) {
+              Navigator.of(context).pop();
+              final snackBar =
+                  SnackBar(content: Text('Please enter valid OTP'));
+
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              return;
+              // Navigator.pushReplacementNamed(context, "/auth");
+            }
             await createUser(db);
             // Used to close the showLoaderDialog
             Navigator.of(context).pop();

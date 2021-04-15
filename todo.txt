@@ -23,3 +23,9 @@ check customers for admin (code breakings)
 add cancel remarks
 --no-tree-shake-icons
  flutter build appbundle --no-tree-shake-icons
+ ===========================================
+ capture location (location access)
+ resend otp
+ ===========================================
+ move all padding, margin, color to constant
+ check customer product price as priority in price listing
