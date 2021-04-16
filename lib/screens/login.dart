@@ -110,15 +110,6 @@ class _LoginState extends State<Login> {
                             ],
                           ),
                         ),
-                        // Container(
-                        //   padding: EdgeInsets.all(8.0),
-                        //   child: TextField(
-                        //     decoration: InputDecoration(
-                        //         border: InputBorder.none,
-                        //         hintText: "Password",
-                        //         hintStyle: TextStyle(color: Colors.grey[400])),
-                        //   ),
-                        // )
                       ],
                     ),
                   ),
@@ -147,7 +138,9 @@ class _LoginState extends State<Login> {
                         child: Text(
                           "Lets Go !",
                           style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),

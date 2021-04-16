@@ -29,10 +29,6 @@ class _AuthMgrState extends State<AuthMgr> {
       if (result == true) {
       } else {
         Navigator.pushReplacementNamed(context, "/login");
-
-        // Navigator.of(context).pushAndRemoveUntil(
-        //     MaterialPageRoute(builder: (_) => Login()),
-        //     (Route<dynamic> route) => false);
       }
     });
   }
@@ -74,16 +70,39 @@ class _AuthMgrState extends State<AuthMgr> {
             return Scaffold(
               backgroundColor: Theme.of(context).primaryColor,
               body: Center(
-                  child: Text(
-                'Nirjal',
-                style: TextStyle(
-                    letterSpacing: 10,
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
-              )),
+                child: ListView(
+                  shrinkWrap: true,
+                  children: [
+                    Center(
+                      child: Text(
+                        'Nirjal',
+                        style: TextStyle(
+                            letterSpacing: 10,
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                      ),
+                    ),
+                    SizedBox(height: 50),
+                    Center(
+                      child: CircularProgressIndicator(
+                        backgroundColor: Colors.white,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Center(
+                      child: Text("Loading",
+                          style: TextStyle(
+                            color: Colors.white,
+                            letterSpacing: 2,
+                          )),
+                    )
+                  ],
+                ),
+              ),
             );
           }
+
           return Scaffold(
             drawer: buildDrawer(_dbSrv.buildDrawerList(context, _loginSrv)),
             appBar: AppBar(

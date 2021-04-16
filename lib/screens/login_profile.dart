@@ -22,9 +22,14 @@ class _LoginProfileState extends State<LoginProfile> {
         body: ListView(
           shrinkWrap: true,
           children: [
+            SizedBox(height: 30),
+            Center(
+                child: CircleAvatar(
+              radius: 40,
+              child: Icon(Icons.person, size: 70),
+            )),
             Padding(
-              padding: const EdgeInsets.only(
-                  right: 8.0, left: 8.0, top: 45.0, bottom: 15),
+              padding: const EdgeInsets.all(10),
               child: TextField(
                 controller: userCtrl,
                 onChanged: null,
@@ -36,21 +41,18 @@ class _LoginProfileState extends State<LoginProfile> {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: FlatButton(
-                  child: Text(
-                    "Save",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  // color: Colors.blue,
-                  onPressed: () async {
-                    print(userCtrl.text);
+              child: InkWell(
+                onTap: () async {
+                  if (userCtrl.text.toString().length == 0) {
+                    final snackBar =
+                        SnackBar(content: Text('Please enter your name !'));
+
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  } else {
                     var customer = await Provider.of<AppConfigService>(context,
                             listen: false)
                         .saveForm('customers', {"name": userCtrl.text},
                             _loginSrv.currentUser["belongs_to_customer"]["id"]);
-
-                    // customer["belongs_to_customer"] =
-                    //     getShortForm()["getCustomerShortForm"](customer);
 
                     await Provider.of<AppConfigService>(context, listen: false)
                         .saveForm(
@@ -58,15 +60,26 @@ class _LoginProfileState extends State<LoginProfile> {
                             getShortForm()["getCustomerShortForm"](customer),
                             _loginSrv.currentUser["_id"].id.hexString,
                             "belongs_to_customer");
-                    //                        var customer = await db
-                    //     .collection("customers")
-                    //     .find(where.eq("phone_no", user.phoneNumber))
-                    //     .toList();
-                    // if (customer != null && customer.length != 0) {
-                    //   model["belongs_to_customer"] = customer[0];
-                    // }
                     Navigator.pushReplacementNamed(context, "/auth");
-                  }),
+                  }
+                },
+                child: Container(
+                  height: 50,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Color.fromARGB(255, 9, 105, 163),
+                  ),
+                  child: Center(
+                    child: Text(
+                      "Lets Go !",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             )
           ],
         ),
