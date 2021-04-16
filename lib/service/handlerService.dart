@@ -3,7 +3,7 @@ Map<String, Function> getShortForm() {
   data = {
     "getCustomerShortForm": (customer) {
       var data = {};
-      data['id'] = customer["_id"] !=null ? customer["_id"].id.hexString : "";
+      data['id'] = customer["_id"] != null ? customer["_id"].id.hexString : "";
       data["name"] = customer["name"];
       data["belongs_to_customer"] = customer["belongs_to_customer"];
       data["phone_no"] = customer["phone_no"];
@@ -27,9 +27,15 @@ Map<String, Function> getShortForm() {
 getHandler() {
   Map<String, Function> data;
   data = {
-    "productAction": (srv, action, state, orderId) async {
+    "productAction": (srv, action, state, dtLastAction, orderId) async {
       await srv.saveForm(
-          'orders', {"last_action": action, "status": state}, orderId);
+          'orders',
+          {
+            "last_action": action,
+            "status": state,
+            "dt_last_action": dtLastAction
+          },
+          orderId);
     }
   };
   return data;

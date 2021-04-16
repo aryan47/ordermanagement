@@ -94,34 +94,28 @@ class _OrdersState extends State<Orders> {
     }
     return Provider.of<AppConfigService>(context, listen: false)
         .getCustomerPastOrders(customerId);
-    //     .then((data) {
-    //   print("==============data");
-    //   print(data);
-    //   setState(() {
-    //     pastOrders = data;
-    //     if (pastOrders.length != 0)
-    //       title = onlyOrders ? "Orders List" : pastOrders[0]["customer_name"];
-    //   });
-    //   return Future.value(pastOrders);
-    // });
   }
 
   void onCustomDropdownTap(action, refData) async {
     selectedProductAction = action;
-    var state;
+    var state, dtLastAction;
     switch (selectedProductAction) {
       case "K_ACTION_DELIVERED":
         state = "K_STATE_COMPLETE";
+        dtLastAction = new DateTime.now();
         break;
       case "K_ACTION_CANCELLED":
         state = "K_STATE_CANCEL";
+        dtLastAction = new DateTime.now();
+
         break;
       default:
         state = "NO_ACTION";
+        dtLastAction = new DateTime.now();
     }
     await getHandler()[_appConfig.config["STATE_MACHINE"]["PRODUCT_ACTIONS"]
-            ["actions"]["onTap"]
-        ["handler"]](_appConfig, action, state, refData["_id"].id.hexString);
+            ["actions"]["onTap"]["handler"]](
+        _appConfig, action, state, dtLastAction, refData["_id"].id.hexString);
     setState(() {
       loadOrders();
     });
@@ -187,10 +181,14 @@ class _OrdersState extends State<Orders> {
     );
   }
 
-  ListView buildListViewForOrders(orders, [bool showMore]) {
-    return ListView.builder(
+  Widget buildListViewForOrders(orders, [bool showMore]) {
+    if (orders.length == 0) return Center(child: Text("No Item Found"));
+    return ListView.separated(
       shrinkWrap: true,
       itemCount: orders.length,
+      separatorBuilder: (context, index) => Divider(
+        color: Colors.black,
+      ),
       itemBuilder: (context, index) {
         return ListTile(
           isThreeLine: true,
@@ -255,11 +253,31 @@ class _OrdersState extends State<Orders> {
     return Text(status, style: TextStyle(color: color));
   }
 
-  Text buildTitle(orders, int index) {
+  Widget buildTitle(orders, int index) {
     if (_loginSrv.currentUser["role"] == "K_USER") {
-      return Text(orders[index]["product"]["name"]);
+      return Text(orders[index]["product"]["name"].toString().trim());
     }
-    return Text(orders[index]["belongs_to_customer"]["name"] ??
-        orders[index]["belongs_to_customer"]["phone_no"]);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          orders[index]["product"]["name"].toString().trim(),
+          overflow: TextOverflow.ellipsis,
+        ),
+        Text(
+            "( " +
+                (orders[index]["belongs_to_customer"]["name"]
+                        .toString()
+                        .trim() ??
+                    orders[index]["belongs_to_customer"]["phone_no"]
+                        .toString()
+                        .trim()) +
+                " )",
+            style: TextStyle(
+                fontSize: 13,
+                color: Theme.of(context).primaryColor,
+                fontWeight: FontWeight.w400)),
+      ],
+    );
   }
 }

@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
           primaryColor: Color.fromARGB(255, 9, 105, 163),
           primarySwatch: Colors.blue,
           buttonColor: Color.fromARGB(255, 9, 105, 163),
-
+          indicatorColor: Colors.white,
           // primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),

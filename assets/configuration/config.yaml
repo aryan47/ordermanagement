@@ -240,3 +240,6 @@ USER_PRIVILEGES:
       is_new: false
     PRODUCT_ACTIONS:
       K_ACTION_CREATE: false
+  K_ADMIN:
+    PRODUCT_ACTIONS:
+      K_ACTION_CREATE: false

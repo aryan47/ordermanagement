@@ -180,7 +180,7 @@ class AppConfigService {
               .eq("belongs_to_customer.id", id)
               .ne('status', "K_STATE_NEW")
               .ne('last_action', "K_ACTION_CREATE")
-              .sortBy('dt_delivery', descending: true))
+              .sortBy('dt_last_action', descending: true))
           .toList();
       return data;
     } else {
@@ -189,7 +189,7 @@ class AppConfigService {
           .find(where
               .ne('status', "K_STATE_NEW")
               .ne('last_action', "K_ACTION_CREATE")
-              .sortBy('dt_delivery', descending: true))
+              .sortBy('dt_last_action', descending: true))
           .toList();
       return data;
     }

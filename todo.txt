@@ -21,6 +21,7 @@ put validation in login screen
 handle failed otp and wrong phone number
 check customers for admin (code breakings)
 add cancel remarks
+flutter pub run flutter_launcher_icons:main
 --no-tree-shake-icons
  flutter build appbundle --no-tree-shake-icons
  ===========================================
