@@ -118,12 +118,13 @@ class MyCustomFormState extends State<MyCustomForm> {
           if (initialValue != null) initialValue = initialValue.toString();
           keyboardType = TextInputType.number;
           inputFormatters.add(FilteringTextInputFormatter.digitsOnly);
-          validator = (value) {
-            if (value.isEmpty) {
-              return 'This field is required.';
-            }
-            return null;
-          };
+          if (fieldDef["required"])
+            validator = (value) {
+              if (value.isEmpty) {
+                return 'This field is required.';
+              }
+              return null;
+            };
           onSaved = (value) => targetModel[fieldDef['name']] = int.parse(value);
 
           if (fref["addWatchers"][fieldDef["name"]] == true) {
@@ -140,12 +141,13 @@ class MyCustomFormState extends State<MyCustomForm> {
           /// set initial value
           initialValue = getInitialValue(fieldDef);
           if (initialValue != null) initialValue = initialValue.toString();
-          validator = (value) {
-            if (value.isEmpty) {
-              return 'This field is required.';
-            }
-            return null;
-          };
+          if (fieldDef["required"])
+            validator = (value) {
+              if (value.isEmpty) {
+                return 'This field is required.';
+              }
+              return null;
+            };
           onSaved = (value) => targetModel[fieldDef['name']] = value;
 
           if (fref["addWatchers"][fieldDef["name"]] == true) {
@@ -158,12 +160,13 @@ class MyCustomFormState extends State<MyCustomForm> {
 
           break;
         default:
-          validator = (value) {
-            if (value.isEmpty) {
-              return 'This field is required.';
-            }
-            return null;
-          };
+          if (fieldDef["required"])
+            validator = (value) {
+              if (value.isEmpty) {
+                return 'This field is required.';
+              }
+              return null;
+            };
           onSaved = (value) => targetModel[fieldDef['name']] = value;
 
           if (fref["addWatchers"][fieldDef["name"]] == true) {
