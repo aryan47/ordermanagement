@@ -7,6 +7,7 @@ import 'package:order_management/service/loginService.dart';
 import 'package:order_management/widgets/dropdownbutton.dart';
 import 'package:order_management/widgets/widgetUtils.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Orders extends StatefulWidget {
   Orders({Key key}) : super(key: key);
@@ -210,12 +211,26 @@ class _OrdersState extends State<Orders> {
           title: buildTitle(orders, index),
           subtitle: Text(DateFormat('dd-MMM-yyyy h:mm a')
               .format((orders[index]['dt_order_place']).toLocal())),
-          trailing: showMore == true
-              ? CustomDropdownButton(
-                  data: _appConfig.config["PRODUCT_ACTIONS"],
-                  refData: orders[index],
-                  onCustomDropdownTap: onCustomDropdownTap)
-              : getProductStatus(orders, index),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (_loginSrv.currentUser["role"] == "K_ADMIN")
+                IconButton(
+                    color: Colors.green[700],
+                    icon: Icon(Icons.call),
+                    onPressed: () {
+                      if (orders[index] != null &&
+                          orders[index]["phone_no"] != null)
+                        launch("tel:" + orders[index]["phone_no"]);
+                    }),
+              showMore == true
+                  ? CustomDropdownButton(
+                      data: _appConfig.config["PRODUCT_ACTIONS"],
+                      refData: orders[index],
+                      onCustomDropdownTap: onCustomDropdownTap)
+                  : getProductStatus(orders, index),
+            ],
+          ),
           onTap: () {
             // print(orders[index]);
             // selectedOrderId = orders[index];
@@ -265,18 +280,17 @@ class _OrdersState extends State<Orders> {
           overflow: TextOverflow.ellipsis,
         ),
         Text(
-            "( " +
-                (orders[index]["belongs_to_customer"]["name"]
-                        .toString()
-                        .trim() ??
-                    orders[index]["belongs_to_customer"]["phone_no"]
-                        .toString()
-                        .trim()) +
-                " )",
-            style: TextStyle(
-                fontSize: 13,
-                color: Theme.of(context).primaryColor,
-                fontWeight: FontWeight.w400)),
+          "( " +
+              (orders[index]["belongs_to_customer"]["name"].toString().trim() ??
+                  orders[index]["belongs_to_customer"]["phone_no"]
+                      .toString()
+                      .trim()) +
+              " )",
+          style: TextStyle(
+              fontSize: 13,
+              color: Theme.of(context).primaryColor,
+              fontWeight: FontWeight.w400),
+        ),
       ],
     );
   }
