@@ -8,10 +8,20 @@ import 'package:order_management/service/loginService.dart';
 import 'package:order_management/service/handlerService.dart';
 import 'package:order_management/service/utilService.dart';
 import 'package:order_management/widgets/card_formfield.dart';
-import 'package:order_management/widgets/widgetUtils.dart';
 import 'package:provider/provider.dart';
 
 import 'checkbox_list_tile_formfield.dart';
+
+// class LoadDataResponse {
+//   Map<String, dynamic>? _shortForm;
+//   List? _originalData;
+//   LoadDataResponse();
+//   LoadDataResponse.create(this._shortForm, this._originalData);
+//   set shortForm(shortForm) => _shortForm = shortForm;
+//   set originalData(originalData) => _originalData = originalData;
+//   Map<String, dynamic>? get shortForm => _shortForm;
+//   List? get originalData => _originalData;
+// }
 
 // Create a Form widget.
 class MyCustomForm extends StatefulWidget {
@@ -34,13 +44,13 @@ class MyCustomFormState extends State<MyCustomForm> {
   Map<String, dynamic> targetModel = {};
   dynamic refModel = {};
   var forms, args, fref, product, srv, loginSrv, parent;
-  String title = "";
+  String? title = "";
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    args = ModalRoute.of(context).settings.arguments;
+    args = ModalRoute.of(context)!.settings.arguments;
     srv = Provider.of<AppConfigService>(context, listen: false);
     loginSrv = Provider.of<LoginService>(context, listen: false);
 
@@ -56,7 +66,7 @@ class MyCustomFormState extends State<MyCustomForm> {
     List<TextInputFormatter> inputFormatters = [];
 
     Widget buildCheckBox(fieldDef) {
-      bool initialValue = false;
+      bool? initialValue = false;
       var validator;
       var onChanged;
 
@@ -86,7 +96,7 @@ class MyCustomFormState extends State<MyCustomForm> {
         onChanged: onChanged,
         initialValue: initialValue,
         title: Text(fieldDef["label"]),
-        onSaved: (bool value) {
+        onSaved: (bool? value) {
           targetModel[fieldDef['name']] = value;
         },
         controlAffinity: ListTileControlAffinity.trailing,
@@ -193,16 +203,16 @@ class MyCustomFormState extends State<MyCustomForm> {
       // var onSaved;
       // var onChanged;
       // _formKey.currentState.
-      Function validator;
+      dynamic validator;
       // Map<String, dynamic> initialValue = {"value": ""};
-      var initialValue;
+      late var initialValue;
       var originalValue;
 
-      Widget button;
+      Widget button = Container();
 
       if (fieldDef["required"] == true) {
         validator = (value) {
-          if (value) {
+          if (value != null) {
             return null;
           } else {
             return 'This field is required!';
@@ -219,8 +229,9 @@ class MyCustomFormState extends State<MyCustomForm> {
           List data = await srv.getModelByID("customers", resolveParams[0]);
 
           var res =
-              await getShortForm()[fieldDef["autoFillHandler"]["handler"]](
+              await getShortForm()[fieldDef["autoFillHandler"]["handler"]]!(
                   data);
+          // LoadDataResponse loadDataResponse =LoadDataResponse.create(res, data[0]);
           return {"shortForm": res, "originalData": data[0]};
 
           // var refId = resolveFields(fieldDef["autoFillHandler"]);
@@ -233,7 +244,7 @@ class MyCustomFormState extends State<MyCustomForm> {
       switch (fieldDef["type"]) {
         case "K_FIELD_FORM":
           button = FutureBuilder(
-            builder: (context, projectSnap) {
+            builder: (context, AsyncSnapshot<dynamic> projectSnap) {
               if (projectSnap.data == null ||
                   projectSnap.connectionState == ConnectionState.none ||
                   projectSnap.connectionState == ConnectionState.waiting) {
@@ -257,12 +268,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                   await loadData();
                   setState(() {});
                 },
-                validator: (value) {
-                  if (value == null) {
-                    return 'This Field is required';
-                  }
-                  return null;
-                },
+                validator: validator,
                 onSaved: (value) {
                   // targetModel[fieldDef['name']] = value;
                   // targetModel[fieldDef[]]
@@ -310,7 +316,7 @@ class MyCustomFormState extends State<MyCustomForm> {
         suggestionsCallback: (pattern) async {
           return await srv.getTypeAhead(src, pattern);
         },
-        itemBuilder: (context, suggestion) {
+        itemBuilder: (context, dynamic suggestion) {
           return ListTile(
             title: Text(suggestion[datasrc["value"]]),
           );
@@ -318,16 +324,16 @@ class MyCustomFormState extends State<MyCustomForm> {
         transitionBuilder: (context, suggestionsBox, controller) {
           return suggestionsBox;
         },
-        onSuggestionSelected: (suggestion) {
+        onSuggestionSelected: (dynamic suggestion) {
           if (fieldDef["parent"] != null) {
-            parent = getShortForm()[datasrc["handler"]](suggestion);
+            parent = getShortForm()[datasrc["handler"]]!(suggestion);
             targetModel[fieldDef["parent"]] = parent;
           }
 
           this._typeAheadController.text = suggestion[datasrc["key"]];
         },
         validator: (value) {
-          if (value.isEmpty) {
+          if (value!.isEmpty) {
             return 'Please select';
           }
           return null;
@@ -359,9 +365,9 @@ class MyCustomFormState extends State<MyCustomForm> {
         switch (v["action"]) {
           case "K_ACTION_CREATE":
             onPressed = () {
-              if (_formKey.currentState.validate()) {
+              if (_formKey.currentState!.validate()) {
                 // If the form is valid, display a Snackbar.
-                _formKey.currentState.save();
+                _formKey.currentState!.save();
                 relatedModelsUpdate(k);
                 print(targetModel);
                 // Scaffold.of(context)
@@ -379,6 +385,7 @@ class MyCustomFormState extends State<MyCustomForm> {
         if (isCondSatisfied(targetModel, v["show_cond"])) {
           buttons.add(Container(
             width: MediaQuery.of(context).size.width,
+            // ignore: deprecated_member_use
             child: FlatButton(
               child: Text(v["label"]),
               color: Theme.of(context).primaryColor,
@@ -434,7 +441,7 @@ class MyCustomFormState extends State<MyCustomForm> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(title),
+        title: Text(title!),
       ),
       backgroundColor: Colors.grey[200],
       body: Container(
@@ -473,7 +480,7 @@ class MyCustomFormState extends State<MyCustomForm> {
     targetModel["type"] = fref["type"];
     // If product is available then attach to the form; Make this generic, hardcoded for now.
     if (product != null) targetModel["product"] = product;
-    await Future.forEach(modelsToUpdate, (element) async {
+    await Future.forEach(modelsToUpdate, (dynamic element) async {
       if (element["refModel"] != null) {
         refModel = await srv.getModelByID(
             element["refModel"], targetModel[element["modelIdRef"]]["id"]);

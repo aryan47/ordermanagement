@@ -4,7 +4,7 @@ import 'package:order_management/service/loginService.dart';
 import 'package:provider/provider.dart';
 
 class Otp extends StatefulWidget {
-  Otp({Key key}) : super(key: key);
+  Otp({Key? key}) : super(key: key);
 
   @override
   _OtpState createState() => _OtpState();

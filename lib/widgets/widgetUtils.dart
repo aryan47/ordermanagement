@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-BottomNavigationBar buildBottomNavigationBar(list, action) {
+BottomNavigationBar? buildBottomNavigationBar(list, action) {
   if (list.isEmpty)
     return null;
   else
@@ -13,7 +13,7 @@ BottomNavigationBar buildBottomNavigationBar(list, action) {
     );
 }
 
-Widget buildDrawer(list) {
+Widget? buildDrawer(list) {
   if (list.isEmpty) return null;
   return Drawer(
     child: ListView(
@@ -24,7 +24,7 @@ Widget buildDrawer(list) {
   );
 }
 
-FutureBuilder customLoader({future, Function builder}) {
+FutureBuilder customLoader({future, Function? builder}) {
   return FutureBuilder<dynamic>(
       future: future,
       builder: (context, snapshot) {
@@ -42,7 +42,7 @@ FutureBuilder customLoader({future, Function builder}) {
             ],
           );
         }
-        return builder(snapshot.data);
+        return builder!(snapshot.data);
       });
 }
 

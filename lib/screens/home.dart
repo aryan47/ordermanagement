@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -9,16 +10,16 @@ import 'package:order_management/service/utilService.dart';
 import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
-  Home({Key key}) : super(key: key);
+  Home({Key? key}) : super(key: key);
 
   @override
   _HomeState createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-  List products;
+  List? products;
   var stateMachine;
-  var dbSrv;
+  late var dbSrv;
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
@@ -39,19 +40,19 @@ class _HomeState extends State<Home> {
           if (snapshot.hasData) {
             return ListView.separated(
               shrinkWrap: true,
-              itemCount: products.length,
+              itemCount: products!.length,
               itemBuilder: (context, index) {
                 var currencyformat =
                     NumberFormat.simpleCurrency(locale: Platform.localeName);
                 final _byteImage =
-                    Base64Decoder().convert(products[index]["uri"]);
+                    Base64Decoder().convert(products![index]["uri"]);
                 return InkWell(
                   onTap: () async {
                     String route =
                         getV("actions.onTap.gotoRoute", stateMachine);
                     var arguments =
                         getV("actions.onTap.arguments", stateMachine);
-                    var product = products[index];
+                    var product = products![index];
                     arguments.addAll({"product": product});
                     await Navigator.pushNamed(context, route,
                         arguments: arguments);
@@ -74,13 +75,13 @@ class _HomeState extends State<Home> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              products[index]["name"].toString().trim(),
+                              products![index]["name"].toString().trim(),
                               softWrap: true,
                               style: TextStyle(
                                   fontSize: 15, fontWeight: FontWeight.w500),
                             ),
                             Text(
-                              products[index]["desc"].toString().trim(),
+                              products![index]["desc"].toString().trim(),
                               softWrap: true,
                               style: TextStyle(
                                   fontSize: 13, fontWeight: FontWeight.w400),
@@ -95,7 +96,7 @@ class _HomeState extends State<Home> {
                                       fontWeight: FontWeight.bold),
                                   children: [
                                     TextSpan(
-                                      text: products[index]["price"]
+                                      text: products![index]["price"]
                                           .toString()
                                           .trim(),
                                       style: TextStyle(
@@ -119,23 +120,6 @@ class _HomeState extends State<Home> {
                     ],
                   )),
                 );
-
-                ListTile(
-                  leading: Image.memory(_byteImage),
-                  title: Text('${products[index]["name"]}'),
-                  subtitle: Text(products[index]["desc"]),
-                  trailing: Icon(Icons.keyboard_arrow_right),
-                  onTap: () async {
-                    String route =
-                        getV("actions.onTap.gotoRoute", stateMachine);
-                    var arguments =
-                        getV("actions.onTap.arguments", stateMachine);
-                    var product = products[index];
-                    arguments.addAll({"product": product});
-                    await Navigator.pushNamed(context, route,
-                        arguments: arguments);
-                  },
-                );
               },
               separatorBuilder: (BuildContext context, int index) {
                 return Divider(height: 3, color: Colors.grey[400]);
@@ -147,7 +131,7 @@ class _HomeState extends State<Home> {
   }
 
   dynamic getStock(int index) {
-    var availableStock = int.parse(products[index]["stock"].toString().trim());
+    var availableStock = int.parse(products![index]["stock"].toString().trim());
     if (availableStock > 30) {
       // return "Available";
       return TextSpan(

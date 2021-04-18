@@ -4,22 +4,22 @@ import 'package:flutter/material.dart';
 class CheckboxListTileFormField extends FormField<bool> {
   //
   CheckboxListTileFormField({
-    Key key,
-    Widget title,
-    BuildContext context,
-    FormFieldSetter<bool> onSaved,
-    FormFieldValidator<bool> validator,
-    bool initialValue = false,
+    Key? key,
+    Widget? title,
+    BuildContext? context,
+    FormFieldSetter<bool>? onSaved,
+    FormFieldValidator<bool>? validator,
+    bool? initialValue = false,
     bool autovalidate = false,
     bool enabled = true,
     bool dense = false,
-    Color errorColor,
-    Color activeColor,
-    Color checkColor,
+    Color? errorColor,
+    Color? activeColor,
+    Color? checkColor,
     ListTileControlAffinity controlAffinity = ListTileControlAffinity.leading,
-    EdgeInsetsGeometry contentPadding,
-    ValueChanged<bool> onChanged,
-    Widget secondary,
+    EdgeInsetsGeometry? contentPadding,
+    ValueChanged<bool?>? onChanged,
+    Widget? secondary,
   }) : super(
           key: key,
           onSaved: onSaved,
@@ -38,11 +38,11 @@ class CheckboxListTileFormField extends FormField<bool> {
               value: state.value,
               onChanged: (value) {
                 if (enabled) state.didChange(value);
-                onChanged(value);
+                onChanged!(value);
               },
               subtitle: state.hasError
                   ? Text(
-                      state.errorText,
+                      state.errorText!,
                       style: TextStyle(color: errorColor),
                     )
                   : null,

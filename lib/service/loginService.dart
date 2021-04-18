@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -11,20 +13,18 @@ import 'package:order_management/widgets/widgetUtils.dart';
 import 'package:provider/provider.dart';
 
 class LoginService {
-  FirebaseAuth _firebaseAuth;
+  FirebaseAuth? _firebaseAuth;
   var db;
   var currentUser;
 
   Future<bool> isAlreadyAuthenticated() async {
     var user = FirebaseAuth.instance.currentUser;
     print("isAlreadyAuthenticated......................");
-    // createUser(user, db);
-    print(user);
     return user != null;
   }
 
   dynamic createUser(db) async {
-    var user = FirebaseAuth.instance.currentUser;
+    var user = FirebaseAuth.instance.currentUser!;
     Map<String, dynamic> model = {};
 
     var data = await db
@@ -53,7 +53,7 @@ class LoginService {
             .toList();
 
         model["belongs_to_customer"] =
-            getShortForm()["getCustomerShortForm"](custData[0]);
+            getShortForm()["getCustomerShortForm"]!(custData[0]);
       }
 
       model["phoneNumber"] = user.phoneNumber;
@@ -64,10 +64,9 @@ class LoginService {
     }
   }
 
-  dynamic getCurrentUser(db) async {
+  dynamic? getCurrentUser(db) async {
     var user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      print(user);
       var data = await db
           .collection("users")
           .find(where.eq("phoneNumber", user.phoneNumber))
@@ -103,9 +102,9 @@ class LoginService {
           print(e);
           Navigator.pushReplacementNamed(context, "/auth");
         },
-        codeSent: (String verificationId, int resendToken) async {
+        codeSent: (String verificationId, int? resendToken) async {
           print('!!!!!!!!!!!!!code sent');
-          String smsCode = await showMyDialog(context);
+          String? smsCode = await showMyDialog(context);
           // String smsCode = await Navigator.push(
           //   context,
           //   MaterialPageRoute(builder: (context) => Otp()),
@@ -121,6 +120,13 @@ class LoginService {
             try {
               await FirebaseAuth.instance
                   .signInWithCredential(phoneAuthCredential);
+            } on FirebaseAuthException catch (e) {
+              Navigator.of(context).pop();
+              final snackBar =
+                  SnackBar(content: Text('Please enter valid OTP'));
+
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              return;
             } catch (e) {
               Navigator.of(context).pop();
               final snackBar =

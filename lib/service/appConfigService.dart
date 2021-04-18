@@ -15,10 +15,10 @@ import 'package:yaml/yaml.dart';
 class AppConfigService {
   dynamic appConfig;
   dynamic db;
-  List<CustomersM> custM;
+  List<CustomersM>? custM;
   BehaviorSubject listLoaded = BehaviorSubject.seeded(false);
 
-  Map<String, dynamic> get config => appConfig;
+  Map<String, dynamic>? get config => appConfig;
 
   Future initDB() async {
     final content =
@@ -44,7 +44,7 @@ class AppConfigService {
           i < getV("BOTTOM_NAV_ITEMS.items", appConfig).length;
           i++) {
         list.add(BottomNavigationBarItem(
-          icon: getI("icon", getV("BOTTOM_NAV_ITEMS.items", appConfig)[i]),
+          icon: getI("icon", getV("BOTTOM_NAV_ITEMS.items", appConfig)[i])!,
           title:
               new Text(getV("BOTTOM_NAV_ITEMS.items", appConfig)[i]["label"]),
         ));
@@ -80,7 +80,7 @@ class AppConfigService {
           title: new Text(getV("DRAWER.items", appConfig)[i]["label"]),
           trailing: Text(
               getV("trailing.text", getV("DRAWER.items", appConfig)[i]) ?? ""),
-          onTap: actions["onTap"],
+          onTap: actions["onTap"] as void Function()?,
         ));
       }
     }
@@ -117,7 +117,7 @@ class AppConfigService {
     Map<String, Function> routes = {};
     routes["onTap"] = (int index) {
       _currentIndex = index;
-      String route = getV("actions.onTap.gotoRoute",
+      String? route = getV("actions.onTap.gotoRoute",
           getV("BOTTOM_NAV_ITEMS.items", appConfig)[index]);
 
       if (route != null) Navigator.pushNamed(context, route);
@@ -126,7 +126,7 @@ class AppConfigService {
   }
 
   /// Load data from DB
-  void loadDataFromDB(String url) async {
+  void loadDataFromDB(String? url) async {
     if (url != null) {
       print('loding data from db...');
       var colName = url.substring(1);

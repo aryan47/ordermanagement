@@ -46,7 +46,7 @@ dynamic getV(String fetchV, dynamic src) {
 }
 
 /// Get icon from config
-Widget getI(String icons, dynamic src, [double size = 30]) {
+Widget? getI(String? icons, dynamic src, [double size = 30]) {
   if (icons == null) return null;
   if (src != null) icons = getV(icons, src);
 
@@ -58,11 +58,11 @@ Widget getI(String icons, dynamic src, [double size = 30]) {
   );
 }
 
-void applyUserPrivileges(Map config, userRole) {
+void applyUserPrivileges(Map? config, userRole) {
   if (userRole == null) {
     return;
   }
-  Map userPriv = getV("USER_PRIVILEGES." + userRole, config);
+  Map? userPriv = getV("USER_PRIVILEGES." + userRole, config);
   if (userPriv != null && userPriv.isNotEmpty) {
     userPriv.forEach((k, v) {
       // get items from config

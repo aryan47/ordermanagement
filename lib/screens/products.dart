@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Products extends StatefulWidget {
-  Products({Key key}) : super(key: key);
+  Products({Key? key}) : super(key: key);
 
   @override
   _ProductsState createState() => _ProductsState();

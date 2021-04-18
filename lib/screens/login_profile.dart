@@ -5,14 +5,14 @@ import 'package:order_management/service/loginService.dart';
 import 'package:provider/provider.dart';
 
 class LoginProfile extends StatefulWidget {
-  LoginProfile({Key key}) : super(key: key);
+  LoginProfile({Key? key}) : super(key: key);
   @override
   _LoginProfileState createState() => _LoginProfileState();
 }
 
 class _LoginProfileState extends State<LoginProfile> {
   final userCtrl = TextEditingController();
-  var _loginSrv;
+  late var _loginSrv;
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +57,7 @@ class _LoginProfileState extends State<LoginProfile> {
                     await Provider.of<AppConfigService>(context, listen: false)
                         .saveForm(
                             'users',
-                            getShortForm()["getCustomerShortForm"](customer),
+                            getShortForm()["getCustomerShortForm"]!(customer),
                             _loginSrv.currentUser["_id"].id.hexString,
                             "belongs_to_customer");
                     Navigator.pushReplacementNamed(context, "/auth");

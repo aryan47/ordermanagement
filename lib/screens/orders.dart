@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Orders extends StatefulWidget {
-  Orders({Key key}) : super(key: key);
+  Orders({Key? key}) : super(key: key);
 
   @override
   _OrdersState createState() => _OrdersState();
@@ -20,20 +20,20 @@ class _OrdersState extends State<Orders> {
   var pastOrders = [];
   var futureOrders = [];
 
-  Map args;
+  Map? args;
   var src,
       result,
       _loginSrv,
       _appConfig,
       selectedOrderId,
       selectedProductAction;
-  String title;
+  String? title;
   bool onlyOrders = true;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    args = ModalRoute.of(context).settings.arguments;
+    args = ModalRoute.of(context)!.settings.arguments as Map<dynamic, dynamic>?;
     _loginSrv = Provider.of<LoginService>(context, listen: false);
 
     // if (args == null) {
@@ -62,8 +62,8 @@ class _OrdersState extends State<Orders> {
     } else {
       // if comming from cutomer screen
       if (args != null) {
-        customerId = args["customer"].id.id.hexString;
-        title = args["customer"].name;
+        customerId = args!["customer"].id.id.hexString;
+        title = args!["customer"].name;
       }
     }
     return Provider.of<AppConfigService>(context, listen: false)
@@ -89,8 +89,8 @@ class _OrdersState extends State<Orders> {
       customerId = currentUsr["belongs_to_customer"]["id"];
     } else {
       if (args != null) {
-        customerId = args["customer"].id.id.hexString;
-        title = args["customer"].name;
+        customerId = args!["customer"].id.id.hexString;
+        title = args!["customer"].name;
       }
     }
     return Provider.of<AppConfigService>(context, listen: false)
@@ -182,7 +182,7 @@ class _OrdersState extends State<Orders> {
     );
   }
 
-  Widget buildListViewForOrders(orders, [bool showMore]) {
+  Widget buildListViewForOrders(orders, [bool? showMore]) {
     if (orders.length == 0) return Center(child: Text("No Item Found"));
     return ListView.separated(
       shrinkWrap: true,
@@ -281,7 +281,7 @@ class _OrdersState extends State<Orders> {
         ),
         Text(
           "( " +
-              (orders[index]["belongs_to_customer"]["name"].toString().trim() ??
+              (orders[index]["belongs_to_customer"]["name"] ??
                   orders[index]["belongs_to_customer"]["phone_no"]
                       .toString()
                       .trim()) +

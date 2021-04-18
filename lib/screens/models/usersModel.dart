@@ -2,13 +2,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 // not getting used.
 class UsersM {
-  ObjectId _id;
-  DateTime _dtCreated;
-  DateTime _dtLastLogin;
-  String _phoneNumber;
-  String _role;
-  bool _isActive;
-  String _uid;
+  ObjectId? _id;
+  DateTime? _dtCreated;
+  DateTime? _dtLastLogin;
+  String? _phoneNumber;
+  String? _role;
+  bool? _isActive;
+  String? _uid;
 
   UsersM();
 
@@ -29,14 +29,14 @@ class UsersM {
   set dtLastLogin(lastLogin) => _dtLastLogin = lastLogin;
   set isActive(active) => _isActive = active;
 
-  String get uid => _uid;
-  String get phoneNumber => _phoneNumber;
-  String get role => _role;
-  DateTime get dtCreated => _dtCreated;
-  DateTime get dtLastLogin => _dtLastLogin;
-  bool get isActive => _isActive;
+  String? get uid => _uid;
+  String? get phoneNumber => _phoneNumber;
+  String? get role => _role;
+  DateTime? get dtCreated => _dtCreated;
+  DateTime? get dtLastLogin => _dtLastLogin;
+  bool? get isActive => _isActive;
 
-  Future<UsersM> createUser(db) async {
+  Future<UsersM?> createUser(db) async {
     var user = FirebaseAuth.instance.currentUser;
     UsersM model = UsersM();
     if (user != null) {
@@ -49,8 +49,8 @@ class UsersM {
     return data;
   }
 
-  Future<UsersM> getCurrentUser(db) async {
-    var user = FirebaseAuth.instance.currentUser;
+  Future<UsersM?> getCurrentUser(db) async {
+    var user = FirebaseAuth.instance.currentUser!;
     var data = await db
         .collection("users")
         .find(where.eq("phoneNumber", user.phoneNumber))
@@ -60,16 +60,16 @@ class UsersM {
 
   factory UsersM.fromJson(dynamic json) {
     return UsersM.create(
-        json['_id'] as ObjectId,
-        json['_uid'] as String,
-        json['_phoneNumber'] as String,
-        json['_role'] as String,
-        json['_dtCreated'] as DateTime,
-        json['_dtLastLogin'] as DateTime,
-        json['_isActive'] as bool);
+        json['_id'] as ObjectId?,
+        json['_uid'] as String?,
+        json['_phoneNumber'] as String?,
+        json['_role'] as String?,
+        json['_dtCreated'] as DateTime?,
+        json['_dtLastLogin'] as DateTime?,
+        json['_isActive'] as bool?);
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic>? toMap() {
     // return {'id': id, 'content': content, 'title': title};
     return null;
   }

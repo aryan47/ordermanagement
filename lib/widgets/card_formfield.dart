@@ -3,16 +3,16 @@ import 'package:order_management/service/utilService.dart';
 
 class CardFormField extends FormField<String> {
   CardFormField(
-      {Map<String, dynamic> fieldDef,
-      BuildContext context,
-      Widget loadWidget,
-      FormFieldSetter<String> onSaved,
-      FormFieldValidator<String> validator,
-      String initialValue,
+      {Map<String, dynamic>? fieldDef,
+      BuildContext? context,
+      Widget? loadWidget,
+      FormFieldSetter<String>? onSaved,
+      FormFieldValidator<String>? validator,
+      String? initialValue,
       var originalValue,
-      final ValueChanged onChanged,
+      final ValueChanged? onChanged,
       bool autovalidate = false,
-      GestureTapCallback onTap})
+      GestureTapCallback? onTap})
       : super(
             onSaved: onSaved,
             validator: validator,
@@ -24,7 +24,7 @@ class CardFormField extends FormField<String> {
                 shape: state.hasError
                     ? new RoundedRectangleBorder(
                         side: new BorderSide(
-                            color: Colors.redAccent[700], width: 2.0),
+                            color: Colors.redAccent[700]!, width: 2.0),
                         borderRadius: BorderRadius.circular(4.0))
                     : new RoundedRectangleBorder(
                         side: new BorderSide(color: Colors.white, width: 2.0),
@@ -35,7 +35,7 @@ class CardFormField extends FormField<String> {
                     ListTile(
                       title: Row(
                         children: [
-                          getI("content.icon", fieldDef, 20),
+                          getI("content.icon", fieldDef, 20)!,
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 5),
                             child: Text(getV("content.heading", fieldDef)),
@@ -45,22 +45,22 @@ class CardFormField extends FormField<String> {
                       subtitle: Padding(
                         padding: const EdgeInsets.all(7.0),
                         child: Text(
-                          initialValue ?? fieldDef["label"],
+                          initialValue ?? fieldDef!["label"],
                           softWrap: true,
                         ),
                       ),
                       onTap: () async {
                         print(fieldDef);
-                        if (fieldDef['key'] != null &&
+                        if (fieldDef!['key'] != null &&
                             originalValue[fieldDef['key']] != null) {
                           originalValue = originalValue[fieldDef['key']];
                         }
-                        var result = await Navigator.pushNamed(
-                            context, "/forms", arguments: {
+                        Object? result = await Navigator.pushNamed(
+                            context!, "/forms", arguments: {
                           "formType": "K_FORM_ADDRESS",
                           "values": originalValue
                         });
-                        onChanged(result);
+                        onChanged!(result);
                         // state.didChange(result);
                       },
                     ),

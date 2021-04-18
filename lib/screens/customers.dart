@@ -5,15 +5,15 @@ import 'package:order_management/service/utilService.dart';
 import 'package:provider/provider.dart';
 
 class Customers extends StatefulWidget {
-  Customers({Key key}) : super(key: key);
+  Customers({Key? key}) : super(key: key);
 
   @override
   _CustomersState createState() => _CustomersState();
 }
 
 class _CustomersState extends State<Customers> {
-  var srv;
-  List<CustomersM> customers = [];
+  late var srv;
+  List<CustomersM>? customers = [];
   var stateMachine;
   @override
   void didChangeDependencies() {
@@ -39,17 +39,53 @@ class _CustomersState extends State<Customers> {
       ),
       body: ListView.builder(
         shrinkWrap: true,
-        itemCount: customers.length,
+        itemCount: customers!.length,
         itemBuilder: (context, index) {
           return ListTile(
-            title: Text('${customers[index].name}'),
-            subtitle: Text(customers[index].address !=null ? customers[index].address["address"]:""),
-            trailing: Icon(Icons.keyboard_arrow_right),
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '${customers![index].name}',
+                  style: TextStyle(fontSize: 15),
+                ),
+                Text(
+                    customers![index].address != null
+                        ? customers![index].address!["address"]
+                        : "",
+                    style: TextStyle(fontSize: 13))
+              ],
+            ),
+            // subtitle: Container(
+            //   child: Row(
+            //     children: <Widget>[
+            //       Expanded(
+            //         child: ElevatedButton(
+            //           onPressed: () {},
+            //           child: Text(
+            //             "Details",
+            //           ),
+            //         ),
+            //       ),
+            //       Expanded(
+            //         child: ElevatedButton(
+            //           child: Text("Orders"),
+            //           style: ElevatedButton.styleFrom(
+            //             primary: Colors.red, // background
+            //             onPrimary: Colors.white, // foreground
+            //           ),
+            //           onPressed: () {},
+            //         ),
+            //       )
+            //     ],
+            //   ),
+            // ),
+            // trailing: Icon(Icons.keyboard_arrow_right),
             onTap: () {
               print(stateMachine);
               String route = getV("actions.onTap.gotoRoute", stateMachine);
               Navigator.pushNamed(context, route,
-                  arguments: {"customer": customers[index]});
+                  arguments: {"customer": customers![index]});
             },
           );
         },
