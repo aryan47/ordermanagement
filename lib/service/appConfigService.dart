@@ -238,4 +238,11 @@ class AppConfigService {
     await db.collection(colName).save(modelToUpdate);
     return modelToUpdate;
   }
+
+// used for dynamic access
+  Map<String, dynamic> toMap() {
+    return {
+      'getCustomers': getCustomers,
+    };
+  }
 }

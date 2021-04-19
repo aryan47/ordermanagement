@@ -125,7 +125,7 @@ class MyCustomFormState extends State<MyCustomForm> {
 
           /// set initial value
           initialValue = getInitialValue(fieldDef);
-          if (initialValue != null) initialValue = initialValue.toString();
+          if (initialValue != "") initialValue = initialValue.toString();
           keyboardType = TextInputType.number;
           inputFormatters.add(FilteringTextInputFormatter.digitsOnly);
           if (fieldDef["required"])
@@ -330,6 +330,7 @@ class MyCustomFormState extends State<MyCustomForm> {
             targetModel[fieldDef["parent"]] = parent;
           }
 
+          targetModel[fieldDef['name']] = suggestion[datasrc["key"]];
           this._typeAheadController.text = suggestion[datasrc["key"]];
         },
         validator: (value) {
@@ -469,7 +470,7 @@ class MyCustomFormState extends State<MyCustomForm> {
     else if (values != null) {
       initialValue = resolveFields(values[fieldDef["name"]])[0];
     } else {
-      initialValue = null;
+      initialValue = "";
     }
     return initialValue;
   }

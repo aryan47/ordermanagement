@@ -31,3 +31,5 @@ flutter pub run flutter_launcher_icons:main
  move all padding, margin, color to constant
  check customer product price as priority in price listing
  style login-profile (DONE)
+ ====================================
+ change address based on customer change

@@ -1,4 +1,3 @@
----
 GENERAL_SETTINGS:
   title: Nirjal
   phone: "+919931164372"
@@ -243,3 +242,17 @@ USER_PRIVILEGES:
   K_ADMIN:
     PRODUCT_ACTIONS:
       K_ACTION_CREATE: false
+CUSTOM_LIST:
+  CUSTOMER_CUSTOM_LIST:
+    title: "Customers"
+    dataInitHandler: "getCustomers"
+    body: "getCustomerListBody"
+    actions:
+      K_ACTION_DETAILS:
+        label: Details
+        action: K_ACTION_DETAILS
+        color: "kGreenColor"
+      K_ACTION_ORDER_LIST:
+        label: Orders
+        action: K_ACTION_ORDER_LIST
+        color: "kOrangeColor"

@@ -12,6 +12,7 @@ import 'package:order_management/screens/products.dart';
 import 'package:order_management/screens/settings.dart';
 import 'package:order_management/service/appConfigService.dart';
 import 'package:order_management/service/loginService.dart';
+import 'package:order_management/widgets/customListScreen.dart';
 import 'package:order_management/widgets/myCustomForms.dart';
 import 'package:provider/provider.dart';
 
@@ -59,7 +60,7 @@ class MyApp extends StatelessWidget {
           '/products': (context) => Products(),
           '/orders': (context) => Orders(),
           '/settings': (context) => Settings(),
-          '/customers': (context) => Customers(),
+          '/customers': (context) => CustomListScreen("CUSTOMER_CUSTOM_LIST"),
           '/payment': (context) => Dashboard(),
           '/forms': (context) => MyCustomForm()
         },
