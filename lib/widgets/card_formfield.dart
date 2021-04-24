@@ -4,7 +4,7 @@ import 'package:order_management/service/utilService.dart';
 class CardFormField extends FormField<String> {
   CardFormField(
       {Map<String, dynamic>? fieldDef,
-      BuildContext? context,
+      context,
       Widget? loadWidget,
       FormFieldSetter<String>? onSaved,
       FormFieldValidator<String>? validator,
@@ -55,8 +55,8 @@ class CardFormField extends FormField<String> {
                             originalValue[fieldDef['key']] != null) {
                           originalValue = originalValue[fieldDef['key']];
                         }
-                        Object? result = await Navigator.pushNamed(
-                            context!, "/forms", arguments: {
+                        dynamic result = await Navigator.pushNamed(
+                            context, "/forms", arguments: {
                           "formType": "K_FORM_ADDRESS",
                           "values": originalValue
                         });

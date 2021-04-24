@@ -42,84 +42,89 @@ class _HomeState extends State<Home> {
               shrinkWrap: true,
               itemCount: products!.length,
               itemBuilder: (context, index) {
-                var currencyformat =
-                    NumberFormat.simpleCurrency(locale: Platform.localeName);
-                final _byteImage =
-                    Base64Decoder().convert(products![index]["uri"]);
-                return InkWell(
-                  onTap: () async {
-                    String route =
-                        getV("actions.onTap.gotoRoute", stateMachine);
-                    var arguments =
-                        getV("actions.onTap.arguments", stateMachine);
-                    var product = products![index];
-                    arguments.addAll({"product": product});
-                    await Navigator.pushNamed(context, route,
-                        arguments: arguments);
-                  },
-                  child: Card(
-                      child: Row(
-                    children: [
-                      Container(
-                          padding: EdgeInsets.all(5.0),
-                          height: 120,
-                          width: 120,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                                image: MemoryImage(_byteImage),
-                                fit: BoxFit.fill),
-                          )),
-                      SizedBox(width: 10),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              products![index]["name"].toString().trim(),
-                              softWrap: true,
-                              style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.w500),
-                            ),
-                            Text(
-                              products![index]["desc"].toString().trim(),
-                              softWrap: true,
-                              style: TextStyle(
-                                  fontSize: 13, fontWeight: FontWeight.w400),
-                            ),
-                            SizedBox(height: 4),
-                            RichText(
-                              text: TextSpan(
-                                  text: currencyformat.currencySymbol + ' ',
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold),
-                                  children: [
-                                    TextSpan(
-                                      text: products![index]["price"]
-                                          .toString()
-                                          .trim(),
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    )
-                                  ]),
-                            ),
-                            SizedBox(height: 4),
-                            RichText(
-                              text: TextSpan(
-                                  text: "Stock: ",
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold),
-                                  children: [getStock(index)]),
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
-                  )),
-                );
+                var availableStock =
+                    int.parse(products![index]["stock"].toString().trim());
+
+                if (availableStock > 0) {
+                  final _byteImage =
+                      Base64Decoder().convert(products![index]["uri"]);
+                  return InkWell(
+                    onTap: () async {
+                      String route =
+                          getV("actions.onTap.gotoRoute", stateMachine);
+                      var arguments =
+                          getV("actions.onTap.arguments", stateMachine);
+                      var product = products![index];
+                      arguments.addAll({"product": product});
+                      await Navigator.pushNamed(context, route,
+                          arguments: arguments);
+                    },
+                    child: Card(
+                        child: Row(
+                      children: [
+                        Container(
+                            padding: EdgeInsets.all(5.0),
+                            height: 120,
+                            width: 120,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  image: MemoryImage(_byteImage),
+                                  fit: BoxFit.fill),
+                            )),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                products![index]["name"].toString().trim(),
+                                softWrap: true,
+                                style: TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.w500),
+                              ),
+                              Text(
+                                products![index]["desc"].toString().trim(),
+                                softWrap: true,
+                                style: TextStyle(
+                                    fontSize: 13, fontWeight: FontWeight.w400),
+                              ),
+                              SizedBox(height: 4),
+                              RichText(
+                                text: TextSpan(
+                                    text: '\u20B9 ',
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold),
+                                    children: [
+                                      TextSpan(
+                                        text: products![index]["price"]
+                                            .toString()
+                                            .trim(),
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      )
+                                    ]),
+                              ),
+                              SizedBox(height: 4),
+                              RichText(
+                                text: TextSpan(
+                                    text: "Stock: ",
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold),
+                                    children: [getStock(index)]),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    )),
+                  );
+                } else {
+                  return Container();
+                }
               },
               separatorBuilder: (BuildContext context, int index) {
                 return Divider(height: 3, color: Colors.grey[400]);

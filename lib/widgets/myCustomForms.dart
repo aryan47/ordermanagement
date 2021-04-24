@@ -125,7 +125,8 @@ class MyCustomFormState extends State<MyCustomForm> {
 
           /// set initial value
           initialValue = getInitialValue(fieldDef);
-          if (initialValue != "") initialValue = initialValue.toString();
+          if (initialValue != null && initialValue != "")
+            initialValue = initialValue.toString();
           keyboardType = TextInputType.number;
           inputFormatters.add(FilteringTextInputFormatter.digitsOnly);
           if (fieldDef["required"])
@@ -251,12 +252,10 @@ class MyCustomFormState extends State<MyCustomForm> {
                 //print('project snapshot data is: ${projectSnap.data}');
                 return Center(child: CircularProgressIndicator());
               }
-              if (projectSnap.data != null &&
-                  projectSnap.data["shortForm"] != null) {
+              if (projectSnap.data != null) {
                 initialValue = projectSnap.data["shortForm"];
               }
-              if (projectSnap.data != null &&
-                  projectSnap.data["originalData"] != null) {
+              if (projectSnap.data != null) {
                 originalValue = projectSnap.data["originalData"];
               }
               return CardFormField(
