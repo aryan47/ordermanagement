@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:order_management/service/appConfigService.dart';
 import 'package:order_management/service/productsService.dart';
 import 'package:order_management/service/utilService.dart';

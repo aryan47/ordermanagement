@@ -4,7 +4,7 @@ Map<String, Function> getShortForm() {
     "getCustomerShortForm": (customer) {
       var data = {};
       data['id'] = customer["_id"] != null ? customer["_id"].id.hexString : "";
-      data["name"] = customer["name"];
+      data["name"] = customer["name"] ?? "";
       data["belongs_to_customer"] = customer["belongs_to_customer"];
       data["phone_no"] = customer["phone_no"];
       data["address"] = customer["address"];
@@ -14,12 +14,33 @@ Map<String, Function> getShortForm() {
       List<dynamic> res = [];
       print('inside getlogin cust address');
       if (data.isNotEmpty && data[0]["address"] != null) {
-        res.add(data[0]["address"]["name"]);
-        res.add(data[0]["address"]["address"]);
-        res.add(data[0]["address"]["landmark"]);
+        res.add(data[0]["address"]["name"] ?? "");
+        res.add(data[0]["address"]["address"] ?? "");
+        res.add(data[0]["address"]["landmark"] ?? "");
       }
       return res.length != 0 ? res.join(", ") : null;
-    }
+    },
+    "getSelectedCustAddress": (data) async {
+      List<dynamic> res = [];
+      print('inside getlogin cust address');
+      if (data.isNotEmpty && data.length > 0 && data[0]["address"] != null) {
+        res.add(data[0]["address"]["name"] ?? "");
+        res.add(data[0]["address"]["address"] ?? "");
+        res.add(data[0]["address"]["landmark"] ?? "");
+      }
+      return res.length != 0 ? res.join(", ") : null;
+    },
+    "getAddressFromOrders": (order) {
+      List<dynamic> res = [];
+      dynamic address = order["belongs_to_customer"]["address"];
+      print('inside getlogin cust address');
+      if (order.isNotEmpty && address != null) {
+        res.add(address["name"] ?? "");
+        res.add(address["address"] ?? "");
+        res.add(address["landmark"] ?? "");
+      }
+      return res.length != 0 ? res.join(", ") : null;
+    },
   };
   return data;
 }

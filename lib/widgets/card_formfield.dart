@@ -4,8 +4,9 @@ import 'package:order_management/service/utilService.dart';
 class CardFormField extends FormField<String> {
   CardFormField(
       {Map<String, dynamic>? fieldDef,
-      context,
+      required BuildContext context,
       Widget? loadWidget,
+      dynamic refId,
       FormFieldSetter<String>? onSaved,
       FormFieldValidator<String>? validator,
       String? initialValue,
@@ -19,6 +20,9 @@ class CardFormField extends FormField<String> {
             initialValue: initialValue,
             autovalidate: autovalidate,
             builder: (FormFieldState<String> state) {
+              if(refId == null){
+                return Container();
+              }
               return Card(
                 // borderOnForeground: true,
                 shape: state.hasError
@@ -58,7 +62,8 @@ class CardFormField extends FormField<String> {
                         dynamic result = await Navigator.pushNamed(
                             context, "/forms", arguments: {
                           "formType": "K_FORM_ADDRESS",
-                          "values": originalValue
+                          "values": originalValue ?? {},
+                          "refId": refId
                         });
                         onChanged!(result);
                         // state.didChange(result);

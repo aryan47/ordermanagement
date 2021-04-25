@@ -52,7 +52,7 @@ class _AuthMgrState extends State<AuthMgr> {
 
     // If user name is not present then send user to login-profile page
     if (_loginSrv.currentUser != null &&
-        _loginSrv.currentUser["belongs_to_customer"]["name"] == null) {
+        (_loginSrv.currentUser["belongs_to_customer"]["name"]).isEmpty) {
       // get the name and save it
       Navigator.pushReplacementNamed(context, "/login-profile");
     }

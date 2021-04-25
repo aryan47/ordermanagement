@@ -17,7 +17,6 @@ class _CustomersState extends State<Customers> {
   var stateMachine;
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     Provider.of<AppConfigService>(context).listLoaded.stream.listen((event) {
       if (event) {

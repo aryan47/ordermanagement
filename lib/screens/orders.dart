@@ -279,17 +279,47 @@ class _OrdersState extends State<Orders> {
           orders[index]["product"]["name"].toString().trim(),
           overflow: TextOverflow.ellipsis,
         ),
-        Text(
-          "( " +
-              (orders[index]["belongs_to_customer"]["name"] ??
+        // Text(
+        //   (orders[index]["belongs_to_customer"]["name"] ??
+        //       orders[index]["belongs_to_customer"]["phone_no"]
+        //           .toString()
+        //           .trim()),
+        //   style: TextStyle(
+        //     fontSize: 14,
+        //     color: Colors.black,
+        //     fontWeight: FontWeight.bold,
+        //   ),
+        // ),
+        RichText(
+          text: TextSpan(children: [
+            WidgetSpan(
+              child: Icon(
+                Icons.person,
+                size: 18,
+              ),
+            ),
+            TextSpan(
+              text: (orders[index]["belongs_to_customer"]["name"] ??
                   orders[index]["belongs_to_customer"]["phone_no"]
                       .toString()
-                      .trim()) +
-              " )",
-          style: TextStyle(
-              fontSize: 13,
-              color: Theme.of(context).primaryColor,
-              fontWeight: FontWeight.w400),
+                      .trim()),
+              style:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.normal),
+            )
+          ]),
+        ),
+        RichText(
+          text: TextSpan(children: [
+            WidgetSpan(
+              child: Icon(Icons.location_on_rounded,
+                  size: 18, color: Colors.red[700]),
+            ),
+            TextSpan(
+              text: getShortForm()["getAddressFromOrders"]!(orders[index]),
+              style:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.normal),
+            )
+          ]),
         ),
       ],
     );

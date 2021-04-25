@@ -93,6 +93,9 @@ FORMS:
         key: address
         type: K_FIELD_FORM
         label: Add Address
+        # refer the key name of the field
+        # TODO: introduce `and` and `or` operation in case of multi field dependencies.
+        dependsOn: "name"
         # Used to display the content in the current form
         content:
           icon: "59456"
@@ -103,9 +106,12 @@ FORMS:
         gotoform: K_FORM_ADDRESS
         # Handler to auto fill the content in the current form
         autoFillHandler:
-          handler: getLogInCustAddress
-          params:
-            - "$$K_LOGGED_IN_CUSTOMER_ID"
+          handler: getSelectedCustAddress
+          datasrc:
+            srctype: model
+            src: customers
+            refKey: "id"
+
       - name: name
         key: name
         type: K_FIELD_TYPEAHEAD
@@ -221,7 +227,10 @@ FORMS:
         action: K_ACTION_CREATE
         modelsToUpdate:
           - targetModel: customers
-            targetModelRef: "$$K_LOGGED_IN_CUSTOMER_ID"
+            targetModelRef:
+              refType: "parent"
+              # used in combination with dependsOn
+              refKey: "id"
       K_ACTION_EDIT:
         label: Edit
         action: K_ACTION_EDIT

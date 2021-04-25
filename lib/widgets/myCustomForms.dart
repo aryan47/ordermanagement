@@ -43,7 +43,7 @@ class MyCustomFormState extends State<MyCustomForm> {
   final TextEditingController _typeAheadController = TextEditingController();
   Map<String, dynamic> targetModel = {};
   dynamic refModel = {};
-  var forms, args, fref, product, srv, loginSrv, parent;
+  var forms, args, fref, product, srv, loginSrv, parent, parentRefId;
   String? title = "";
 
   @override
@@ -51,11 +51,15 @@ class MyCustomFormState extends State<MyCustomForm> {
     super.didChangeDependencies();
 
     args = ModalRoute.of(context)!.settings.arguments;
+
+    /// Used to hold parent reference id, i.e child form keeps the parentRefId
+    parentRefId = args!["refId"];
     srv = Provider.of<AppConfigService>(context, listen: false);
     loginSrv = Provider.of<LoginService>(context, listen: false);
 
     forms = srv.config["FORMS"];
     fref = forms[args["formType"]];
+    // TODO: remove hardcoded value
     product = args["product"];
     title = fref["title"];
   }
@@ -203,11 +207,9 @@ class MyCustomFormState extends State<MyCustomForm> {
     Widget buildChildForm(fieldDef) {
       // var onSaved;
       // var onChanged;
-      // _formKey.currentState.
       dynamic validator;
-      // Map<String, dynamic> initialValue = {"value": ""};
-      late var initialValue;
-      var originalValue;
+      var initialValue = "";
+      var originalValue = {};
 
       Widget button = Container();
 
@@ -221,22 +223,19 @@ class MyCustomFormState extends State<MyCustomForm> {
         };
       }
 
-      // hardcoded to fill address from customers model
-      Future<dynamic> loadData() async {
+      Future<dynamic> loadDataForChildForm() async {
+        List data;
         if (fieldDef["autoFillHandler"] != null &&
             fieldDef["autoFillHandler"]["handler"] != null) {
-          var resolveParams =
-              resolveFields(fieldDef["autoFillHandler"]["params"]);
-          List data = await srv.getModelByID("customers", resolveParams[0]);
+          data = await loadDataFromHandler(fieldDef);
 
           var res =
               await getShortForm()[fieldDef["autoFillHandler"]["handler"]]!(
                   data);
-          // LoadDataResponse loadDataResponse =LoadDataResponse.create(res, data[0]);
-          return {"shortForm": res, "originalData": data[0]};
-
-          // var refId = resolveFields(fieldDef["autoFillHandler"]);
-          // var data = await srv.getModelByID("customers", refId);
+          return {
+            "shortForm": res,
+            "originalData": data.length > 0 ? data[0] : null
+          };
         } else {
           return null;
         }
@@ -249,22 +248,37 @@ class MyCustomFormState extends State<MyCustomForm> {
               if (projectSnap.data == null ||
                   projectSnap.connectionState == ConnectionState.none ||
                   projectSnap.connectionState == ConnectionState.waiting) {
-                //print('project snapshot data is: ${projectSnap.data}');
                 return Center(child: CircularProgressIndicator());
               }
               if (projectSnap.data != null) {
-                initialValue = projectSnap.data["shortForm"];
+                initialValue = projectSnap.data["shortForm"] ?? "";
               }
               if (projectSnap.data != null) {
-                originalValue = projectSnap.data["originalData"];
+                originalValue = projectSnap.data["originalData"] ?? {};
+              }
+
+              /// Used to fetch refId from parent
+              /// First get the refItem by checking `dependsOn`
+              /// check if refItem contains `parent` attribute, if yes then take the `parent` id
+              /// otherwise fetch `dependsOn` from targetModel
+              var refItem = fref["fields"].singleWhere(
+                  (eachfields) => eachfields["name"] == fieldDef['dependsOn']);
+              var refId;
+              if (targetModel.isNotEmpty) {
+                if (refItem["parent"] != null) {
+                  refId = targetModel[refItem["parent"]]["id"];
+                } else {
+                  refId = targetModel[fieldDef['dependsOn']];
+                }
               }
               return CardFormField(
                 context: context,
                 fieldDef: fieldDef,
+                refId: refId,
                 initialValue: initialValue,
                 originalValue: originalValue,
                 onChanged: (value) async {
-                  await loadData();
+                  await loadDataForChildForm();
                   setState(() {});
                 },
                 validator: validator,
@@ -274,7 +288,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                 },
               );
             },
-            future: loadData(),
+            future: loadDataForChildForm(),
           );
 
           break;
@@ -331,6 +345,7 @@ class MyCustomFormState extends State<MyCustomForm> {
 
           targetModel[fieldDef['name']] = suggestion[datasrc["key"]];
           this._typeAheadController.text = suggestion[datasrc["key"]];
+          setState(() {});
         },
         validator: (value) {
           if (value!.isEmpty) {
@@ -340,7 +355,6 @@ class MyCustomFormState extends State<MyCustomForm> {
         },
         onSaved: (value) {
           targetModel[fieldDef['name']] = value;
-          // targetModel[fieldDef[]]
         },
       );
     }
@@ -369,7 +383,6 @@ class MyCustomFormState extends State<MyCustomForm> {
                 // If the form is valid, display a Snackbar.
                 _formKey.currentState!.save();
                 relatedModelsUpdate(k);
-                print(targetModel);
                 // Scaffold.of(context)
                 //     .showSnackBar(SnackBar(content: Text('Processing Data')));
               }
@@ -403,8 +416,6 @@ class MyCustomFormState extends State<MyCustomForm> {
 
     List<Widget> formBuilder() {
       List<Widget> fb = [];
-      // fref = forms[args["formType"]];
-
       for (var i = 0; i < fref["fields"].length; i++) {
         if (isCondSatisfied(targetModel, fref["fields"][i]["show_cond"]) ==
             false) {
@@ -426,8 +437,6 @@ class MyCustomFormState extends State<MyCustomForm> {
           case "K_FIELD_FORM":
             fb.add(buildChildForm(fref["fields"][i]));
 
-            // Future.delayed(
-            //     Duration.zero, () => buildChildForm(fref["fields"][i]));
             break;
           default:
         }
@@ -466,7 +475,10 @@ class MyCustomFormState extends State<MyCustomForm> {
     var values = getV("values", args);
     if (targetModel[fieldDef['name']] != null)
       initialValue = targetModel[fieldDef['name']];
-    else if (values != null) {
+    else if (values != null &&
+        values.isNotEmpty &&
+        resolveFields(values[fieldDef["name"]]) != null &&
+        resolveFields(values[fieldDef["name"]]).length > 0) {
       initialValue = resolveFields(values[fieldDef["name"]])[0];
     } else {
       initialValue = "";
@@ -500,7 +512,13 @@ class MyCustomFormState extends State<MyCustomForm> {
         // if we have to update other collection then we have to provide targetModelRef
         // eg: update customer from address form
         if (element["targetModelRef"] != null) {
-          refId = resolveFields(element["targetModelRef"])[0];
+          if (loginSrv.currentUser["role"] != "K_ADMIN") {
+            refId = loginSrv.currentUser["belongs_to_customer"]["id"];
+          } else {
+            /// fetch from child
+            /// take refid and fill up
+            refId = parentRefId;
+          }
         }
         var result = await srv.saveForm(
             element["targetModel"], targetModel, refId, fref['key']);
@@ -511,6 +529,7 @@ class MyCustomFormState extends State<MyCustomForm> {
   }
 
   // used to resolve reserved constants
+  // todo: Move to service
   resolveFields(paramFields) {
     List resolvedValue = [];
     // if array
@@ -530,7 +549,7 @@ class MyCustomFormState extends State<MyCustomForm> {
           resolvedValue.add(loginSrv.currentUser["belongs_to_customer"]["id"]);
           break;
         default:
-          resolvedValue.add(field);
+          if (field != null) resolvedValue.add(field);
       }
     });
 
@@ -555,5 +574,37 @@ class MyCustomFormState extends State<MyCustomForm> {
       }
     });
     targetModel.addAll(fieldmap);
+  }
+
+  /// Used to load data from handler configuration
+  /// [config.autoFillHandler.datasrc.srctype] : model
+  /// [config.autoFillHandler.datasrc.refKey] : id
+  loadDataFromHandler(config) async {
+    List data = [];
+    var autofillHandler = config["autoFillHandler"];
+    if (autofillHandler != null &&
+        autofillHandler["datasrc"] != null &&
+        autofillHandler["datasrc"]["srctype"] != null) {
+      Map datasrc = autofillHandler["datasrc"];
+      switch (datasrc["srctype"]) {
+        case "model":
+          if (datasrc["refKey"] == "id") {
+            // TODO: check this remove user role from here
+            if (loginSrv.currentUser["role"] != "K_ADMIN") {
+              data = await srv.getModelByID(datasrc["src"],
+                  loginSrv.currentUser["belongs_to_customer"]["id"]);
+            } else {
+              if (targetModel["belongs_to_customer"] != null &&
+                  targetModel["belongs_to_customer"]["id"] != null) {
+                data = await srv.getModelByID(
+                    datasrc["src"], targetModel["belongs_to_customer"]["id"]);
+              }
+            }
+          }
+          break;
+        default:
+      }
+    }
+    return data;
   }
 }
