@@ -4,11 +4,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mongo_dart/mongo_dart.dart';
-import 'package:order_management/screens/login.dart';
-import 'package:order_management/screens/models/usersModel.dart';
-import 'package:order_management/screens/otp.dart';
-import 'package:order_management/service/appConfigService.dart';
-import 'package:order_management/service/handlerService.dart';
+import 'package:order_management/views/login.dart';
+import 'package:order_management/models/usersModel.dart';
+import 'package:order_management/views/otp.dart';
+import 'package:order_management/controllers/appConfigService.dart';
+import 'package:order_management/controllers/handlerService.dart';
 import 'package:order_management/widgets/widgetUtils.dart';
 import 'package:provider/provider.dart';
 

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:order_management/constants.dart';
-import 'package:order_management/service/appConfigService.dart';
-import 'package:order_management/service/utilService.dart';
+import 'package:order_management/configs/constants.dart';
+import 'package:order_management/controllers/appConfigService.dart';
+import 'package:order_management/controllers/utilService.dart';
 import 'package:provider/provider.dart';
 
 class CustomListScreen extends StatefulWidget {

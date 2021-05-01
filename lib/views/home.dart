@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:order_management/service/appConfigService.dart';
-import 'package:order_management/service/productsService.dart';
-import 'package:order_management/service/utilService.dart';
+import 'package:order_management/controllers/appConfigService.dart';
+import 'package:order_management/controllers/productsService.dart';
+import 'package:order_management/controllers/utilService.dart';
 import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {

@@ -1,9 +1,9 @@
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:order_management/service/appConfigService.dart';
-import 'package:order_management/service/handlerService.dart';
-import 'package:order_management/service/loginService.dart';
+import 'package:order_management/controllers/appConfigService.dart';
+import 'package:order_management/controllers/handlerService.dart';
+import 'package:order_management/controllers/loginService.dart';
 import 'package:order_management/widgets/dropdownbutton.dart';
 import 'package:order_management/widgets/widgetUtils.dart';
 import 'package:provider/provider.dart';

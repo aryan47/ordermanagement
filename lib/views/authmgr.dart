@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:order_management/screens/home.dart';
-import 'package:order_management/service/appConfigService.dart';
-import 'package:order_management/service/loginService.dart';
-import 'package:order_management/service/utilService.dart';
+import 'package:order_management/views/home.dart';
+import 'package:order_management/controllers/appConfigService.dart';
+import 'package:order_management/controllers/loginService.dart';
+import 'package:order_management/controllers/utilService.dart';
 import 'package:order_management/widgets/widgetUtils.dart';
 import 'package:provider/provider.dart';
 

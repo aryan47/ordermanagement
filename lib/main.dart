@@ -1,22 +1,22 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:order_management/screens/dashboard.dart';
-import 'package:order_management/screens/authmgr.dart';
-import 'package:order_management/screens/login.dart';
-import 'package:order_management/screens/login_profile.dart';
-import 'package:order_management/screens/orders.dart';
-import 'package:order_management/screens/otp.dart';
-import 'package:order_management/screens/products.dart';
-import 'package:order_management/screens/settings.dart';
-import 'package:order_management/service/appConfigService.dart';
-import 'package:order_management/service/loginService.dart';
+import 'package:order_management/views/dashboard.dart';
+import 'package:order_management/views/authmgr.dart';
+import 'package:order_management/views/login.dart';
+import 'package:order_management/views/login_profile.dart';
+import 'package:order_management/views/orders.dart';
+import 'package:order_management/views/otp.dart';
+import 'package:order_management/views/products.dart';
+import 'package:order_management/views/settings.dart';
+import 'package:order_management/controllers/appConfigService.dart';
+import 'package:order_management/controllers/loginService.dart';
 import 'package:order_management/widgets/customListScreen.dart';
 import 'package:order_management/widgets/myCustomForms.dart';
 import 'package:provider/provider.dart';
 
 // import 'service/login_store.dart';
-import 'service/appConfigService.dart';
+import 'controllers/appConfigService.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

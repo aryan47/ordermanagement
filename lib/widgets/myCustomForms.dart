@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:order_management/service/appConfigService.dart';
-import 'package:order_management/service/loginService.dart';
-import 'package:order_management/service/handlerService.dart';
-import 'package:order_management/service/utilService.dart';
+import 'package:order_management/controllers/appConfigService.dart';
+import 'package:order_management/controllers/loginService.dart';
+import 'package:order_management/controllers/handlerService.dart';
+import 'package:order_management/controllers/utilService.dart';
 import 'package:order_management/widgets/card_formfield.dart';
 import 'package:provider/provider.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:order_management/service/loginService.dart';
+import 'package:order_management/controllers/loginService.dart';
 import 'package:provider/provider.dart';
 
 class Otp extends StatefulWidget {

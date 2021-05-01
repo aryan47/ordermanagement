@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:order_management/screens/models/customersModel.dart';
-import 'package:order_management/service/appConfigService.dart';
-import 'package:order_management/service/utilService.dart';
+import 'package:order_management/models/customersModel.dart';
+import 'package:order_management/controllers/appConfigService.dart';
+import 'package:order_management/controllers/utilService.dart';
 import 'package:provider/provider.dart';
 
 class Customers extends StatefulWidget {
