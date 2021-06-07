@@ -41,6 +41,17 @@ Map<String, Function> getShortForm() {
       }
       return res.length != 0 ? res.join(", ") : null;
     },
+    "getAddressForOrder": (address) {
+      List<dynamic> res = [];
+      // dynamic address = customer["belongs_to_customer"]["address"];
+      print('inside getlogin cust address');
+      if (address.isNotEmpty && address != null) {
+        res.add(address["name"] ?? "");
+        res.add(address["address"] ?? "");
+        res.add(address["landmark"] ?? "");
+      }
+      return res.length != 0 ? res.join(", ") : null;
+    },
   };
   return data;
 }

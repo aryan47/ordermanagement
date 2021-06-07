@@ -308,19 +308,29 @@ class _OrdersState extends State<Orders> {
             )
           ]),
         ),
-        RichText(
-          text: TextSpan(children: [
-            WidgetSpan(
-              child: Icon(Icons.location_on_rounded,
-                  size: 18, color: Colors.red[700]),
-            ),
-            TextSpan(
-              text: getShortForm()["getAddressFromOrders"]!(orders[index]),
-              style:
-                  TextStyle(color: Colors.black, fontWeight: FontWeight.normal),
-            )
-          ]),
-        ),
+        FutureBuilder<dynamic>(
+            future: Provider.of<AppConfigService>(context, listen: false)
+                .getModelByID(
+                    "customers", orders[index]["belongs_to_customer"]["id"]),
+            builder: (BuildContext context, snapshot) {
+              if (snapshot.hasData) {
+                return RichText(
+                  text: TextSpan(children: [
+                    WidgetSpan(
+                      child: Icon(Icons.location_on_rounded,
+                          size: 18, color: Colors.red[700]),
+                    ),
+                    TextSpan(
+                      text:  getShortForm()["getAddressForOrder"]!(snapshot.data[0]["address"]),
+                      style: TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.normal),
+                    )
+                  ]),
+                );
+              }
+
+              return Container(child: CircularProgressIndicator());
+            }),
       ],
     );
   }
