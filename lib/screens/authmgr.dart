@@ -46,12 +46,12 @@ class _AuthMgrState extends State<AuthMgr> {
     // Get the current loggedin user
     await extractCurrentUser();
     var currentUser =
-        _loginSrv.currentUser != null ? _loginSrv.currentUser["role"] : null;
+        (_loginSrv.currentUser != null && _loginSrv.currentUser.length != 0 ) ? _loginSrv.currentUser["role"] : null;
     // Modify the configuration based on user privileges
     applyUserPrivileges(_dbSrv.appConfig, currentUser);
 
     // If user name is not present then send user to login-profile page
-    if (_loginSrv.currentUser != null &&
+    if (_loginSrv.currentUser != null && _loginSrv.currentUser.length != 0 &&
         (_loginSrv.currentUser["belongs_to_customer"]["name"]).isEmpty) {
       // get the name and save it
       Navigator.pushReplacementNamed(context, "/login-profile");

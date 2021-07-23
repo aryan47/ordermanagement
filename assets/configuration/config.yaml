@@ -1,6 +1,6 @@
 GENERAL_SETTINGS:
   title: Nirjal
-  phone: "+919931164372"
+  phone: "+919341999571"
 DRAWER:
   value: true
   header:
@@ -188,7 +188,7 @@ FORMS:
             - "$last_action"
             - K_ACTION_CREATE
     addWatchers:
-      is_new: true
+      is_new: false
   K_FORM_ADDRESS:
     title: Add Address
     type: K_FORM_ADDRESS

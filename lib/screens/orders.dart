@@ -321,7 +321,8 @@ class _OrdersState extends State<Orders> {
                           size: 18, color: Colors.red[700]),
                     ),
                     TextSpan(
-                      text:  getShortForm()["getAddressForOrder"]!(snapshot.data[0]["address"]),
+                      text: getShortForm()["getAddressForOrder"]!(
+                          (snapshot.data.length != 0 && snapshot.data[0]["address"] != null) ? snapshot.data[0]["address"] : ""),
                       style: TextStyle(
                           color: Colors.black, fontWeight: FontWeight.normal),
                     )

@@ -215,7 +215,7 @@ class MyCustomFormState extends State<MyCustomForm> {
 
       if (fieldDef["required"] == true) {
         validator = (value) {
-          if (value != null) {
+          if (value != null && value.toString().trim() != "") {
             return null;
           } else {
             return 'This field is required!';

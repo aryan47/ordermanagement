@@ -93,7 +93,7 @@ String transformText(String text, loginSrv) {
         print("current user: ");
         // textArr.removeAt(index);
         if (loginSrv != null &&
-            loginSrv.currentUser != null &&
+            loginSrv.currentUser != null && loginSrv.currentUser.length != 0 &&
             loginSrv.currentUser["belongs_to_customer"] != null)
           textArrResult.add(loginSrv.currentUser["belongs_to_customer"]
                   ["name"] ??
@@ -102,7 +102,7 @@ String transformText(String text, loginSrv) {
       case "\$\$K_LOGGED_IN_CUSTOMER_ID":
         // textArr.removeAt(index);
         if (loginSrv != null &&
-            loginSrv.currentUser != null &&
+            loginSrv.currentUser != null && loginSrv.currentUser.length != 0 &&
             loginSrv.currentUser["belongs_to_customer"] != null)
           textArrResult.add(loginSrv.currentUser["belongs_to_customer"]["id"]);
         break;
